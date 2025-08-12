@@ -1,15 +1,152 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Premium Luxury Disqus Styling */
+#disqus_thread {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+/* Ultra-modern Disqus iframe styling */
+#disqus_thread iframe {
+  border-radius: 16px !important;
+  border: none !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* Hide default Disqus branding untuk look yang premium */
+#disqus_thread .disqus-footer {
+  display: none !important;
+}
+
+/* Islamic color scheme untuk Disqus */
+.islamic-disqus {
+  --disqus-primary: #10b981;
+  --disqus-secondary: #064e3b;
+  --disqus-accent: #f59e0b;
+  --disqus-background: #ffffff;
+}
+
+/* Luxury loading animations */
+@keyframes luxurySpin {
+  0% { 
+    transform: rotate(0deg) scale(1);
+    opacity: 0.8;
+  }
+  50% { 
+    transform: rotate(180deg) scale(1.05);
+    opacity: 1;
+  }
+  100% { 
+    transform: rotate(360deg) scale(1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes goldShimmer {
+  0% { 
+    background-position: -200% center;
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% { 
+    background-position: 200% center;
+    opacity: 0.5;
+  }
+}
+
+/* Islamic Premium Section Styling */
+.islamic-premium-section {
+  position: relative;
+}
+
+.islamic-premium-section::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.08) 0%, rgba(20, 184, 166, 0.05) 40%, transparent 70%);
+  z-index: -1;
+  opacity: 0.8;
+}
+
+/* Islamic geometric patterns background */
+.islamic-premium-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(245, 158, 11, 0.08) 0%, transparent 50%);
+  z-index: -1;
+  opacity: 0.6;
+}
+
+/* Glass morphism effects */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Luxury hover effects */
+.luxury-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Premium gradient text */
+.gold-text {
+  background: linear-gradient(135deg, #f59e0b, #d97706, #f59e0b);
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldShimmer 3s ease-in-out infinite;
+}
+
+/* Floating elements animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.floating {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Luxury transitions */
+.premium-transition {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Executive theme colors */
+:root {
+  --gold-50: #fffbeb;
+  --gold-100: #fef3c7;
+  --gold-200: #fde68a;
+  --gold-300: #fcd34d;
+  --gold-400: #fbbf24;
+  --gold-500: #f59e0b;
+  --gold-600: #d97706;
+}
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +159,400 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Quicksand', Arial, Helvetica, sans-serif;
+}
+
+/* Force primary color override */
+.bg-primary {
+  background-color: #0656CE !important;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out;
+}
+
+@keyframes flipIn {
+  0% {
+    opacity: 0;
+    transform: rotateX(-90deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: rotateX(-45deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg);
+  }
+}
+
+.flip-animation {
+  animation: flipIn 0.6s ease-in-out infinite;
+}
+
+/* Shape Illustration Styling */
+.shape-illustration {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  opacity: 0.9;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shape-illustration img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(0%) brightness(1.3) contrast(1.0) drop-shadow(2px 2px 8px rgba(0,0,0,0.3));
+  transition: all 0.5s ease;
+  transform: scale(0.9);
+}
+
+
+/* Position variations for different sections */
+.shape-illustration.top-right {
+  top: -90px;
+  right: -19px;
+}
+
+.shape-illustration.top-left {
+  top: -59px;
+  left: 50px;
+}
+
+.shape-illustration.bottom-right {
+  bottom: -120px;
+  right: -20px;
+}
+
+.shape-illustration.bottom-left {
+  bottom: -30px;
+  left: -110px;
+}
+
+/* Center positioning options */
+.shape-illustration.center-right {
+  top: 50%;
+  right: 30px;
+  transform: translateY(-50%);
+}
+
+.shape-illustration.center-left {
+  top: 50%;
+  left: 30px;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 1920px) {
+  .shape-illustration {
+    width: 500px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .shape-illustration {
+    width: 500px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .shape-illustration {
+    width: 500px;
+    height: 500px;
+    opacity: 0.8;
+  }
+}
+
+@media (max-width: 768px) {
+  .shape-illustration {
+    width: 400px;
+    height: 400px;
+    opacity: 0.7;
+  }
+}
+
+/* Custom font classes */
+.font-plus-jakarta-regular {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 400;
+}
+
+.font-plus-jakarta-light {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 300;
+}
+
+.font-ubuntu {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+/* Dropdown animations */
+@keyframes slideInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-enter {
+  animation: slideInDown 0.3s ease-out;
+}
+
+/* Yellow line hover effect */
+.navbar-item-hover {
+  position: relative;
+}
+
+.navbar-item-hover::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 4px;
+  background-color: #fbbf24;
+  transition: width 0.3s ease-out;
+}
+
+.navbar-item-hover:hover::after {
+  width: 100%;
+}
+
+
+/* Dropdown staggered animation */
+.dropdown-item {
+  opacity: 0;
+  transform: translateY(-5px);
+  animation-name: slideInDown;
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+.dropdown-item:nth-child(1) { animation-delay: 0ms; }
+.dropdown-item:nth-child(2) { animation-delay: 50ms; }
+.dropdown-item:nth-child(3) { animation-delay: 100ms; }
+.dropdown-item:nth-child(4) { animation-delay: 150ms; }
+.dropdown-item:nth-child(5) { animation-delay: 200ms; }
+
+/* Fix dropdown z-index to appear above video */
+.fe-kautsar-menu-item .absolute {
+  z-index: 9999 !important;
+}
+
+/* Ensure header has high z-index */
+.fe-kautsar-header-wrapper {
+  position: relative;
+  z-index: 1000;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+.animate-marquee-once {
+  animation: marquee 20s linear 1;
+}
+
+@keyframes marquee-vertical {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical 15s linear infinite;
+}
+
+.animate-marquee-vertical-once {
+  animation: marquee-vertical 15s linear 1;
+}
+
+@keyframes marquee-vertical-reverse {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.animate-marquee-vertical-reverse {
+  animation: marquee-vertical-reverse 15s linear infinite;
+}
+
+.animate-marquee-vertical-reverse-once {
+  animation: marquee-vertical-reverse 15s linear 1;
+}
+
+@keyframes marquee-reverse {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee-reverse {
+  animation: marquee-reverse 20s linear infinite;
+}
+
+.animate-marquee-reverse-once {
+  animation: marquee-reverse 20s linear 1;
+}
+
+/* Mobile dropdown animations */
+@keyframes mobileSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 300px;
+  }
+}
+
+@keyframes mobileSlideUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 300px;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+}
+
+.mobile-dropdown-enter {
+  animation: mobileSlideDown 0.3s ease-out forwards;
+}
+
+.mobile-dropdown-exit {
+  animation: mobileSlideUp 0.2s ease-in forwards;
+}
+
+/* Mobile dropdown item staggered animation */
+.mobile-dropdown-item {
+  opacity: 0;
+  transform: translateX(-10px);
+  animation-name: slideInRight;
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes slideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Optimasi performa dengan contain */
+.bento-card {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+.shine-border {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+/* Disable animations on low-end devices */
+@media (prefers-reduced-motion: reduce) {
+  .shine-border div {
+    animation: none !important;
+  }
+  
+  .transition-all {
+    transition: none !important;
+  }
+}
+
+/* Optimasi untuk animasi yang lebih smooth */
+.shine-border {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.bento-card {
+  will-change: transform, box-shadow;
+  transform: translateZ(0);
+}
+
+.mobile-dropdown-item:nth-child(1) { animation-delay: 0ms; }
+.mobile-dropdown-item:nth-child(2) { animation-delay: 50ms; }
+.mobile-dropdown-item:nth-child(3) { animation-delay: 100ms; }
+.mobile-dropdown-item:nth-child(4) { animation-delay: 150ms; }
+.mobile-dropdown-item:nth-child(5) { animation-delay: 200ms; }
+
+/* Tambahkan di bagian bawah file */
+/* Force white background untuk halaman berita */
+.berita-page {
+  background: #ffffff !important;
+  min-height: 100vh;
+  /* Force light foreground for pages that use white background even in dark OS mode */
+  --foreground: #111827; /* gray-900 */
+  color: var(--foreground);
+}
+
+/* Generic helper for other light pages */
+.light-page {
+  background: #ffffff !important;
+  --foreground: #111827;
+  color: var(--foreground);
 }
