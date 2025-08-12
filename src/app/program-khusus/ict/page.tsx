@@ -155,7 +155,7 @@ const ICTDetail = () => {
   }
 
   // Helper URL gambar backend
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api'
   const backendOrigin = (() => {
     try {
       const url = new URL(apiBase)

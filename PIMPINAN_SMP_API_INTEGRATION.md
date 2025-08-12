@@ -26,7 +26,7 @@ Buat file `.env.local` di root project dengan konfigurasi berikut:
 
 ```env
 # API Configuration
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1
+NEXT_PUBLIC_API_BASE_URL=http://api.raphnesia.my.id/api/v1
 
 # Site Configuration
 NEXT_PUBLIC_SITE_URL=http://localhost:3000

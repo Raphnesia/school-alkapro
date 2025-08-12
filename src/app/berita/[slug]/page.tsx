@@ -40,7 +40,7 @@ const BeritaDetailSlug = ({ params }: BeritaDetailProps) => {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api/v1'
         
         // Try direct slug endpoint first
         let response = await fetch(`${apiUrl}/posts/${slug}`)

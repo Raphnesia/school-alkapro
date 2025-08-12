@@ -62,7 +62,7 @@ export default function ArtikelDetailSlug({ params }: ArtikelDetailProps) {
           throw new Error('Slug parameter tidak valid')
         }
         
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api/v1'
         
         // Try direct slug endpoint first (same as berita)
         let response = await fetch(`${apiUrl}/posts/${slug}`)

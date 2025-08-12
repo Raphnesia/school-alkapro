@@ -2,7 +2,7 @@
 
 ## Base URL
 ```
-http://localhost:8000/api/v1
+http://api.raphnesia.my.id/api/v1
 ```
 
 ## Endpoints

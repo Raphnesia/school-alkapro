@@ -4,7 +4,7 @@
 export const config = {
   // API Configuration
   api: {
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1',
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://api.raphnesia.my.id/api/v1',
     timeout: 10000, // 10 seconds
   },
   

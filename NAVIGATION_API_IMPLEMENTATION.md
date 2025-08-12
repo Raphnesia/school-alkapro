@@ -79,7 +79,7 @@ interface FooterBranding {
 Buat file `.env.local` di root project:
 ```bash
 # API Configuration
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
+NEXT_PUBLIC_API_BASE_URL=http://api.raphnesia.my.id/api
 
 # Production
 # NEXT_PUBLIC_API_BASE_URL=https://yourdomain.com/api
@@ -134,10 +134,10 @@ const brandText = footerData?.branding?.footer_brand_text;
 ### 1. Test API Endpoints
 ```bash
 # Test Header API
-curl http://localhost:8000/api/v1/navigation/header
+curl http://api.raphnesia.my.id/api/v1/navigation/header
 
 # Test Footer API
-curl http://localhost:8000/api/v1/navigation/footer
+curl http://api.raphnesia.my.id/api/v1/navigation/footer
 ```
 
 ### 2. Test Frontend

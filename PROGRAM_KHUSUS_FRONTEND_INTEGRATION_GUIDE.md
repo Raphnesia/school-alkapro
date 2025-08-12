@@ -37,7 +37,7 @@ Setiap tipe memiliki:
 
 ### 📌 Base URL
 ```
-http://localhost:8000/api/v1
+http://api.raphnesia.my.id/api/v1
 ```
 
 ### 🎯 Endpoint Utama
@@ -753,7 +753,7 @@ export default function ICTPage() {
 import axios from 'axios';
 
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api/v1',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -911,7 +911,7 @@ mkdir -p app/program-khusus/ict
 
 ```env
 # .env.local
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+NEXT_PUBLIC_API_URL=http://api.raphnesia.my.id/api/v1
 NEXT_PUBLIC_STORAGE_URL=http://localhost:8000/storage
 ```
 

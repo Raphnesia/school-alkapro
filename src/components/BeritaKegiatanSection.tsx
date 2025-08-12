@@ -40,7 +40,7 @@ const BeritaKegiatanSection = () => {
   useEffect(() => {
   const fetchArticles = async () => {
   try {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api/v1'
   
   // Fetch dari kedua endpoint
   const [newsResponse, articlesResponse] = await Promise.all([

@@ -10,7 +10,7 @@ cp .env.example .env.local
 
 Edit `.env.local`:
 ```env
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1
+NEXT_PUBLIC_API_BASE_URL=http://api.raphnesia.my.id/api/v1
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
@@ -35,13 +35,13 @@ php artisan serve --port=8000
 ### 1. Test API Endpoints
 ```bash
 # Test complete data
-curl http://localhost:8000/api/v1/pimpinan-smp/complete
+curl http://api.raphnesia.my.id/api/v1/pimpinan-smp/complete
 
 # Test settings
-curl http://localhost:8000/api/v1/pimpinan-smp/settings
+curl http://api.raphnesia.my.id/api/v1/pimpinan-smp/settings
 
 # Test pimpinan data
-curl http://localhost:8000/api/v1/pimpinan-smp
+curl http://api.raphnesia.my.id/api/v1/pimpinan-smp
 ```
 
 ### 2. Test Frontend
@@ -54,7 +54,7 @@ curl http://localhost:8000/api/v1/pimpinan-smp
 ### API Tidak Terhubung
 ```bash
 # Cek apakah backend berjalan
-curl http://localhost:8000/api/v1/pimpinan-smp/complete
+curl http://api.raphnesia.my.id/api/v1/pimpinan-smp/complete
 
 # Jika error, restart backend
 php artisan serve --port=8000

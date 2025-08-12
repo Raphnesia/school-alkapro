@@ -6,7 +6,7 @@ Buat file `.env.local` di root project dengan konfigurasi berikut:
 
 ```env
 # API Configuration
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+NEXT_PUBLIC_API_URL=http://api.raphnesia.my.id/api/v1
 
 # Instagram API Configuration (if needed)
 NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN=your_instagram_access_token_here

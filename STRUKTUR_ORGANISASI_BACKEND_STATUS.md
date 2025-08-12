@@ -90,13 +90,13 @@ if (hasBackendData && data) {
 4. **Verifikasi Data:**
    ```bash
    # Test complete data
-   curl http://localhost:8000/api/v1/struktur-organisasi/complete
+   curl http://api.raphnesia.my.id/api/v1/struktur-organisasi/complete
    
    # Test struktur organisasi
-   curl http://localhost:8000/api/v1/struktur-organisasi
+   curl http://api.raphnesia.my.id/api/v1/struktur-organisasi
    
    # Test content
-   curl http://localhost:8000/api/v1/struktur-organisasi-content
+   curl http://api.raphnesia.my.id/api/v1/struktur-organisasi-content
    ```
 
 ### **Untuk Frontend:**
@@ -111,22 +111,22 @@ if (hasBackendData && data) {
 ### **Jika masih menggunakan fallback:**
 1. **Cek backend status:**
    ```bash
-   curl http://localhost:8000/api/v1/struktur-organisasi/complete
+   curl http://api.raphnesia.my.id/api/v1/struktur-organisasi/complete
    ```
 
 2. **Cek data settings:**
    ```bash
-   curl http://localhost:8000/api/v1/struktur-organisasi/settings
+   curl http://api.raphnesia.my.id/api/v1/struktur-organisasi/settings
    ```
 
 3. **Cek data struktur organisasi:**
    ```bash
-   curl http://localhost:8000/api/v1/struktur-organisasi
+   curl http://api.raphnesia.my.id/api/v1/struktur-organisasi
    ```
 
 4. **Cek data content:**
    ```bash
-   curl http://localhost:8000/api/v1/struktur-organisasi-content
+   curl http://api.raphnesia.my.id/api/v1/struktur-organisasi-content
    ```
 
 ### **Jika backend tidak merespons:**

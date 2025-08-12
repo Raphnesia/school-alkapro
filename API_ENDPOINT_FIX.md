@@ -10,10 +10,10 @@ Frontend menggunakan endpoint baru `/api/teachers` tapi backend masih menggunaka
 ### **1. Updated API Base URL**
 ```typescript
 // Dari
-const API_BASE_URL = 'http://localhost:8000/api'
+const API_BASE_URL = 'http://api.raphnesia.my.id/api'
 
 // Ke
-const API_BASE_URL = 'http://localhost:8000/api/v1'
+const API_BASE_URL = 'http://api.raphnesia.my.id/api/v1'
 ```
 
 ### **2. Fixed Endpoint Paths**
@@ -77,7 +77,7 @@ export const getTeacherSettings = async (): Promise<TeacherSettings> => {
 
 ### **1. Get Teachers Grouped by Subject** ⭐
 ```bash
-GET http://localhost:8000/api/v1/teachers/by-subject
+GET http://api.raphnesia.my.id/api/v1/teachers/by-subject
 ```
 
 **Response:**
@@ -108,17 +108,17 @@ GET http://localhost:8000/api/v1/teachers/by-subject
 
 ### **2. Get All Teachers & Staff**
 ```bash
-GET http://localhost:8000/api/v1/teachers
+GET http://api.raphnesia.my.id/api/v1/teachers
 ```
 
 ### **3. Get Teachers Only**
 ```bash
-GET http://localhost:8000/api/v1/teachers/list
+GET http://api.raphnesia.my.id/api/v1/teachers/list
 ```
 
 ### **4. Get Staff Only**
 ```bash
-GET http://localhost:8000/api/v1/staff/list
+GET http://api.raphnesia.my.id/api/v1/staff/list
 ```
 
 ## 🔍 **Testing Checklist**
@@ -145,7 +145,7 @@ GET http://localhost:8000/api/v1/staff/list
 
 ### **Frontend (.env.local)**
 ```bash
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+NEXT_PUBLIC_API_URL=http://api.raphnesia.my.id/api/v1
 ```
 
 ### **Backend (.env)**

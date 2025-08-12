@@ -8,7 +8,7 @@ Update file `.env.local` dengan konfigurasi berikut:
 
 ```bash
 # Laravel Backend API Configuration
-NEXT_PUBLIC_API_URL=http://localhost:8000/api
+NEXT_PUBLIC_API_URL=http://api.raphnesia.my.id/api
 
 # Production (ganti dengan domain shared hosting Anda)
 # NEXT_PUBLIC_API_URL=https://your-shared-hosting-domain.com/api

@@ -51,7 +51,7 @@ cp SIMPLE_FRONTEND_EXAMPLE.tsx app/program-khusus/ict/page.tsx
 # useProgramData('tahfidz') → useProgramData('ict')
 
 # 3. Setup environment
-echo "NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1" > .env.local
+echo "NEXT_PUBLIC_API_URL=http://api.raphnesia.my.id/api/v1" > .env.local
 
 # 4. Install dependencies
 npm install next
@@ -72,7 +72,7 @@ cp REACT_SIMPLE_EXAMPLE.jsx src/pages/ProgramICT.jsx
 # useProgramData('tahfidz') → useProgramData('ict')
 
 # 3. Setup environment
-echo "REACT_APP_API_URL=http://localhost:8000/api/v1" > .env
+echo "REACT_APP_API_URL=http://api.raphnesia.my.id/api/v1" > .env
 
 # 4. Install dependencies
 npm install react react-dom react-router-dom
@@ -145,7 +145,7 @@ function useProgramData(type: 'tahfidz' | 'ict') {
         setLoading(true);
         
         // Fetch complete data
-        const response = await fetch(`http://localhost:8000/api/v1/special-programs/type/${type}/complete`);
+        const response = await fetch(`http://api.raphnesia.my.id/api/v1/special-programs/type/${type}/complete`);
         const result = await response.json();
         
         if (result.success) {
@@ -432,7 +432,7 @@ function useProgramData(type) {
     async function fetchData() {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:8000/api/v1/special-programs/type/${type}/complete`);
+        const response = await fetch(`http://api.raphnesia.my.id/api/v1/special-programs/type/${type}/complete`);
         const result = await response.json();
         
         if (result.success) {
@@ -676,7 +676,7 @@ export default ProgramTahfidz;
 
 ### Base URL
 ```
-http://localhost:8000/api/v1
+http://api.raphnesia.my.id/api/v1
 ```
 
 ### Endpoints
@@ -816,7 +816,7 @@ style={{ padding: '64px 16px' }} // → '80px 16px'
 php artisan serve
 
 # Cek di browser:
-http://localhost:8000/api/v1/special-programs/type/tahfidz/complete
+http://api.raphnesia.my.id/api/v1/special-programs/type/tahfidz/complete
 ```
 
 ### ❌ Data Tidak Muncul

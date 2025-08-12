@@ -64,7 +64,7 @@ npm install
 cp .env.local.example .env.local
 
 # Edit .env.local dengan URL backend Anda
-NEXT_PUBLIC_API_URL=http://localhost:8000/api
+NEXT_PUBLIC_API_URL=http://api.raphnesia.my.id/api
 NEXT_PUBLIC_IMAGE_BASE_URL=http://localhost:8000/storage
 
 # Jalankan development server

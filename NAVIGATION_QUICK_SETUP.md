@@ -8,7 +8,7 @@
 cp env.example .env.local
 
 # Edit .env.local dan set API URL
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
+NEXT_PUBLIC_API_BASE_URL=http://api.raphnesia.my.id/api
 ```
 
 ### 2. Pastikan Backend Berjalan
@@ -83,10 +83,10 @@ src/
 ### Test API Endpoints
 ```bash
 # Test Header
-curl http://localhost:8000/api/v1/navigation/header
+curl http://api.raphnesia.my.id/api/v1/navigation/header
 
 # Test Footer
-curl http://localhost:8000/api/v1/navigation/footer
+curl http://api.raphnesia.my.id/api/v1/navigation/footer
 ```
 
 ### Test Frontend

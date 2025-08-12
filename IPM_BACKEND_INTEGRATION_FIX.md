@@ -121,13 +121,13 @@ if (hasBackendData && data) {
 3. **Verifikasi Data:**
    ```bash
    # Test settings
-   curl http://localhost:8000/api/v1/ipm/settings
+   curl http://api.raphnesia.my.id/api/v1/ipm/settings
    
    # Test pengurus
-   curl http://localhost:8000/api/v1/ipm
+   curl http://api.raphnesia.my.id/api/v1/ipm
    
    # Test complete data
-   curl http://localhost:8000/api/v1/ipm/complete
+   curl http://api.raphnesia.my.id/api/v1/ipm/complete
    ```
 
 ### **Untuk Frontend:**
@@ -142,17 +142,17 @@ if (hasBackendData && data) {
 ### **Jika masih menggunakan fallback:**
 1. **Cek backend status:**
    ```bash
-   curl http://localhost:8000/api/v1/ipm/complete
+   curl http://api.raphnesia.my.id/api/v1/ipm/complete
    ```
 
 2. **Cek data settings:**
    ```bash
-   curl http://localhost:8000/api/v1/ipm/settings
+   curl http://api.raphnesia.my.id/api/v1/ipm/settings
    ```
 
 3. **Cek data pengurus:**
    ```bash
-   curl http://localhost:8000/api/v1/ipm
+   curl http://api.raphnesia.my.id/api/v1/ipm
    ```
 
 ### **Jika backend tidak merespons:**

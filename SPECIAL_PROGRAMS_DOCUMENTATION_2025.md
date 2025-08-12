@@ -56,7 +56,7 @@ Menyimpan pengaturan umum untuk halaman Program Khusus seperti title, subtitle, 
 
 ### Base URL
 ```
-http://localhost:8000/api/v1
+http://api.raphnesia.my.id/api/v1
 ```
 
 ### 1. List Programs
