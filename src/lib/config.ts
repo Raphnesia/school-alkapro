@@ -4,8 +4,13 @@
 export const config = {
   // API Configuration
   api: {
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://api.raphnesia.my.id/api/v1',
+    // Gunakan proxy Next.js untuk menghindari CORS
+    baseUrl: process.env.NEXT_PUBLIC_USE_PROXY === 'true' 
+      ? '/api/proxy' 
+      : (process.env.NEXT_PUBLIC_API_BASE_URL || 'http://api.raphnesia.my.id/api/v1'),
     timeout: 10000, // 10 seconds
+    // Laravel API URL asli (untuk proxy)
+    laravelUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://api.raphnesia.my.id/api/v1',
   },
   
   // Site Configuration
@@ -50,6 +55,12 @@ export type Config = typeof config;
 
 // Helper function untuk mendapatkan API URL
 export function getApiUrl(endpoint: string): string {
+  // Jika menggunakan proxy, endpoint langsung ke proxy
+  if (config.api.baseUrl === '/api/proxy') {
+    return `/api/proxy${endpoint}`;
+  }
+  
+  // Jika tidak menggunakan proxy, gunakan Laravel API langsung
   return `${config.api.baseUrl}${endpoint}`;
 }
 
@@ -58,5 +69,16 @@ export function getImageUrl(path: string): string {
   if (path.startsWith('http')) {
     return path;
   }
+  
+  // Jika menggunakan proxy, gunakan Laravel URL asli untuk gambar
+  if (config.api.baseUrl === '/api/proxy') {
+    return `${config.api.laravelUrl.replace('/api/v1', '')}${path}`;
+  }
+  
   return `${config.api.baseUrl.replace('/api/v1', '')}${path}`;
+}
+
+// Helper function untuk mengecek apakah menggunakan proxy
+export function isUsingProxy(): boolean {
+  return config.api.baseUrl === '/api/proxy';
 } 
