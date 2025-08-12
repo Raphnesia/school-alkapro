@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api'
+// Gunakan environment variable untuk production
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.raphnesia.my.id/api'
 
 export async function GET(request: NextRequest, { params }: { params: { path: string[] } }) {
   return handleRequest(request, params, 'GET')
@@ -39,6 +40,8 @@ async function handleRequest(request: NextRequest, params: { path: string[] }, m
     const searchParams = request.nextUrl.searchParams
     const queryString = searchParams.toString()
     const finalUrl = queryString ? `${url}?${queryString}` : url
+    
+    console.log(`[PROXY] ${method} ${finalUrl}`)
     
     // Prepare headers
     const headers: HeadersInit = {
@@ -85,6 +88,8 @@ async function handleRequest(request: NextRequest, params: { path: string[] }, m
       data = await response.text()
     }
     
+    console.log(`[PROXY] Response: ${response.status}`)
+    
     // Return response with CORS headers
     return NextResponse.json(data, {
       status: response.status,
@@ -97,7 +102,7 @@ async function handleRequest(request: NextRequest, params: { path: string[] }, m
     })
     
   } catch (error) {
-    console.error('Proxy API Error:', error)
+    console.error('[PROXY] Error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch data from API', details: error instanceof Error ? error.message : 'Unknown error' },
       { 

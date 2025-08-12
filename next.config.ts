@@ -2,7 +2,7 @@
 const nextConfig = {
   output: 'standalone',
   images: {
-    domains: ['api.raphnesia.my.id'],
+    domains: ['api.raphnesia.my.id', 'raphnesia.my.id'],
     unoptimized: true
   },
   async headers() {
@@ -18,16 +18,18 @@ const nextConfig = {
       }
     ]
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api'}/:path*`
-      }
-    ]
-  },
+  // Rewrite untuk production - tidak perlu karena kita pakai proxy
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/api/:path*',
+  //       destination: `${process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.raphnesia.my.id/api'}/:path*`
+  //     }
+  //   ]
+  // },
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    NEXT_PUBLIC_USE_PROXY: process.env.NEXT_PUBLIC_USE_PROXY,
   }
 }
 

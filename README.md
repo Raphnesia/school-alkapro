@@ -61,11 +61,11 @@ php artisan serve
 npm install
 
 # Copy environment file
-cp .env.local.example .env.local
+cp env.example .env.local
 
 # Edit .env.local dengan URL backend Anda
-NEXT_PUBLIC_API_URL=http://api.raphnesia.my.id/api
-NEXT_PUBLIC_IMAGE_BASE_URL=http://api.raphnesia.my.id/storage
+NEXT_PUBLIC_API_BASE_URL=https://api.raphnesia.my.id/api
+NEXT_PUBLIC_USE_PROXY=true
 
 # Jalankan development server
 npm run dev
@@ -73,7 +73,7 @@ npm run dev
 
 ### 3. Test Koneksi
 
-Buka `http://localhost:3001/test-connection` untuk memverifikasi koneksi antara frontend dan backend.
+Buka `http://localhost:3000/test-connection` untuk memverifikasi koneksi antara frontend dan backend.
 
 ## 📋 Fitur yang Tersedia
 
@@ -98,16 +98,17 @@ Buka `http://localhost:3001/test-connection` untuk memverifikasi koneksi antara 
 
 | Endpoint | Description |
 |----------|-------------|
-| `GET /api/home-sections` | Semua home sections |
-| `GET /api/teachers` | Semua guru aktif |
-| `GET /api/staff` | Semua staff aktif |
-| `GET /api/posts` | Semua posts published |
-| `GET /api/news` | Berita sekolah |
-| `GET /api/articles` | Artikel sekolah |
-| `GET /api/profile-sections` | Profile sections |
-| `GET /api/facilities` | Fasilitas sekolah |
-| `GET /api/activities` | Kegiatan sekolah |
-| `GET /api/links` | Semua links |
+| `GET /api/v1/navigation/header` | Navigation header dengan menu dan branding |
+| `GET /api/v1/home-sections` | Semua home sections |
+| `GET /api/v1/teachers` | Semua guru aktif |
+| `GET /api/v1/staff` | Semua staff aktif |
+| `GET /api/v1/posts` | Semua posts published |
+| `GET /api/v1/news` | Berita sekolah |
+| `GET /api/v1/articles` | Artikel sekolah |
+| `GET /api/v1/profile-sections` | Profile sections |
+| `GET /api/v1/facilities` | Fasilitas sekolah |
+| `GET /api/v1/activities` | Kegiatan sekolah |
+| `GET /api/v1/links` | Semua links |
 
 ## 🛠️ Development Tools
 
@@ -121,6 +122,7 @@ Buka `http://localhost:3001/test-connection` untuk memverifikasi koneksi antara 
 - **TypeScript**: Full type safety
 - **Tailwind CSS**: Utility-first styling
 - **Image Optimization**: Automatic optimization
+- **CORS Proxy**: Built-in proxy untuk menghindari CORS issues
 
 ## 📊 Testing Checklist
 
@@ -132,7 +134,7 @@ Buka `http://localhost:3001/test-connection` untuk memverifikasi koneksi antara 
 - [ ] File upload berfungsi
 
 ### ✅ Frontend Testing
-- [ ] Next.js server berjalan di `localhost:3001`
+- [ ] Next.js server berjalan di `localhost:3000`
 - [ ] Test connection page menunjukkan "All Connected"
 - [ ] Images loading dari backend
 - [ ] Navigation berfungsi
@@ -140,7 +142,7 @@ Buka `http://localhost:3001/test-connection` untuk memverifikasi koneksi antara 
 
 ### ✅ Integration Testing
 - [ ] API calls dari frontend ke backend berhasil
-- [ ] CORS headers configured
+- [ ] CORS proxy berfungsi
 - [ ] Image URLs berfungsi
 - [ ] Data fetching berhasil
 
@@ -154,19 +156,53 @@ Buka `http://localhost:3001/test-connection` untuk memverifikasi koneksi antara 
 5. Jalankan `php artisan migrate`
 6. Setup cron jobs untuk Laravel scheduler
 
-### Next.js Frontend (Vercel)
-1. Push code ke GitHub
-2. Import di Vercel
-3. Set environment variables di Vercel dashboard
-4. Deploy
+### Next.js Frontend (Vercel) - Domain: raphnesia.my.id
+
+#### 1. Setup Domain di Vercel
+```bash
+# Deploy ke Vercel
+vercel --prod
+
+# Atau push ke GitHub dan import di Vercel dashboard
+git push origin main
+```
+
+#### 2. Environment Variables di Vercel
+```bash
+NEXT_PUBLIC_API_BASE_URL=https://api.raphnesia.my.id/api
+NEXT_PUBLIC_USE_PROXY=true
+NEXT_PUBLIC_SITE_URL=https://raphnesia.my.id
+```
+
+#### 3. Domain Configuration
+- **Frontend**: `raphnesia.my.id` (Vercel)
+- **API**: `api.raphnesia.my.id` (Hosting)
+- **CORS Proxy**: `/api/proxy` (Next.js)
+
+#### 4. DNS Records
+```
+A Record: raphnesia.my.id → Vercel IP
+CNAME: www.raphnesia.my.id → raphnesia.my.id
+A Record: api.raphnesia.my.id → Hosting IP
+```
+
+#### 5. CORS Proxy Setup
+Semua API calls akan melalui `/api/proxy` untuk menghindari CORS issues:
+```typescript
+// ❌ Sebelum (bisa error CORS)
+fetch('https://api.raphnesia.my.id/api/v1/navigation/header')
+
+// ✅ Sesudah (aman dari CORS)
+fetch('/api/proxy/v1/navigation/header')
+```
 
 ## 🐛 Troubleshooting
 
 ### Common Issues
 
 **CORS Error:**
-- Pastikan Laravel CORS middleware aktif
-- Check `config/cors.php` di Laravel
+- Gunakan CORS proxy dengan `NEXT_PUBLIC_USE_PROXY=true`
+- Check `src/app/api/proxy/[...path]/route.ts`
 
 **Image Not Loading:**
 - Jalankan `php artisan storage:link`
@@ -177,8 +213,12 @@ Buka `http://localhost:3001/test-connection` untuk memverifikasi koneksi antara 
 - Pastikan MySQL service running
 
 **API 404 Error:**
-- Check `NEXT_PUBLIC_API_URL` di `.env.local`
+- Check `NEXT_PUBLIC_API_BASE_URL` di environment
 - Pastikan Laravel server running
+
+**Vercel Deploy Error:**
+- Check `vercel.json` configuration
+- Pastikan environment variables terisi di Vercel dashboard
 
 ## 📞 Support
 
@@ -194,6 +234,7 @@ Untuk pertanyaan atau masalah:
 - **Image Storage**: Gunakan `storage/app/public` untuk file uploads
 - **Security**: Jangan commit file `.env` atau `.env.local`
 - **Performance**: Aktifkan caching di production
+- **CORS**: Gunakan built-in proxy untuk production
 
 ---
 
