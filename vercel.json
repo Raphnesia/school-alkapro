@@ -16,10 +16,5 @@
     "NEXT_PUBLIC_API_BASE_URL": "https://api.raphnesia.my.id/api/v1",
     "NEXT_PUBLIC_USE_PROXY": "true",
     "NEXT_PUBLIC_SITE_URL": "https://raphnesia.my.id"
-  },
-  "functions": {
-    "src/app/api/proxy/[...path]/route.ts": {
-      "maxDuration": 30
-    }
   }
 } 
