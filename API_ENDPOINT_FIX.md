@@ -87,7 +87,7 @@ GET http://api.raphnesia.my.id/api/v1/teachers/by-subject
     "matematika": [
       {
         "name": "Dr. Ahmad Susanto, M.Pd.",
-        "image": "http://localhost:8000/storage/teachers/ahmad.jpg",
+        "image": "http://api.raphnesia.my.id/storage/teachers/ahmad.jpg",
         "position": "Guru Matematika Senior",
         "description": "Berpengalaman 15 tahun dalam pengajaran matematika",
         "subject": "Matematika"
@@ -96,7 +96,7 @@ GET http://api.raphnesia.my.id/api/v1/teachers/by-subject
     "bahasa_inggris": [
       {
         "name": "Sarah Johnson, M.A.",
-        "image": "http://localhost:8000/storage/teachers/sarah.jpg",
+        "image": "http://api.raphnesia.my.id/storage/teachers/sarah.jpg",
         "position": "Guru Bahasa Inggris",
         "description": "Lulusan dari University of Cambridge",
         "subject": "Bahasa Inggris"
@@ -124,7 +124,7 @@ GET http://api.raphnesia.my.id/api/v1/staff/list
 ## 🔍 **Testing Checklist**
 
 ### **Backend Testing**
-- [ ] Backend server berjalan di `http://localhost:8000`
+- [ ] Backend server berjalan di `http://api.raphnesia.my.id`
 - [ ] Endpoint `/api/v1/teachers/by-subject` berfungsi
 - [ ] Response format sesuai dokumentasi
 - [ ] CORS dikonfigurasi dengan benar
@@ -150,7 +150,7 @@ NEXT_PUBLIC_API_URL=http://api.raphnesia.my.id/api/v1
 
 ### **Backend (.env)**
 ```bash
-APP_URL=http://localhost:8000
+APP_URL=http://api.raphnesia.my.id
 CORS_ALLOWED_ORIGINS=http://localhost:3000
 ```
 

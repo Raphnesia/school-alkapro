@@ -186,7 +186,7 @@ chmod -R 775 storage
 chmod -R 775 bootstrap/cache
 
 # Periksa APP_URL di .env
-APP_URL=http://localhost:8000
+APP_URL=http://api.raphnesia.my.id
 ```
 
 ### 2. API Tidak Bisa Diakses

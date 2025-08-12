@@ -699,7 +699,7 @@ Saat ini API bersifat **public** dan tidak memerlukan autentikasi. Semua endpoin
 
 ## 📝 Notes
 
-1. **Image URLs**: Semua URL gambar menggunakan path relatif. Untuk akses penuh, tambahkan base URL: `http://localhost:8000/storage/`
+1. **Image URLs**: Semua URL gambar menggunakan path relatif. Untuk akses penuh, tambahkan base URL: `http://api.raphnesia.my.id/storage/`
 
 2. **Formatted Fields**: Model menyediakan accessor untuk format yang user-friendly:
    - `formatted_price`: Format harga dalam Rupiah

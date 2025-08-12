@@ -14,7 +14,7 @@ NEXT_PUBLIC_API_URL=http://api.raphnesia.my.id/api
 # NEXT_PUBLIC_API_URL=https://your-shared-hosting-domain.com/api
 
 # Image Configuration
-NEXT_PUBLIC_IMAGE_BASE_URL=http://localhost:8000/storage
+NEXT_PUBLIC_IMAGE_BASE_URL=http://api.raphnesia.my.id/storage
 
 # Site Information
 NEXT_PUBLIC_SITE_NAME="Sekolah Islam Terpadu"

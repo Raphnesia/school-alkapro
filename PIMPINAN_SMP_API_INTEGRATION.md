@@ -33,7 +33,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 ### 2. API Endpoints
-Pastikan backend API berjalan di `http://localhost:8000` dengan endpoint berikut:
+Pastikan backend API berjalan di `http://api.raphnesia.my.id` dengan endpoint berikut:
 
 - `GET /api/v1/pimpinan-smp/complete` - Semua data lengkap
 - `GET /api/v1/pimpinan-smp` - Semua pimpinan

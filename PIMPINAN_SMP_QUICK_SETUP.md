@@ -96,7 +96,7 @@ src/
 ## Admin Panel Setup
 
 ### 1. Akses Admin Panel
-- URL: http://localhost:8000/admin
+- URL: http://api.raphnesia.my.id/admin
 - Login dengan credentials yang sudah dibuat
 
 ### 2. Kelola Data

@@ -31,25 +31,25 @@ const WhyChooseUsSection = ({ initial }: { initial?: WhyInitial }) => {
     {
       number: '[01]',
       title: t('why_choose_us.features.character.title'),
-      image: '/image (10).png',
+      image: '/img-2835-1-688d24f0c925c438072c5b22.png',
       description: t('why_choose_us.features.character.description')
     },
     {
       number: '[02]',
       title: t('why_choose_us.features.facilities.title'),
-      image: '/image (11).png',
+      image: '/images(6).png',
       description: t('why_choose_us.features.facilities.description')
     },
     {
       number: '[03]',
       title: t('why_choose_us.features.teachers.title'),
-      image: '/guru/Adam-Muttaqien-M.Si_.jpg',
+      image: '/perpustakaan-sekolah.webp',
       description: t('why_choose_us.features.teachers.description')
     },
     {
       number: '[04]',
       title: t('why_choose_us.features.programs.title'),
-      image: '/Programkhusus/6-1.png',
+      image: '/kelasku.jpeg',
       description: t('why_choose_us.features.programs.description')
     }
   ]

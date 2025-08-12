@@ -87,7 +87,7 @@ GET /special-programs?display_location=program_khusus
         "Bimbingan ustadz berpengalaman",
         "Target hafalan yang terstruktur"
       ],
-      "image": "http://localhost:8000/storage/special-programs/image.jpg",
+      "image": "http://api.raphnesia.my.id/storage/special-programs/image.jpg",
       "order_index": 1,
       "is_active": true
     }

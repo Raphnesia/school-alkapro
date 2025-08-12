@@ -712,8 +712,8 @@ GET /special-programs
       "type": "tahfidz",
       "title": "Program Tahfidz",
       "subtitle": "Hafalan Al-Quran Terbaik",
-      "hero_desktop_image": "http://localhost:8000/storage/...",
-      "hero_mobile_image": "http://localhost:8000/storage/...",
+      "hero_desktop_image": "http://api.raphnesia.my.id/storage/...",
+      "hero_mobile_image": "http://api.raphnesia.my.id/storage/...",
       "intro_badge_text": "Program Unggulan",
       "intro_main_title": "Tahfidz Al-Quran",
       "intro_description": "Program hafalan Al-Quran...",
@@ -726,12 +726,12 @@ GET /special-programs
       ],
       "gallery_images": [
         {
-          "image": "http://localhost:8000/storage/...",
+          "image": "http://api.raphnesia.my.id/storage/...",
           "title": "Kegiatan Tahfidz",
           "description": "Suasana belajar..."
         }
       ],
-      "cta_background_image": "http://localhost:8000/storage/...",
+      "cta_background_image": "http://api.raphnesia.my.id/storage/...",
       "cta_title": "Bergabung Sekarang",
       "cta_description": "Daftar program tahfidz...",
       "cta_primary_button_text": "Daftar Sekarang",
@@ -742,7 +742,7 @@ GET /special-programs
         "id": 1,
         "title": "Tahfidz Dasar",
         "description": "Program untuk pemula...",
-        "image": "http://localhost:8000/storage/...",
+        "image": "http://api.raphnesia.my.id/storage/...",
         "is_featured": true
       }
     ]
@@ -821,7 +821,7 @@ http://api.raphnesia.my.id/api/v1/special-programs/type/tahfidz/complete
 
 ### ❌ Data Tidak Muncul
 **Solusi:**
-1. Cek admin panel: `http://localhost:8000/admin/special-program-type-settings`
+1. Cek admin panel: `http://api.raphnesia.my.id/admin/special-program-type-settings`
 2. Pastikan data Tahfidz/ICT sudah ada
 3. Pastikan `is_active = true`
 4. Pastikan ada gambar yang diupload
@@ -909,7 +909,7 @@ function App() {
 ## 📋 Checklist Implementasi
 
 ### ✅ Persiapan
-- [ ] Backend berjalan di `http://localhost:8000`
+- [ ] Backend berjalan di `http://api.raphnesia.my.id`
 - [ ] Data Tahfidz/ICT sudah ada di admin panel
 - [ ] Storage link sudah dibuat (`php artisan storage:link`)
 

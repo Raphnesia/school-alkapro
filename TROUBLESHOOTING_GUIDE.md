@@ -32,7 +32,7 @@ NEXT_PUBLIC_API_URL=http://api.raphnesia.my.id/api/v1
 ```bash
 # Di folder backend Laravel
 php artisan serve
-# Pastikan berjalan di http://localhost:8000
+# Pastikan berjalan di http://api.raphnesia.my.id
 ```
 
 ### **Step 2: Test API Endpoint**

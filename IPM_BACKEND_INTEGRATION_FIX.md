@@ -3,7 +3,7 @@
 ## 📋 Masalah yang Ditemukan
 
 ### **Backend Status:**
-- ✅ Backend berjalan di `http://localhost:8000`
+- ✅ Backend berjalan di `http://api.raphnesia.my.id`
 - ✅ API endpoint `/api/v1/ipm/complete` merespons dengan status 200
 - ❌ Data `settings` dan `pengurus` kosong/null
 - ✅ Data `content` tersedia (informasi tentang IPM)
@@ -110,7 +110,7 @@ if (hasBackendData && data) {
 
 ### **Untuk Admin Backend:**
 1. **Tambahkan Data Settings IPM:**
-   - Login ke admin panel: `http://localhost:8000/admin`
+   - Login ke admin panel: `http://api.raphnesia.my.id/admin`
    - Buka menu "Pengaturan IPM"
    - Isi data banner, title, subtitle
 
@@ -158,7 +158,7 @@ if (hasBackendData && data) {
 ### **Jika backend tidak merespons:**
 1. **Cek apakah backend berjalan:**
    ```bash
-   curl http://localhost:8000
+   curl http://api.raphnesia.my.id
    ```
 
 2. **Cek CORS settings** di backend Laravel

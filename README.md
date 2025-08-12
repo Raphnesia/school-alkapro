@@ -65,7 +65,7 @@ cp .env.local.example .env.local
 
 # Edit .env.local dengan URL backend Anda
 NEXT_PUBLIC_API_URL=http://api.raphnesia.my.id/api
-NEXT_PUBLIC_IMAGE_BASE_URL=http://localhost:8000/storage
+NEXT_PUBLIC_IMAGE_BASE_URL=http://api.raphnesia.my.id/storage
 
 # Jalankan development server
 npm run dev
@@ -125,7 +125,7 @@ Buka `http://localhost:3001/test-connection` untuk memverifikasi koneksi antara 
 ## 📊 Testing Checklist
 
 ### ✅ Backend Testing
-- [ ] Laravel server berjalan di `localhost:8000`
+- [ ] Laravel server berjalan di `api.raphnesia.my.id`
 - [ ] Database migrations berhasil
 - [ ] Filament admin accessible di `/admin`
 - [ ] API endpoints responsive

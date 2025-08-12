@@ -803,7 +803,7 @@ export function getImageUrl(imagePath: string | null): string | null {
   }
   
   // Construct full URL
-  const baseUrl = process.env.NEXT_PUBLIC_STORAGE_URL || 'http://localhost:8000/storage';
+  const baseUrl = process.env.NEXT_PUBLIC_STORAGE_URL || 'http://api.raphnesia.my.id/storage';
   return `${baseUrl}/${imagePath.replace(/^\//, '')}`;
 }
 
@@ -912,7 +912,7 @@ mkdir -p app/program-khusus/ict
 ```env
 # .env.local
 NEXT_PUBLIC_API_URL=http://api.raphnesia.my.id/api/v1
-NEXT_PUBLIC_STORAGE_URL=http://localhost:8000/storage
+NEXT_PUBLIC_STORAGE_URL=http://api.raphnesia.my.id/storage
 ```
 
 ---

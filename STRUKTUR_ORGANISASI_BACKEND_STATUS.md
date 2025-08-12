@@ -3,7 +3,7 @@
 ## 📋 **Status Saat Ini:**
 
 ### **Backend Status:**
-- ✅ **Backend berjalan** di `http://localhost:8000`
+- ✅ **Backend berjalan** di `http://api.raphnesia.my.id`
 - ✅ **API endpoint** `/api/v1/struktur-organisasi/complete` merespons dengan status 200
 - ❌ **Data `settings`** kosong/null
 - ❌ **Data `struktur_organisasi`** array kosong
@@ -75,7 +75,7 @@ if (hasBackendData && data) {
 
 ### **Untuk Admin Backend:**
 1. **Tambahkan Data Settings:**
-   - Login ke admin panel: `http://localhost:8000/admin`
+   - Login ke admin panel: `http://api.raphnesia.my.id/admin`
    - Buka menu "Pengaturan Struktur Organisasi"
    - Isi data banner, title, subtitle
 
@@ -132,7 +132,7 @@ if (hasBackendData && data) {
 ### **Jika backend tidak merespons:**
 1. **Cek apakah backend berjalan:**
    ```bash
-   curl http://localhost:8000
+   curl http://api.raphnesia.my.id
    ```
 
 2. **Cek CORS settings** di backend Laravel

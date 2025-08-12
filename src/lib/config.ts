@@ -12,7 +12,7 @@ export const config = {
   site: {
     name: 'SMP Muhammadiyah Al Kautsar PK Kartasura',
     description: 'Sekolah Menengah Pertama Muhammadiyah Al Kautsar PK Kartasura',
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000', //http://localhost:3000
   },
   
   // Image Configuration

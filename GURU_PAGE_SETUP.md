@@ -84,7 +84,7 @@ return [
     "matematika": [
       {
         "name": "Dr. Ahmad Susanto, M.Pd.",
-        "image": "http://localhost:8000/storage/teachers/ahmad.jpg",
+        "image": "http://api.raphnesia.my.id/storage/teachers/ahmad.jpg",
         "position": "Guru Matematika Senior",
         "description": "Berpengalaman 15 tahun dalam pengajaran matematika",
         "subject": "Matematika"
@@ -93,7 +93,7 @@ return [
     "bahasa_indonesia": [
       {
         "name": "Prof. Bambang Sutrisno, M.Pd.",
-        "image": "http://localhost:8000/storage/teachers/bambang.jpg",
+        "image": "http://api.raphnesia.my.id/storage/teachers/bambang.jpg",
         "position": "Guru Bahasa Indonesia Senior",
         "description": "Ahli dalam sastra Indonesia",
         "subject": "Bahasa Indonesia"
