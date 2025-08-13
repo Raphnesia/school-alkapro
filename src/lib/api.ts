@@ -2,7 +2,7 @@
 const RAW_API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL;
 const API_BASE = (() => {
   // Default dev backend
-  const defaultBase = 'http://api.raphnesia.my.id/api';
+  const defaultBase = 'https://api.raphnesia.my.id/api';
 
   // Helper: strip any trailing /api or /api/v{n}
   const stripApiSuffix = (base: string) => base.replace(/\/(api)(?:\/v\d+)?\/?$/i, '');
@@ -34,12 +34,19 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit & { lang?: st
   const url = `${API_BASE}${endpoint}`;
   
   try {
+    // Build headers safely: avoid setting Content-Type for GET to prevent CORS preflight
+    const shouldSetJsonContentType = (
+      (options?.method && options.method.toUpperCase() !== 'GET') ||
+      (options as any)?.body !== undefined
+    );
+    const headers: HeadersInit = {
+      ...(options?.headers || {}),
+      ...(shouldSetJsonContentType ? { 'Content-Type': 'application/json' } : {}),
+    };
+
     const response = await fetch(url, {
       ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
-      },
+      headers,
     });
 
     if (!response.ok) {
@@ -49,12 +56,13 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit & { lang?: st
     const result = await response.json();
     
     // Handle both direct response and wrapped response formats
-    if (result.success !== undefined) {
+    if ((result as ApiResponse<T>)?.success !== undefined) {
       // Wrapped response format: { success: boolean, data: T }
-      if (!result.success) {
+      const wrapped = result as ApiResponse<T>;
+      if (!wrapped.success) {
         throw new Error('API request failed');
       }
-      return result.data;
+      return wrapped.data;
     } else {
       // Direct response format
       return result as T;
@@ -100,6 +108,21 @@ export const homeApi = {
   // Tahan error agar tidak memutus Promise.all di halaman beranda
   byType: async (type: string) => {
     try {
+      // Jika berjalan di browser, gunakan proxy internal untuk menghindari CORS
+      if (typeof window !== 'undefined') {
+        try {
+          const res = await fetch(`/api/proxy/v1/home-sections/type/${type}`, { cache: 'no-store' })
+          if (res.ok) {
+            const json = await res.json()
+            const data = Array.isArray(json?.data) ? json.data : (Array.isArray(json) ? json : [])
+            return data as HomeSection[]
+          }
+        } catch (e) {
+          console.warn('[homeApi.byType] proxy fetch failed, falling back to direct:', e instanceof Error ? e.message : String(e))
+        }
+      }
+
+      // Server-side atau fallback direct fetch
       return await fetchApi<HomeSection[]>(`/v1/home-sections/type/${type}`, { cache: 'no-store' })
     } catch (error: any) {
       const message: string = error?.message || ''
@@ -125,10 +148,10 @@ export const homeApi = {
         timers[idx] = setTimeout(() => controller.abort('timeout'), timeoutMs)
         try {
           // Coba v1 dulu
-          let res = await fetch(makeUrl(type, true), { cache: 'no-store', headers: { 'Content-Type': 'application/json' }, signal: controller.signal as any })
+          let res = await fetch(makeUrl(type, true), { cache: 'no-store', headers: { 'Accept': 'application/json' }, signal: controller.signal as any })
           if (!res.ok) {
             // Fallback tanpa v1
-            res = await fetch(`${API_BASE}/home-sections/type/${type}`, { cache: 'no-store', headers: { 'Content-Type': 'application/json' }, signal: controller.signal as any })
+            res = await fetch(`${API_BASE}/home-sections/type/${type}`, { cache: 'no-store', headers: { 'Accept': 'application/json' }, signal: controller.signal as any })
           }
           if (!res.ok) throw new Error(String(res.status))
           const json = await res.json()

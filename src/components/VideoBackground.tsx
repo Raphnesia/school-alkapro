@@ -45,6 +45,8 @@ export function VideoBackground({
   
   console.log('🔍 VideoBackground - Original src:', videoSrc)
   console.log('🔍 VideoBackground - Final URL:', finalVideoSrc)
+  console.log('🔍 VideoBackground - Will show video?', !!finalVideoSrc)
+  console.log('🔍 VideoBackground - Will show fallback?', !finalVideoSrc)
 
   return (
     <div className={`relative min-h-screen overflow-hidden ${className}`}>
@@ -52,6 +54,7 @@ export function VideoBackground({
       <div className="absolute top-0 left-0 w-full h-full z-0">
         {finalVideoSrc ? (
           <video
+            key={finalVideoSrc || 'fallback'}
             autoPlay
             loop
             muted

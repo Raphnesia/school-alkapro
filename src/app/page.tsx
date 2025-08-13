@@ -30,6 +30,7 @@ export default function Home() {
   const [igPosts, setIgPosts] = useState<InstagramApiPost[]>([])
   const [whyInitial, setWhyInitial] = useState<any | null>(null)
   const [whyTranslated, setWhyTranslated] = useState<any | null>(null)
+  const [heroLoaded, setHeroLoaded] = useState(false)
 
   const rotatingWords = [
     (hero?.config_data?.flip_text as string) || t('header.home') + ", Sekolah Surgaku",
@@ -175,25 +176,46 @@ export default function Home() {
   useEffect(() => {
     let mounted = true
 
-    const safeSet = <T,>(setter: (v: T) => void) => (v: T) => { if (mounted) setter(v) }
+    const safeSet = <T,>(setter: (v: T) => void) => (v: T) => { 
+      console.log('🔧 SafeSet called with value:', v)
+      if (mounted) {
+        console.log('🔧 Component still mounted, setting value')
+        setter(v)
+      } else {
+        console.log('🔧 Component unmounted, ignoring set')
+      }
+    }
 
     // Hero - ambil dari section 'hero' sesuai dengan response API
+    console.log('🚀 Starting hero API call...')
     homeApi.byType('hero')
       .then((heroArr) => {
-        console.log('🔍 Hero section data:', heroArr)
+        console.log('🔍 Hero section data received:', heroArr)
+        console.log('🔍 Hero array length:', heroArr?.length)
+        console.log('🔍 Hero array type:', typeof heroArr)
         
         const heroSection = heroArr?.[0]
+        console.log('🔍 First hero section:', heroSection)
         
         if (heroSection) {
           console.log('✅ Using hero section for video:', heroSection)
           safeSet(setHero)(heroSection)
         } else {
-          console.log('❌ No hero section found')
+          console.log('❌ No hero section found in array')
           safeSet(setHero)(null)
         }
       })
       .catch((error) => {
         console.error('❌ Error fetching hero section:', error)
+        console.error('❌ Error details:', {
+          message: error?.message,
+          stack: error?.stack,
+          name: error?.name
+        })
+        safeSet(setHero)(null)
+      })
+      .finally(() => {
+        if (mounted) setHeroLoaded(true)
       })
 
     // Principal Welcome
@@ -261,7 +283,7 @@ export default function Home() {
       .catch(() => {})
 
     return () => { mounted = false }
-  }, [currentLocale])
+  }, [])
 
   // Auto change gradient for Prestasi section
   useEffect(() => {
@@ -282,36 +304,51 @@ export default function Home() {
   // Debug hero config
   console.log('🔍 Hero config:', heroConfig)
   console.log('🔍 Hero raw data:', hero)
+  console.log('🔍 Hero section type:', hero?.section_type)
+  console.log('🔍 Hero config data keys:', Object.keys(heroConfig || {}))
 
   const heroVideoSrc: string | undefined = (() => {
+    console.log('🔍 === START VIDEO SOURCE LOGIC ===')
+    
     // Cek apakah ada video file desktop dari backend (sudah full URL)
     if (heroConfig?.video_file_desktop) {
       console.log('✅ Found video file desktop from backend:', heroConfig.video_file_desktop)
       return heroConfig.video_file_desktop
+    } else {
+      console.log('❌ No video_file_desktop found in:', heroConfig)
     }
     
     // Cek apakah ada video file mobile dari backend (sudah full URL)
     if (heroConfig?.video_file_mobile) {
       console.log('✅ Found video file mobile from backend:', heroConfig.video_file_mobile)
       return heroConfig.video_file_mobile
+    } else {
+      console.log('❌ No video_file_mobile found in:', heroConfig)
     }
     
     // Cek apakah ada video URL dari backend
     if (heroConfig?.video_url_desktop) {
       console.log('✅ Found video URL desktop from backend:', heroConfig.video_url_desktop)
       return heroConfig.video_url_desktop
+    } else {
+      console.log('❌ No video_url_desktop found in:', heroConfig)
     }
     
-    // Fallback ke video default
-    console.log('⚠️ No video found in backend, using fallback')
+    // Fallback ke video default (tapi nanti ditentukan berdasarkan heroLoaded)
+    console.log('⚠️ No video found in backend, will determine fallback based on heroLoaded')
     return undefined
   })()
 
   // Debug video source
   console.log('🔍 Final hero video source:', heroVideoSrc)
+  console.log('🔍 Will use fallback video.mp4?', !heroVideoSrc && heroLoaded)
   console.log('🔍 Background mode:', heroConfig?.background_mode)
   console.log('🔍 Video URL desktop:', heroConfig?.video_url_desktop)
   console.log('🔍 Video file desktop:', heroConfig?.video_file_desktop)
+  console.log('🔍 === END VIDEO SOURCE LOGIC ===')
+
+  // Tentukan sumber video yang diberikan ke VideoBackground
+  const videoSrcToPass = heroVideoSrc ?? (heroLoaded ? '/video.mp4' : undefined)
 
   const facilityItems: any[] = Array.isArray(facilitiesConfig?.carousel_items)
     ? facilitiesConfig.carousel_items
@@ -348,7 +385,7 @@ export default function Home() {
       
       {/* Hero Section with Video Background - Digital School, Sekolahku Surgaku */}
       <VideoBackground 
-        videoSrc={heroVideoSrc || '/video.mp4'}
+        videoSrc={videoSrcToPass}
         backgroundImageUrl={heroConfig?.background_mode === 'image' ? (heroConfig?.background_image as string) : undefined}
         className="min-h-[80vh]"
       >
