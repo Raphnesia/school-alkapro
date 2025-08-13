@@ -40,37 +40,40 @@ const BeritaDetailSlug = ({ params }: BeritaDetailProps) => {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api/v1'
+        console.log('🔍 Fetching article detail for slug:', slug);
         
-        // Try direct slug endpoint first
-        let response = await fetch(`${apiUrl}/posts/${slug}`)
+        // Gunakan proxy internal untuk menghindari Mixed Content error
+        let response = await fetch(`/api/proxy/posts/${slug}`)
         
-        // If direct endpoint fails, try fetching all news
+        // Jika direct endpoint gagal, coba fetch semua posts
         if (!response.ok) {
-          const allNewsResponse = await fetch(`${apiUrl}/posts`)
+          console.log('⚠️ Direct endpoint gagal, coba fetch semua posts...');
+          const allNewsResponse = await fetch('/api/proxy/posts')
           if (!allNewsResponse.ok) {
             throw new Error('Gagal mengambil data berita')
           }
           
           const data = await allNewsResponse.json()
           const newsList = data.data || []
+          console.log('📰 All posts fetched:', newsList.length);
           
           // Find article by exact slug match
           const newsData = newsList.find((item: any) => item.slug === slug)
           
           if (!newsData) {
+            console.error('❌ Article not found for slug:', slug);
             throw new Error('Artikel tidak ditemukan')
           }
 
-                  // Tambahkan fungsi helper untuk strip HTML tags
-        const stripHtmlTags = (html: string): string => {
-          if (!html) return '';
-          return html.replace(/<[^>]*>/g, '').trim();
-        };
-
+          console.log('✅ Article found:', newsData.title);
+          
+          // Tambahkan fungsi helper untuk strip HTML tags
+          const stripHtmlTags = (html: string): string => {
+            if (!html) return '';
+            return html.replace(/<[^>]*>/g, '').trim();
+          };
           
           // Update kedua setArticle call untuk menggunakan author_image
-          // Perbaikan untuk setArticle call kedua (baris 85-97)
           setArticle({
             id: newsData.id,
             title: newsData.title,
@@ -80,7 +83,7 @@ const BeritaDetailSlug = ({ params }: BeritaDetailProps) => {
             category: newsData.category || 'Berita',
             published_at: newsData.published_at || new Date().toISOString(),
             author: newsData.author || 'Admin',
-            authorImage: newsData.author_image || '/pace.jpeg', // Tambahkan ini
+            authorImage: newsData.author_image || '/pace.jpeg',
             tags: newsData.tags || [],
             slug: newsData.slug,
             navigation_sections: newsData.navigation_sections || []
@@ -89,11 +92,12 @@ const BeritaDetailSlug = ({ params }: BeritaDetailProps) => {
           // Direct endpoint worked
           const data = await response.json()
           const newsData = data.data || data
+          console.log('✅ Direct endpoint worked:', newsData.title);
           
           const stripHtmlTags = (html: string): string => {
-          if (!html) return '';
-          return html.replace(/<[^>]*>/g, '').trim();
-        };
+            if (!html) return '';
+            return html.replace(/<[^>]*>/g, '').trim();
+          };
           
           setArticle({
             id: newsData.id,

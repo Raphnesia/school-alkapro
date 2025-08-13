@@ -38,129 +38,134 @@ const BeritaKegiatanSection = () => {
 
   // Bagian useEffect yang diperbaiki - mengambil data dari kedua endpoint
   useEffect(() => {
-  const fetchArticles = async () => {
-  try {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api/v1'
-  
-  // Fetch dari kedua endpoint
-  const [newsResponse, articlesResponse] = await Promise.all([
-    fetch(`${apiUrl}/news`),
-    fetch(`${apiUrl}/articles`)
-  ])
-  
-  const newsData = await newsResponse.json()
-  const articlesData = await articlesResponse.json()
-  
-  const stripHtmlTags = (html: string): string => {
-    if (!html) return ''
-    return html.replace(/<[^>]*>/g, '').trim()
-  }
-  
-  const transformData = (items: any[], type: 'news' | 'article') => {
-    return items.map((item: any) => {
-      const contentText = stripHtmlTags(item.content || '')
-      const excerpt = item.subtitle ? stripHtmlTags(item.subtitle) : 
-                             (contentText.length > 150 ? 
-                              contentText.substring(0, 150) + '...' : 
-                              contentText) || 
-                             'Belum ada deskripsi'
-      
-      return {
-        id: item.id,
-        title: item.title,
-        subtitle: stripHtmlTags(item.subtitle || ''),
-        content: item.content,
-        excerpt: excerpt,
-        image: item.image || '/placeholder.jpg',
-        category: item.category || (type === 'news' ? 'Berita' : 'Artikel'),
-        date: new Date(item.published_at).toLocaleDateString('id-ID', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric'
-        }),
-        author: item.author || 'Admin',
-        authorImage: '/pace.jpeg',
-        tags: item.tags || [],
-        slug: item.slug,
-        published_at: item.published_at || new Date().toISOString(),
-        type: type
+    const fetchArticles = async () => {
+      try {
+        console.log('🔍 BeritaKegiatanSection: Fetching data...');
+        
+        // Gunakan proxy internal untuk menghindari Mixed Content error
+        const [newsResponse, articlesResponse] = await Promise.all([
+          fetch('/api/proxy/news'),
+          fetch('/api/proxy/articles')
+        ])
+        
+        const newsData = await newsResponse.json()
+        const articlesData = await articlesResponse.json()
+        
+        console.log('📰 News response:', newsData);
+        console.log('📚 Articles response:', articlesData);
+        
+        const stripHtmlTags = (html: string): string => {
+          if (!html) return ''
+          return html.replace(/<[^>]*>/g, '').trim()
+        }
+        
+        const transformData = (items: any[], type: 'news' | 'article') => {
+          return items.map((item: any) => {
+            const contentText = stripHtmlTags(item.content || '')
+            const excerpt = item.subtitle ? stripHtmlTags(item.subtitle) : 
+                                   (contentText.length > 150 ? 
+                                    contentText.substring(0, 150) + '...' : 
+                                    contentText) || 
+                                   'Belum ada deskripsi'
+            
+            return {
+              id: item.id,
+              title: item.title,
+              subtitle: stripHtmlTags(item.subtitle || ''),
+              content: item.content,
+              excerpt: excerpt,
+              image: item.image || '/placeholder.jpg',
+              category: item.category || (type === 'news' ? 'Berita' : 'Artikel'),
+              date: new Date(item.published_at).toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+              }),
+              author: item.author || 'Admin',
+              authorImage: '/pace.jpeg',
+              tags: item.tags || [],
+              slug: item.slug,
+              published_at: item.published_at || new Date().toISOString(),
+              type: type
+            }
+          })
+        }
+        
+        let allData: Article[] = []
+        
+        // Transform news data
+        if (newsData.data && Array.isArray(newsData.data)) {
+          const transformedNews = transformData(newsData.data, 'news')
+          allData = [...allData, ...transformedNews]
+          console.log('✅ News transformed:', transformedNews.length);
+        }
+        
+        // Transform articles data
+        if (articlesData.data && Array.isArray(articlesData.data)) {
+          const transformedArticles = transformData(articlesData.data, 'article')
+          allData = [...allData, ...transformedArticles]
+          console.log('✅ Articles transformed:', transformedArticles.length);
+        }
+        
+        // Sort by date and limit to 6 items for home page
+        const sortedData = allData.sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime())
+        const limitedData = sortedData.slice(0, 6)
+        setArticles(limitedData)
+        
+        // Generate kategori dinamis dari data API
+        const categoryMap: { [key: string]: string } = {
+          'academic': 'Akademik',
+          'achievement': 'Prestasi',
+          'campus': 'Kampus',
+          'international': 'Internasional',
+          'perspective': 'Perspektif',
+          'news': 'Berita',
+          'announcement': 'Pengumuman',
+          'other': 'Lainnya'
+        }
+        
+        // Separate categories for news and articles
+        const newsItems = limitedData.filter(item => item.type === 'news')
+        const articleItems = limitedData.filter(item => item.type === 'article')
+        
+        const newsCategoryCounts = newsItems.reduce((acc: { [key: string]: number }, article: any) => {
+          const category = categoryMap[article.category] || article.category
+          acc[category] = (acc[category] || 0) + 1
+          return acc
+        }, {})
+        
+        const articleCategoryCounts = articleItems.reduce((acc: { [key: string]: number }, article: any) => {
+          const category = categoryMap[article.category] || article.category
+          acc[category] = (acc[category] || 0) + 1
+          return acc
+        }, {})
+        
+        const dynamicNewsCategories: Category[] = [
+          { name: 'Semua', count: newsItems.length },
+          ...Object.entries(newsCategoryCounts).map(([name, count]) => ({ name, count }))
+        ]
+        
+        const dynamicArticleCategories: Category[] = [
+          { name: 'Semua', count: articleItems.length },
+          ...Object.entries(articleCategoryCounts).map(([name, count]) => ({ name, count }))
+        ]
+        
+        setNewsCategories(dynamicNewsCategories)
+        setArticleCategories(dynamicArticleCategories)
+        
+      } catch (error) {
+        console.error('Error fetching articles:', error)
+        // Jangan gunakan fallback data dummy, biarkan array kosong untuk menunjukkan error
+        setArticles([])
+        setNewsCategories([{ name: 'Semua', count: 0 }])
+        setArticleCategories([{ name: 'Semua', count: 0 }])
+      } finally {
+        setLoading(false)
       }
-    })
-  }
-  
-  let allData: Article[] = []
-  
-  // Transform news data
-  if (newsData.data && Array.isArray(newsData.data)) {
-    const transformedNews = transformData(newsData.data, 'news')
-    allData = [...allData, ...transformedNews]
-  }
-  
-  // Transform articles data
-  if (articlesData.data && Array.isArray(articlesData.data)) {
-    const transformedArticles = transformData(articlesData.data, 'article')
-    allData = [...allData, ...transformedArticles]
-  }
-  
-  // Sort by date and limit to 6 items for home page
-  const sortedData = allData.sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime())
-  const limitedData = sortedData.slice(0, 6)
-  setArticles(limitedData)
-  
-  // Generate kategori dinamis dari data API
-  const categoryMap: { [key: string]: string } = {
-    'academic': 'Akademik',
-    'achievement': 'Prestasi',
-    'campus': 'Kampus',
-    'international': 'Internasional',
-    'perspective': 'Perspektif',
-    'news': 'Berita',
-    'announcement': 'Pengumuman',
-    'other': 'Lainnya'
-  }
-  
-  // Separate categories for news and articles
-  const newsItems = limitedData.filter(item => item.type === 'news')
-  const articleItems = limitedData.filter(item => item.type === 'article')
-  
-  const newsCategoryCounts = newsItems.reduce((acc: { [key: string]: number }, article: any) => {
-    const category = categoryMap[article.category] || article.category
-    acc[category] = (acc[category] || 0) + 1
-    return acc
-  }, {})
-  
-  const articleCategoryCounts = articleItems.reduce((acc: { [key: string]: number }, article: any) => {
-    const category = categoryMap[article.category] || article.category
-    acc[category] = (acc[category] || 0) + 1
-    return acc
-  }, {})
-  
-  const dynamicNewsCategories: Category[] = [
-    { name: 'Semua', count: newsItems.length },
-    ...Object.entries(newsCategoryCounts).map(([name, count]) => ({ name, count }))
-  ]
-  
-  const dynamicArticleCategories: Category[] = [
-    { name: 'Semua', count: articleItems.length },
-    ...Object.entries(articleCategoryCounts).map(([name, count]) => ({ name, count }))
-  ]
-  
-  setNewsCategories(dynamicNewsCategories)
-  setArticleCategories(dynamicArticleCategories)
-  
-  } catch (error) {
-    console.error('Error fetching articles:', error)
-    // Jangan gunakan fallback data dummy, biarkan array kosong untuk menunjukkan error
-    setArticles([])
-    setNewsCategories([{ name: 'Semua', count: 0 }])
-    setArticleCategories([{ name: 'Semua', count: 0 }])
-  } finally {
-    setLoading(false)
-  }
-}
+    }
 
-fetchArticles()
-}, [])
+    fetchArticles()
+  }, [])
 
   const filteredArticles = () => {
     let filtered = articles
