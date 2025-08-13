@@ -24,6 +24,8 @@ function SocialMediaFeedSection() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [settings, setSettings] = useState<SocialSettings | null>(null)
+  const [sectionTitle, setSectionTitle] = useState<string>('')
+  const [sectionContent, setSectionContent] = useState<string>('')
 
   // TikTok API Configuration  (belum via backend)
   const TIKTOK_ACCESS_TOKEN = process.env.NEXT_PUBLIC_TIKTOK_ACCESS_TOKEN
@@ -116,6 +118,17 @@ function SocialMediaFeedSection() {
     // Muat settings untuk CTA follow URL (jika backend support)
     homeApi.social.settings()
       .then((s) => setSettings(s || null))
+      .catch(() => {})
+
+    // Muat judul dan konten section dari backend (home: social_media_feed)
+    homeApi.byType('social_media_feed')
+      .then((arr) => {
+        const sec = arr?.[0]
+        if (sec) {
+          setSectionTitle(sec.title || '')
+          setSectionContent(sec.content || '')
+        }
+      })
       .catch(() => {})
   }, [])
 
@@ -270,17 +283,28 @@ function SocialMediaFeedSection() {
           </div>
           
           <h2 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight">
-            Tetap Terhubung dengan
-            <br />
-            <span className="bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 bg-clip-text text-transparent animate-pulse">
-              Aktivitas Sekolah
-            </span>
+            {sectionTitle || (
+              <>
+                Tetap Terhubung dengan
+                <br />
+                <span className="bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 bg-clip-text text-transparent animate-pulse">
+                  Aktivitas Sekolah
+                </span>
+              </>
+            )}
           </h2>
           
-          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed font-light">
-            Dapatkan update terbaru tentang kegiatan, prestasi, dan momen-momen berharga di 
-            <span className="text-white font-medium"> SMA Islam Terpadu</span> melalui platform media sosial kami.
-          </p>
+          {sectionContent ? (
+            <div
+              className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed font-light"
+              dangerouslySetInnerHTML={{ __html: sectionContent }}
+            />
+          ) : (
+            <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed font-light">
+              Dapatkan update terbaru tentang kegiatan, prestasi, dan momen-momen berharga di 
+              <span className="text-white font-medium"> SMA Islam Terpadu</span> melalui platform media sosial kami.
+            </p>
+          )}
         </motion.div>
 
         {/* Modern Tab Navigation */}
