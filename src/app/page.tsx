@@ -177,10 +177,33 @@ export default function Home() {
 
     const safeSet = <T,>(setter: (v: T) => void) => (v: T) => { if (mounted) setter(v) }
 
-    // Hero
-    homeApi.byType('hero')
-      .then((arr) => safeSet(setHero)(arr?.[0] || null))
-      .catch(() => {})
+    // Hero - coba ambil dari section 'home' dulu, lalu fallback ke 'hero'
+    Promise.all([
+      homeApi.byType('home'),
+      homeApi.byType('hero')
+    ])
+      .then(([homeArr, heroArr]) => {
+        console.log('🔍 Home section data:', homeArr)
+        console.log('🔍 Hero section data:', heroArr)
+        
+        // Prioritaskan section 'home' untuk video hero
+        const homeSection = homeArr?.[0]
+        const heroSection = heroArr?.[0]
+        
+        if (homeSection) {
+          console.log('✅ Using home section for hero:', homeSection)
+          safeSet(setHero)(homeSection)
+        } else if (heroSection) {
+          console.log('✅ Using hero section as fallback:', heroSection)
+          safeSet(setHero)(heroSection)
+        } else {
+          console.log('❌ No hero/home section found')
+          safeSet(setHero)(null)
+        }
+      })
+      .catch((error) => {
+        console.error('❌ Error fetching hero/home sections:', error)
+      })
 
     // Principal Welcome
     homeApi.byType('principal_welcome')
@@ -265,9 +288,33 @@ export default function Home() {
   const facilitiesConfig = (facilities as any)?.config_data || {}
   const achievementsConfig = (achievements as any)?.config_data || {}
 
-  const heroVideoSrc: string | undefined = heroConfig?.background_mode === 'video'
-    ? (heroConfig.video_url_desktop || heroConfig.video_file_desktop)
-    : undefined
+  // Debug hero config
+  console.log('🔍 Hero config:', heroConfig)
+  console.log('🔍 Hero raw data:', hero)
+
+  const heroVideoSrc: string | undefined = (() => {
+    // Cek apakah ada video file dari backend
+    if (heroConfig?.video_file_desktop) {
+      console.log('✅ Found video file from backend:', heroConfig.video_file_desktop)
+      return heroConfig.video_file_desktop
+    }
+    
+    // Cek apakah ada video URL dari backend
+    if (heroConfig?.video_url_desktop) {
+      console.log('✅ Found video URL from backend:', heroConfig.video_url_desktop)
+      return heroConfig.video_url_desktop
+    }
+    
+    // Fallback ke video default
+    console.log('⚠️ No video found in backend, using fallback')
+    return undefined
+  })()
+
+  // Debug video source
+  console.log('🔍 Final hero video source:', heroVideoSrc)
+  console.log('🔍 Background mode:', heroConfig?.background_mode)
+  console.log('🔍 Video URL desktop:', heroConfig?.video_url_desktop)
+  console.log('🔍 Video file desktop:', heroConfig?.video_file_desktop)
 
   const facilityItems: any[] = Array.isArray(facilitiesConfig?.carousel_items)
     ? facilitiesConfig.carousel_items

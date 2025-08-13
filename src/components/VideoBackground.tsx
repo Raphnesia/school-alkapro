@@ -6,7 +6,7 @@ interface VideoBackgroundProps {
   videoSrc?: string
   backgroundImageUrl?: string
   className?: string
-  children?: React.ReactNode
+  children: React.ReactNode
 }
 
 export function VideoBackground({
@@ -15,11 +15,42 @@ export function VideoBackground({
   className = '',
   children,
 }: VideoBackgroundProps) {
+  // Helper function untuk membangun URL video yang benar
+  const buildVideoUrl = (src?: string) => {
+    if (!src) return undefined
+    
+    // Jika sudah full URL, gunakan langsung
+    if (src.startsWith('http://') || src.startsWith('https://')) {
+      return src
+    }
+    
+    // Jika relative path dengan /storage/, gunakan langsung
+    if (src.startsWith('/storage/')) {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api'
+      const backendOrigin = apiBase.replace(/\/api.*$/, '')
+      return `${backendOrigin}${src}`
+    }
+    
+    // Jika hanya filename, tambahkan path storage lengkap untuk home/hero
+    if (!src.includes('/')) {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api'
+      const backendOrigin = apiBase.replace(/\/api.*$/, '')
+      return `${backendOrigin}/storage/home/hero/${src}`
+    }
+    
+    return src
+  }
+
+  const finalVideoSrc = buildVideoUrl(videoSrc)
+  
+  console.log('🔍 VideoBackground - Original src:', videoSrc)
+  console.log('🔍 VideoBackground - Final URL:', finalVideoSrc)
+
   return (
     <div className={`relative min-h-screen overflow-hidden ${className}`}>
       {/* Video Background */}
       <div className="absolute top-0 left-0 w-full h-full z-0">
-        {videoSrc ? (
+        {finalVideoSrc ? (
           <video
             autoPlay
             loop
@@ -28,7 +59,8 @@ export function VideoBackground({
             className="w-full h-full object-cover"
             style={{ pointerEvents: 'none' }}
           >
-            <source src={videoSrc} type="video/mp4" />
+            <source src={finalVideoSrc} type="video/mp4" />
+            Your browser does not support the video tag.
           </video>
         ) : backgroundImageUrl ? (
           <img src={backgroundImageUrl} alt="Background" className="w-full h-full object-cover" />
