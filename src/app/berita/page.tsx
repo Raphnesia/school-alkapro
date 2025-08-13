@@ -51,7 +51,7 @@ const BeritaList = () => {
         console.log('🚀 useEffect berita berjalan!');
         
         // Hanya gunakan proxy internal (hindari CORS dan Mixed Content)
-        let response = await fetch('/api/proxy/v1/news', { cache: 'no-store' })
+        let response = await fetch('/api/proxy/news', { cache: 'no-store' })
         let data: any = null
         let list: any[] = []
         
@@ -69,7 +69,7 @@ const BeritaList = () => {
           // 1) Articles
           let articlesList: any[] = []
           try {
-            const resArticles = await fetch('/api/proxy/v1/articles', { cache: 'no-store' })
+            const resArticles = await fetch('/api/proxy/articles', { cache: 'no-store' })
             if (resArticles.ok) {
               const json = await resArticles.json()
               articlesList = Array.isArray(json?.data) ? json.data : (Array.isArray(json) ? json : [])
@@ -85,7 +85,7 @@ const BeritaList = () => {
           if (articlesList.length === 0) {
             console.log('⚠️ Articles kosong, coba posts...');
             try {
-              const resPosts = await fetch('/api/proxy/v1/posts', { cache: 'no-store' })
+              const resPosts = await fetch('/api/proxy/posts', { cache: 'no-store' })
               if (resPosts.ok) {
                 const json = await resPosts.json()
                 postsList = Array.isArray(json?.data) ? json.data : (Array.isArray(json) ? json : [])
