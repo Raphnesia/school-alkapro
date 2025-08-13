@@ -27,6 +27,16 @@ const BeritaList = () => {
   const [loading, setLoading] = useState(true)
   const itemsPerPage = 6
 
+  // Helper: bangun URL gambar backend
+  const buildImageUrl = (path: string): string => {
+    if (!path) return '/image112.png'
+    if (/^https?:\/\//i.test(path)) return path
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://api.raphnesia.my.id/api'
+    const backendOrigin = apiBase.replace(/\/?api(?:\/v\d+)?$/i, '')
+    const normalized = path.startsWith('/storage') ? path : `/storage/${path.replace(/^\/+/, '')}`
+    return `${backendOrigin}${normalized}`
+  }
+
   // Fetch data dari API
   // Tambahkan fungsi stripHtmlTags sebelum komponen BeritaList
   const stripHtmlTags = (html: string): string => { 
@@ -38,14 +48,19 @@ const BeritaList = () => {
   useEffect(() => {
     const fetchBerita = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api/v1'
-        const response = await fetch(`${apiUrl}/news`)
+        // Coba via proxy internal (hindari CORS dan masalah base URL)
+        let response = await fetch('/api/proxy/v1/news', { cache: 'no-store' })
+        if (!response.ok) {
+          // Fallback direct URL jika proxy gagal
+          const apiUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://api.raphnesia.my.id/api')
+          const base = /\/api$/i.test(apiUrl) ? `${apiUrl}/v1` : apiUrl
+          response = await fetch(`${base}/news`, { cache: 'no-store' })
+        }
         const data = await response.json()
+        const list = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : [])
         
-        if (data.data && Array.isArray(data.data)) {
-          // Transform data dari API ke format yang dibutuhkan
-          const transformedData = data.data.map((item: any) => {
-            // Gunakan stripHtmlTags untuk membersihkan HTML
+        if (Array.isArray(list)) {
+          const transformedData = list.map((item: any) => {
             const contentText = stripHtmlTags(item.content || '');
             const excerpt = item.subtitle ? stripHtmlTags(item.subtitle) : 
                            (contentText.length > 150 ? 
@@ -57,9 +72,9 @@ const BeritaList = () => {
               id: item.id,
               title: item.title,
               excerpt: excerpt,
-              image: item.image,
+              image: buildImageUrl(item.image),
               category: item.category,
-              date: new Date(item.published_at).toLocaleDateString('id-ID', {
+              date: new Date(item.published_at || item.created_at).toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric'
