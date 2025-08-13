@@ -50,14 +50,40 @@ const BeritaList = () => {
       try {
         // Coba via proxy internal (hindari CORS dan masalah base URL)
         let response = await fetch('/api/proxy/v1/news', { cache: 'no-store' })
-        if (!response.ok) {
-          // Fallback direct URL jika proxy gagal
-          const apiUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://api.raphnesia.my.id/api')
-          const base = /\/api$/i.test(apiUrl) ? `${apiUrl}/v1` : apiUrl
-          response = await fetch(`${base}/news`, { cache: 'no-store' })
+        let data: any = null
+        let list: any[] = []
+        
+        if (response.ok) {
+          data = await response.json()
+          list = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : [])
         }
-        const data = await response.json()
-        const list = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : [])
+        
+        // Jika endpoint news kosong, fallback ke articles lalu posts
+        if (!Array.isArray(list) || list.length === 0) {
+          // 1) Articles
+          let articlesList: any[] = []
+          try {
+            const resArticles = await fetch('/api/proxy/v1/articles', { cache: 'no-store' })
+            if (resArticles.ok) {
+              const json = await resArticles.json()
+              articlesList = Array.isArray(json?.data) ? json.data : (Array.isArray(json) ? json : [])
+            }
+          } catch {}
+          
+          // 2) Posts jika articles juga kosong
+          let postsList: any[] = []
+          if (articlesList.length === 0) {
+            try {
+              const resPosts = await fetch('/api/proxy/v1/posts', { cache: 'no-store' })
+              if (resPosts.ok) {
+                const json = await resPosts.json()
+                postsList = Array.isArray(json?.data) ? json.data : (Array.isArray(json) ? json : [])
+              }
+            } catch {}
+          }
+          
+          list = articlesList.length ? articlesList : postsList
+        }
         
         if (Array.isArray(list)) {
           const transformedData = list.map((item: any) => {
