@@ -177,32 +177,23 @@ export default function Home() {
 
     const safeSet = <T,>(setter: (v: T) => void) => (v: T) => { if (mounted) setter(v) }
 
-    // Hero - coba ambil dari section 'home' dulu, lalu fallback ke 'hero'
-    Promise.all([
-      homeApi.byType('home'),
-      homeApi.byType('hero')
-    ])
-      .then(([homeArr, heroArr]) => {
-        console.log('🔍 Home section data:', homeArr)
+    // Hero - ambil dari section 'hero' sesuai dengan response API
+    homeApi.byType('hero')
+      .then((heroArr) => {
         console.log('🔍 Hero section data:', heroArr)
         
-        // Prioritaskan section 'home' untuk video hero
-        const homeSection = homeArr?.[0]
         const heroSection = heroArr?.[0]
         
-        if (homeSection) {
-          console.log('✅ Using home section for hero:', homeSection)
-          safeSet(setHero)(homeSection)
-        } else if (heroSection) {
-          console.log('✅ Using hero section as fallback:', heroSection)
+        if (heroSection) {
+          console.log('✅ Using hero section for video:', heroSection)
           safeSet(setHero)(heroSection)
         } else {
-          console.log('❌ No hero/home section found')
+          console.log('❌ No hero section found')
           safeSet(setHero)(null)
         }
       })
       .catch((error) => {
-        console.error('❌ Error fetching hero/home sections:', error)
+        console.error('❌ Error fetching hero section:', error)
       })
 
     // Principal Welcome
@@ -293,15 +284,21 @@ export default function Home() {
   console.log('🔍 Hero raw data:', hero)
 
   const heroVideoSrc: string | undefined = (() => {
-    // Cek apakah ada video file dari backend
+    // Cek apakah ada video file desktop dari backend (sudah full URL)
     if (heroConfig?.video_file_desktop) {
-      console.log('✅ Found video file from backend:', heroConfig.video_file_desktop)
+      console.log('✅ Found video file desktop from backend:', heroConfig.video_file_desktop)
       return heroConfig.video_file_desktop
+    }
+    
+    // Cek apakah ada video file mobile dari backend (sudah full URL)
+    if (heroConfig?.video_file_mobile) {
+      console.log('✅ Found video file mobile from backend:', heroConfig.video_file_mobile)
+      return heroConfig.video_file_mobile
     }
     
     // Cek apakah ada video URL dari backend
     if (heroConfig?.video_url_desktop) {
-      console.log('✅ Found video URL from backend:', heroConfig.video_url_desktop)
+      console.log('✅ Found video URL desktop from backend:', heroConfig.video_url_desktop)
       return heroConfig.video_url_desktop
     }
     
