@@ -185,34 +185,6 @@ const ProgramKhususSection = () => {
           </div>
         </div>
 
-        {/* Title */}
-        <div className="text-center mb-8">
-          <AnimatePresence mode="wait">
-            <motion.h2
-              key={activeProgram + '-title'}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-              className="text-2xl md:text-3xl lg:text-4xl font-ubuntu font-bold text-white mb-3"
-            >
-              {currentProgram.title}
-            </motion.h2>
-          </AnimatePresence>
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={activeProgram + '-subtitle'}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-base text-white/90 max-w-2xl mx-auto"
-            >
-              {currentProgram.subtitle}
-            </motion.p>
-          </AnimatePresence>
-        </div>
-        
         {/* Materials Grid */}
         <AnimatePresence mode="wait">
           <motion.div
