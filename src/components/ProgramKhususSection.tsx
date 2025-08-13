@@ -96,9 +96,8 @@ const ProgramKhususSection = () => {
     return `${backendOrigin}/storage/${normalized}`
   }
 
-  // Ambil program per id dari section_programs
-  const tahfidzProgram = sectionPrograms.find(p => p.id === 'tahfidz')
-  const ictProgram = sectionPrograms.find(p => p.id === 'ict')
+  // Filter program berdasarkan tipe yang aktif
+  const filteredPrograms = sectionPrograms.filter(p => p.id === activeProgram)
 
   // Helper function to get icon based on program title or use default
   const getIcon = (titleSource?: string, type?: ProgramType) => {
@@ -111,18 +110,8 @@ const ProgramKhususSection = () => {
     if (title.includes('web') || title.includes('programming')) return '💻'
     if (title.includes('design') || title.includes('graphic')) return '🎨'
     if (title.includes('robot') || title.includes('arduino')) return '🤖'
+    if (title.includes('figma')) return '🎨'
     return type === 'tahfidz' ? '📚' : '💻'
-  }
-
-  // Helper function to render program content from backend data
-  const renderSectionProgramContent = (program?: ProgramCard, type?: ProgramType) => {
-    if (!program) return []
-    return [{
-      icon: getIcon(program.title, type),
-      text: program.title,
-      description: program.subtitle || '',
-      image: buildImageUrl(program.image, '/Programkhusus/photo-1553063085-dbbf64d936ea.jpeg')
-    }]
   }
 
   const programsData = {
@@ -130,15 +119,13 @@ const ProgramKhususSection = () => {
       title: sectionTitle || t('programs.tahfidz.title'),
       subtitle: sectionSubtitle || t('programs.tahfidz.subtitle'),
       background: 'from-green-600 via-emerald-600 to-teal-700',
-      buttonColor: 'bg-green-600 hover:bg-green-700',
-      materials: renderSectionProgramContent(tahfidzProgram, 'tahfidz')
+      buttonColor: 'bg-green-600 hover:bg-green-700'
     },
     ict: {
       title: sectionTitle || t('programs.ict.title'),
       subtitle: sectionSubtitle || t('programs.ict.subtitle'),
       background: 'from-blue-600 via-indigo-600 to-purple-700',
-      buttonColor: 'bg-blue-600 hover:bg-blue-700',
-      materials: renderSectionProgramContent(ictProgram, 'ict')
+      buttonColor: 'bg-blue-600 hover:bg-blue-700'
     }
   }
 
@@ -236,9 +223,9 @@ const ProgramKhususSection = () => {
             transition={{ duration: 0.6 }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6"
           >
-            {currentProgram.materials.map((material, index) => (
+            {filteredPrograms.map((program, index) => (
               <motion.div
-                key={material.text}
+                key={`${program.id}-${program.title}-${index}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
@@ -249,10 +236,10 @@ const ProgramKhususSection = () => {
                   <div className="absolute h-[60px] bottom-[-1px] w-full z-[2]" style={{background: 'linear-gradient(rgba(255, 255, 255, 0) 50%, rgb(255, 255, 255) 100%)'}}></div>
                   <div 
                     className="h-[100px] min-h-[100px] w-full relative bg-cover bg-center" 
-                    style={{backgroundImage: `url(${material.image})`}}
+                    style={{backgroundImage: `url(${buildImageUrl(program.image, '/Programkhusus/photo-1553063085-dbbf64d936ea.jpeg')})`}}
                   >
                     <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                      <span className="text-2xl z-[1]">{material.icon}</span>
+                      <span className="text-2xl z-[1]">{getIcon(program.title, program.id)}</span>
                     </div>
                   </div>
                 </div>
@@ -276,10 +263,10 @@ const ProgramKhususSection = () => {
                   {/* Title and description */}
                    <div className="flex flex-col gap-2">
                      <p className="text-sm font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300 text-center w-full">
-                       {material.text}
+                       {program.title}
                      </p>
                      <p className="text-xs text-gray-600 text-center leading-relaxed">
-                       {material.description}
+                       {program.subtitle}
                      </p>
                    </div>
                 </div>

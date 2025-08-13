@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { dataFetchers, helpers } from '@/lib/site-config';
+import { homeApi } from '@/lib/api'
 
 interface ApiStatus {
   endpoint: string;
@@ -13,6 +14,9 @@ interface ApiStatus {
 export default function TestConnectionPage() {
   const [apiStatuses, setApiStatuses] = useState<ApiStatus[]>([]);
   const [overallStatus, setOverallStatus] = useState<'loading' | 'connected' | 'failed'>('loading');
+  const [instagramStatus, setInstagramStatus] = useState<string>('')
+  const [instagramData, setInstagramData] = useState<any>(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     testAllConnections();
@@ -59,6 +63,31 @@ export default function TestConnectionPage() {
 
     setOverallStatus(successCount === endpoints.length ? 'connected' : 'failed');
   };
+
+  const testInstagramAPI = async () => {
+    setLoading(true)
+    setInstagramStatus('Testing Instagram API...')
+    
+    try {
+      console.log('🔍 Testing Instagram API...')
+      const data = await homeApi.social.instagram()
+      console.log('📱 Instagram API Response:', data)
+      
+      if (Array.isArray(data) && data.length > 0) {
+        setInstagramStatus(`✅ Instagram API berhasil! Ditemukan ${data.length} posts`)
+        setInstagramData(data.slice(0, 3)) // Show first 3 posts
+      } else {
+        setInstagramStatus('⚠️ Instagram API berhasil tapi tidak ada data')
+        setInstagramData(data)
+      }
+    } catch (error: any) {
+      console.error('❌ Instagram API Error:', error)
+      setInstagramStatus(`❌ Instagram API Error: ${error.message}`)
+      setInstagramData(null)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -116,6 +145,86 @@ export default function TestConnectionPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Instagram API Test */}
+        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">Instagram API Test</h2>
+          
+          <button
+            onClick={testInstagramAPI}
+            disabled={loading}
+            className="px-6 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 rounded-lg font-medium transition-colors"
+          >
+            {loading ? 'Testing...' : 'Test Instagram API'}
+          </button>
+          
+          {instagramStatus && (
+            <div className="mt-4 p-4 bg-white/10 rounded-lg">
+              <p className="font-medium">{instagramStatus}</p>
+            </div>
+          )}
+          
+          {instagramData && (
+            <div className="mt-4">
+              <h3 className="font-medium mb-2">Sample Data:</h3>
+              <pre className="bg-black/50 p-4 rounded-lg overflow-auto text-sm">
+                {JSON.stringify(instagramData, null, 2)}
+              </pre>
+            </div>
+          )}
+
+          {/* Instagram Configuration Guide */}
+          <div className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+            <h3 className="font-medium text-yellow-300 mb-3">📱 Cara Konfigurasi Instagram di Backend</h3>
+            <div className="text-sm text-yellow-200/80 space-y-2">
+              <p>1. <strong>Login ke Backend Admin</strong> → Social Media → Settings</p>
+              <p>2. <strong>Masukkan Instagram User ID</strong> (bukan username)</p>
+              <p>3. <strong>Masukkan Instagram Access Token</strong> dari Facebook Developer</p>
+              <p>4. <strong>Save Settings</strong> dan test ulang</p>
+            </div>
+            <div className="mt-3 text-xs text-yellow-300/60">
+              <p>💡 <strong>Note:</strong> Jika backend belum dikonfigurasi, sistem akan otomatis menggunakan fallback local API</p>
+            </div>
+          </div>
+
+          {/* Instagram Error Fix Guide */}
+          <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+            <h3 className="font-medium text-red-300 mb-3">🚨 Fix Instagram API Error</h3>
+            <div className="text-sm text-red-200/80 space-y-2">
+              <p><strong>Error yang ditemukan:</strong> "Object with ID 'raphnesiastore' does not exist"</p>
+              <p><strong>Penyebab:</strong> Instagram User ID salah atau permissions tidak cukup</p>
+            </div>
+            
+            <div className="mt-3 text-sm text-red-200/80">
+              <p className="font-medium mb-2">🔧 Langkah Perbaikan:</p>
+              <ol className="list-decimal list-inside space-y-1 ml-2">
+                <li><strong>Dapatkan Instagram User ID yang benar</strong> (bukan username)</li>
+                <li><strong>Generate Access Token baru</strong> dengan permissions yang tepat</li>
+                <li><strong>Update di backend</strong> dengan credentials yang benar</li>
+                <li><strong>Test ulang</strong> Instagram API</li>
+              </ol>
+            </div>
+
+            <div className="mt-3 text-xs text-red-300/60">
+              <p>💡 <strong>Solusi Sementara:</strong> Sistem sudah menggunakan fallback data lokal</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Environment Info */}
+        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6">
+          <h2 className="text-xl font-semibold mb-4">Environment Variables</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-gray-400">NEXT_PUBLIC_API_BASE_URL</p>
+              <p className="font-mono text-sm">{process.env.NEXT_PUBLIC_API_BASE_URL || 'Not set'}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-400">NODE_ENV</p>
+              <p className="font-mono text-sm">{process.env.NODE_ENV}</p>
+            </div>
           </div>
         </div>
 

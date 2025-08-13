@@ -34,23 +34,79 @@ function SocialMediaFeedSection() {
     setLoading(true)
     setError(null)
     try {
+      console.log('🔍 Fetching Instagram posts from backend...')
+      
       // 1) Coba via backend
       const data = await homeApi.social.instagram()
+      console.log('📱 Backend Instagram response:', data)
+      
+      // Check if backend has Instagram configured
+      if (data && typeof data === 'object' && 'success' in data && !data.success) {
+        const responseData = data as { success: boolean; message?: string }
+        if (responseData.message === 'Instagram credentials not configured') {
+          console.log('⚠️ Backend Instagram not configured, using local fallback...')
+          throw new Error('Backend Instagram not configured')
+        }
+      }
+      
       const list = Array.isArray(data) ? data : []
       if (list.length > 0) {
+        console.log(`✅ Instagram posts loaded from backend: ${list.length} posts`)
         setInstagramPosts(list.slice(0, 8))
         return
       }
 
+      console.log('⚠️ Backend returned empty data, trying local fallback...')
+      
       // 2) Fallback: route API lokal (server-side)
       const res = await fetch('/api/instagram-feed', { cache: 'no-store' })
-      if (!res.ok) throw new Error('Failed to fetch Instagram posts (local)')
+      if (!res.ok) {
+        const errorText = await res.text()
+        console.error('❌ Local Instagram API failed:', res.status, errorText)
+        throw new Error(`Failed to fetch Instagram posts (local): ${res.status}`)
+      }
+      
       const json = await res.json()
+      console.log('📱 Local Instagram API response:', json)
+      
       const localData = Array.isArray(json?.data) ? json.data : (Array.isArray(json) ? json : [])
-      setInstagramPosts(localData.slice(0, 8))
-    } catch (err) {
-      setError('Error loading Instagram posts')
-      console.error('Instagram API Error:', err)
+      if (localData.length > 0) {
+        console.log(`✅ Instagram posts loaded from local API: ${localData.length} posts`)
+        setInstagramPosts(localData.slice(0, 8))
+      } else {
+        console.log('⚠️ Both backend and local API returned empty data')
+        setError('Tidak ada post Instagram yang tersedia')
+      }
+    } catch (err: any) {
+      const errorMsg = err?.message || 'Unknown error'
+      console.error('❌ Instagram API Error:', err)
+      
+      // If backend not configured, try local API directly
+      if (errorMsg.includes('Backend Instagram not configured') || errorMsg.includes('Instagram credentials not configured')) {
+        console.log('🔄 Trying local Instagram API as fallback...')
+        try {
+          const res = await fetch('/api/instagram-feed', { cache: 'no-store' })
+          if (!res.ok) {
+            throw new Error(`Local API failed: ${res.status}`)
+          }
+          
+          const json = await res.json()
+          const localData = Array.isArray(json?.data) ? json.data : (Array.isArray(json) ? json : [])
+          
+          if (localData.length > 0) {
+            console.log(`✅ Instagram posts loaded from local API: ${localData.length} posts`)
+            setInstagramPosts(localData.slice(0, 8))
+            setError(null)
+            return
+          } else {
+            setError('Instagram belum dikonfigurasi di backend dan tidak ada data lokal')
+          }
+        } catch (localErr: any) {
+          setError(`Instagram belum dikonfigurasi: ${localErr.message}`)
+        }
+      } else {
+        setError(`Error loading Instagram posts: ${errorMsg}`)
+      }
     } finally {
       setLoading(false)
     }
@@ -292,10 +348,31 @@ function SocialMediaFeedSection() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="inline-flex items-center px-6 py-3 bg-red-500/10 backdrop-blur-xl border border-red-500/20 text-red-300 rounded-2xl shadow-2xl">
-              <div className="w-2 h-2 bg-red-400 rounded-full mr-3 animate-pulse"></div>
-              {error}
+            <div className="inline-flex flex-col items-center px-6 py-4 bg-red-500/10 backdrop-blur-xl border border-red-500/20 text-red-300 rounded-2xl shadow-2xl max-w-2xl">
+              <div className="w-2 h-2 bg-red-400 rounded-full mb-3 animate-pulse"></div>
+              <p className="font-medium mb-2">{error}</p>
+              <p className="text-sm text-red-400/80">
+                Cek console browser untuk detail error. Pastikan backend API berjalan dengan baik.
+              </p>
+              <button 
+                onClick={fetchInstagramPosts}
+                className="mt-3 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 rounded-lg text-sm transition-colors"
+              >
+                Coba Lagi
+              </button>
             </div>
+          </motion.div>
+        )}
+
+        {/* Debug Info (hanya tampil di development) */}
+        {process.env.NODE_ENV === 'development' && (
+          <motion.div 
+            className="text-center mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg text-blue-300 text-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <p>🔍 Debug Mode: Cek console untuk detail API calls</p>
+            <p>Instagram Posts: {instagramPosts.length} | Loading: {loading ? 'Yes' : 'No'} | Error: {error ? 'Yes' : 'No'}</p>
           </motion.div>
         )}
 
