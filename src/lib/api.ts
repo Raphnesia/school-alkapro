@@ -1,7 +1,7 @@
 // Resolve API base robustly: avoid relative values like "/api" that point to Next origin
 const RAW_API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL;
 const API_BASE = (() => {
-  // Default dev backend
+  // Default dev backend - use HTTPS to avoid Mixed Content errors
   const defaultBase = 'https://api.raphnesia.my.id/api';
 
   // Helper: strip any trailing /api or /api/v{n}
@@ -20,7 +20,7 @@ const API_BASE = (() => {
     return ensureApiSuffix(noSuffix);
   }
 
-  // Not provided or relative → fallback to default
+  // Not provided or relative → fallback to default (HTTPS)
   return defaultBase;
 })();
 
@@ -303,7 +303,7 @@ export const linkApi = {
   getSocialMedia: () => fetchApi<Link[]>('/links/social-media'),
   getQuickLinks: () => fetchApi<Link[]>('/links/quick-links'),
   getByCategory: (category: string) => fetchApi<Link[]>(`/links/category/${category}`),
-  getById: (id: string) => fetchApi<Link>(`/links/${id}`),
+  getById: (id: string) => fetchApi<Link[]>(`/links/${id}`),
 };
 
 // Profil API
