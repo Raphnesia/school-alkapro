@@ -71,7 +71,7 @@ async function handleRequest(request: NextRequest, params: { path: string[] }, m
 			try {
 				const body = await request.text()
 				if (body) {
-					requestOptions.body = body
+					requestOptions.body = body;
 					(headers as any)['Content-Type'] = 'application/json'
 				}
 			} catch (error) {
