@@ -19,6 +19,8 @@ const YouTubeSection = () => {
   const [channelVideos, setChannelVideos] = useState<YouTubeVideo[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [userInteracted, setUserInteracted] = useState(false)
+  const [sectionTitle, setSectionTitle] = useState<string>('')
+  const [sectionContent, setSectionContent] = useState<string>('')
 
   // Data video YouTube dari channel ALKAPRO TV 
   // Menggunakan channel embed untuk menampilkan video terbaru dari channel
@@ -46,8 +48,10 @@ const YouTubeSection = () => {
         const sections = await homeApi.byType('youtube')
         const [yt] = sections as HomeSection[]
         const cfg = yt?.config_data || {}
-        if (mounted && cfg?.channel_id) {
-          setChannelId(cfg.channel_id)
+        if (mounted) {
+          if (cfg?.channel_id) setChannelId(cfg.channel_id)
+          setSectionTitle(yt?.title || '')
+          setSectionContent(yt?.content || '')
         }
       } catch (_) {}
     })()
@@ -393,17 +397,28 @@ const YouTubeSection = () => {
             </div>
             
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight">
-              <span className="block">Video Dokumentasi</span>
-              <span className="block bg-gradient-to-r from-green-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
-                SMP Al Kautsar
-              </span>
+              {sectionTitle || (
+                <>
+                  <span className="block">Video Dokumentasi</span>
+                  <span className="block bg-gradient-to-r from-green-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+                    SMP Al Kautsar
+                  </span>
+                </>
+              )}
             </h2>
             
-            <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
-              Saksikan dokumentasi kegiatan sekolah, pembelajaran, dan prestasi siswa 
-              <span className="text-slate-800 font-semibold"> SMP Muhammadiyah Al Kautsar PK Kartasura </span>
-              melalui channel YouTube resmi ALKAPRO TV.
-            </p>
+            {sectionContent ? (
+              <div
+                className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: sectionContent }}
+              />
+            ) : (
+              <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+                Saksikan dokumentasi kegiatan sekolah, pembelajaran, dan prestasi siswa 
+                <span className="text-slate-800 font-semibold"> SMP Muhammadiyah Al Kautsar PK Kartasura </span>
+                melalui channel YouTube resmi ALKAPRO TV.
+              </p>
+            )}
           </div>
         </ScrollReveal>
 
