@@ -48,6 +48,8 @@ const BeritaList = () => {
   useEffect(() => {
     const fetchBerita = async () => {
       try {
+        console.log('🔍 Fetching berita...');
+        
         // Coba via proxy internal (hindari CORS dan masalah base URL)
         let response = await fetch('/api/proxy/v1/news', { cache: 'no-store' })
         let data: any = null
@@ -56,10 +58,14 @@ const BeritaList = () => {
         if (response.ok) {
           data = await response.json()
           list = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : [])
+          console.log('📰 News response:', data);
+          console.log('📰 News list length:', list.length);
         }
         
         // Jika endpoint news kosong, fallback ke articles lalu posts
         if (!Array.isArray(list) || list.length === 0) {
+          console.log('⚠️ News kosong, coba articles...');
+          
           // 1) Articles
           let articlesList: any[] = []
           try {
@@ -67,25 +73,36 @@ const BeritaList = () => {
             if (resArticles.ok) {
               const json = await resArticles.json()
               articlesList = Array.isArray(json?.data) ? json.data : (Array.isArray(json) ? json : [])
+              console.log('📚 Articles response:', json);
+              console.log('📚 Articles list length:', articlesList.length);
             }
-          } catch {}
+          } catch (error) {
+            console.error('❌ Error fetching articles:', error);
+          }
           
           // 2) Posts jika articles juga kosong
           let postsList: any[] = []
           if (articlesList.length === 0) {
+            console.log('⚠️ Articles kosong, coba posts...');
             try {
               const resPosts = await fetch('/api/proxy/v1/posts', { cache: 'no-store' })
               if (resPosts.ok) {
                 const json = await resPosts.json()
                 postsList = Array.isArray(json?.data) ? json.data : (Array.isArray(json) ? json : [])
+                console.log('📝 Posts response:', json);
+                console.log('📝 Posts list length:', postsList.length);
               }
-            } catch {}
+            } catch (error) {
+              console.error('❌ Error fetching posts:', error);
+            }
           }
           
-          list = articlesList.length ? articlesList : postsList
+          list = articlesList.length > 0 ? articlesList : postsList
+          console.log('✅ Final list from fallback:', list.length);
         }
         
-        if (Array.isArray(list)) {
+        if (Array.isArray(list) && list.length > 0) {
+          console.log('🔄 Transforming data...');
           const transformedData = list.map((item: any) => {
             const contentText = stripHtmlTags(item.content || '');
             const excerpt = item.subtitle ? stripHtmlTags(item.subtitle) : 
@@ -99,7 +116,7 @@ const BeritaList = () => {
               title: item.title,
               excerpt: excerpt,
               image: buildImageUrl(item.image),
-              category: item.category,
+              category: item.category || 'general',
               date: new Date(item.published_at || item.created_at).toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'long',
@@ -111,12 +128,14 @@ const BeritaList = () => {
             };
           });
           
+          console.log('✅ Transformed data:', transformedData);
           setBeritaData(transformedData);
         } else {
-          console.error('Invalid API response structure:', data);
+          console.error('❌ Invalid API response structure or empty list:', data);
+          setBeritaData([]);
         }
       } catch (error) {
-        console.error('Error fetching berita:', error);
+        console.error('❌ Error fetching berita:', error);
         setBeritaData([]);
       } finally {
         setLoading(false);
