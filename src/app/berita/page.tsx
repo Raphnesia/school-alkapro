@@ -37,21 +37,20 @@ const BeritaList = () => {
     return `${backendOrigin}${normalized}`
   }
 
-  // Helper: strip HTML tags
+  // Fetch data dari API
+  // Tambahkan fungsi stripHtmlTags sebelum komponen BeritaList
   const stripHtmlTags = (html: string): string => { 
     if (!html) return ''; 
     return html.replace(/<[^>]*>/g, '').trim();
   };
 
-  // Fetch data dari API
+  // Ganti bagian excerpt generation di dalam useEffect
   useEffect(() => {
-    console.log('🚀 useEffect berita berjalan!');
-    
     const fetchBerita = async () => {
       try {
-        console.log('🔍 Fetching berita...');
+        console.log('🚀 useEffect berita berjalan!');
         
-        // Coba via proxy internal (hindari CORS dan masalah base URL)
+        // Hanya gunakan proxy internal (hindari CORS dan Mixed Content)
         let response = await fetch('/api/proxy/v1/news', { cache: 'no-store' })
         let data: any = null
         let list: any[] = []
