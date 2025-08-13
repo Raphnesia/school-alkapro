@@ -37,15 +37,16 @@ const BeritaList = () => {
     return `${backendOrigin}${normalized}`
   }
 
-  // Fetch data dari API
-  // Tambahkan fungsi stripHtmlTags sebelum komponen BeritaList
+  // Helper: strip HTML tags
   const stripHtmlTags = (html: string): string => { 
     if (!html) return ''; 
     return html.replace(/<[^>]*>/g, '').trim();
   };
 
-  // Ganti bagian excerpt generation di dalam useEffect
+  // Fetch data dari API
   useEffect(() => {
+    console.log('🚀 useEffect berita berjalan!');
+    
     const fetchBerita = async () => {
       try {
         console.log('🔍 Fetching berita...');
