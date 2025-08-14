@@ -95,7 +95,10 @@ export const useTeachers = (): UseTeachersReturn => {
       // Coba ambil data langsung dari API tanpa processing
       try {
         console.log('Trying direct API call...')
-        const response = await fetch('http://api.raphnesia.my.id/api/v1/teachers')
+        const apiUrl = process.env.NEXT_PUBLIC_USE_PROXY === 'true' 
+          ? '/api/proxy/teachers' 
+          : 'http://api.raphnesia.my.id/api/v1/teachers'
+        const response = await fetch(apiUrl)
         if (response.ok) {
           const data = await response.json()
           console.log('Direct API call successful:', data)
