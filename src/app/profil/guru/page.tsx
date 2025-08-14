@@ -248,67 +248,34 @@ const GuruPage = ({ searchParams }: GuruPageProps) => {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="space-y-8"
             >
-                        {teachersData[activeSubject]?.map((teacher: TeacherDisplay, index: number) => (
-            <TeacherCard key={index} teacher={teacher} index={index} />
-          ))}
+              {teachersData[activeSubject] && teachersData[activeSubject].length > 0 ? (
+                teachersData[activeSubject].map((teacher: TeacherDisplay, index: number) => (
+                  <TeacherCard key={index} teacher={teacher} index={index} />
+                ))
+              ) : (
+                <div className="text-center py-12">
+                  <div className="text-6xl mb-4">👨‍🏫</div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    Belum Ada Data Guru
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Untuk mata pelajaran "{subjects.find(s => s.key === activeSubject)?.name || activeSubject}" belum ada data guru yang tersedia.
+                  </p>
+                  <motion.button 
+                    onClick={refetch}
+                    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Refresh Data
+                  </motion.button>
+                </div>
+              )}
             </motion.div>
           </div>
         </section>
         
-        {/* Empty State */}
-        {(!teachersData[activeSubject] || teachersData[activeSubject].length === 0) && (
-          <motion.section 
-            className="py-12 bg-white border-t border-gray-200"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <div className="container mx-auto px-8 text-center">
-              <motion.div 
-                className="bg-white rounded-lg shadow-md p-8 max-w-md mx-auto"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-              >
-                <motion.div 
-                  className="text-6xl mb-4"
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                >
-                  👨‍🏫
-                </motion.div>
-                <motion.h3 
-                  className="text-xl font-bold text-gray-800 mb-2"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.7 }}
-                >
-                  Belum Ada Data Guru
-                </motion.h3>
-                <motion.p 
-                  className="text-gray-600 mb-4"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.8 }}
-                >
-                  Untuk mata pelajaran ini belum ada data guru yang tersedia.
-                </motion.p>
-                <motion.button 
-                  onClick={refetch}
-                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.9 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Refresh Data
-                </motion.button>
-              </motion.div>
-            </div>
-          </motion.section>
-        )}
+
       </main>
     </div>
   )

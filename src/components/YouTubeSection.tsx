@@ -399,10 +399,10 @@ const YouTubeSection = () => {
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight">
               {sectionTitle || (
                 <>
-                  <span className="block">Video Dokumentasi</span>
-                  <span className="block bg-gradient-to-r from-green-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
-                    SMP Al Kautsar
-                  </span>
+              <span className="block">Video Dokumentasi</span>
+              <span className="block bg-gradient-to-r from-green-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+                SMP Al Kautsar
+              </span>
                 </>
               )}
             </h2>
@@ -413,11 +413,11 @@ const YouTubeSection = () => {
                 dangerouslySetInnerHTML={{ __html: sectionContent }}
               />
             ) : (
-              <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
-                Saksikan dokumentasi kegiatan sekolah, pembelajaran, dan prestasi siswa 
-                <span className="text-slate-800 font-semibold"> SMP Muhammadiyah Al Kautsar PK Kartasura </span>
-                melalui channel YouTube resmi ALKAPRO TV.
-              </p>
+            <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+              Saksikan dokumentasi kegiatan sekolah, pembelajaran, dan prestasi siswa 
+              <span className="text-slate-800 font-semibold"> SMP Muhammadiyah Al Kautsar PK Kartasura </span>
+              melalui channel YouTube resmi ALKAPRO TV.
+            </p>
             )}
           </div>
         </ScrollReveal>

@@ -285,11 +285,11 @@ function SocialMediaFeedSection() {
           <h2 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight">
             {sectionTitle || (
               <>
-                Tetap Terhubung dengan
-                <br />
-                <span className="bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 bg-clip-text text-transparent animate-pulse">
-                  Aktivitas Sekolah
-                </span>
+            Tetap Terhubung dengan
+            <br />
+            <span className="bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 bg-clip-text text-transparent animate-pulse">
+              Aktivitas Sekolah
+            </span>
               </>
             )}
           </h2>
@@ -300,10 +300,10 @@ function SocialMediaFeedSection() {
               dangerouslySetInnerHTML={{ __html: sectionContent }}
             />
           ) : (
-            <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed font-light">
-              Dapatkan update terbaru tentang kegiatan, prestasi, dan momen-momen berharga di 
-              <span className="text-white font-medium"> SMA Islam Terpadu</span> melalui platform media sosial kami.
-            </p>
+          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed font-light">
+            Dapatkan update terbaru tentang kegiatan, prestasi, dan momen-momen berharga di 
+            <span className="text-white font-medium"> SMA Islam Terpadu</span> melalui platform media sosial kami.
+          </p>
           )}
         </motion.div>
 

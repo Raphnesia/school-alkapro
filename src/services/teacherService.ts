@@ -8,10 +8,10 @@ export interface Teacher {
   subject: string
   type: 'teacher' | 'staff' | 'principal' | 'vice_principal'
   photo: string
-  bio: string
-  education: string
-  experience: string
-  is_active: boolean
+  bio: string | null
+  education: string | null
+  experience: string | null
+  is_active?: boolean
   order_index: number
 }
 
@@ -64,14 +64,56 @@ export const getAllTeachers = async (): Promise<Teacher[]> => {
 // Get teachers grouped by subject (for frontend display)
 export const getTeachersBySubject = async (): Promise<TeachersBySubject> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/teachers/by-subject`)
+    // Mengambil data dari endpoint /teachers yang tersedia
+    console.log('Fetching from:', `${API_BASE_URL}/teachers`)
+    const response = await fetch(`${API_BASE_URL}/teachers`)
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
     
-    const result: ApiResponse<TeachersBySubject> = await response.json()
-    return result.data || {}
+    const result: ApiResponse<Teacher[]> = await response.json()
+    console.log('API Response:', result)
+    const teachers = result.data || []
+    console.log('Teachers data:', teachers)
+    
+    // Mengelompokkan data per subject
+    const groupedTeachers: TeachersBySubject = {}
+    
+    teachers.forEach((teacher: Teacher) => {
+      // Hanya ambil guru yang bertipe teacher (is_active mungkin tidak ada di API)
+      if (teacher.type === 'teacher') {
+        const subjectKey = teacher.subject.toLowerCase().replace(/\s+/g, '_')
+        
+        if (!groupedTeachers[subjectKey]) {
+          groupedTeachers[subjectKey] = []
+        }
+        
+        // Konversi Teacher ke TeacherDisplay
+        const teacherDisplay: TeacherDisplay = {
+          name: teacher.name,
+          image: teacher.photo,
+          position: teacher.position,
+          description: teacher.bio || `${teacher.position} - ${teacher.subject}`,
+          subject: teacher.subject
+        }
+        
+        groupedTeachers[subjectKey].push(teacherDisplay)
+      }
+    })
+    
+    // Sort teachers berdasarkan order_index
+    Object.keys(groupedTeachers).forEach(subjectKey => {
+      groupedTeachers[subjectKey].sort((a, b) => {
+        const teacherA = teachers.find(t => t.name === a.name)
+        const teacherB = teachers.find(t => t.name === b.name)
+        return (teacherA?.order_index || 0) - (teacherB?.order_index || 0)
+      })
+    })
+    
+    console.log('Grouped teachers data:', groupedTeachers)
+    return groupedTeachers
+    
   } catch (error) {
     console.error('Error fetching teachers by subject:', error)
     throw new Error('Failed to fetch teachers data')
@@ -158,5 +200,5 @@ export const generateSubjectsArray = (teachersData: TeachersBySubject) => {
       name: subjectName,
       color: colors[index % colors.length]
     }
-  })
+  }).sort((a, b) => a.name.localeCompare(b.name)) // Sort subjects alphabetically
 } 

@@ -66,12 +66,12 @@ const BeritaDetailSlug = ({ params }: BeritaDetailProps) => {
           }
 
           console.log('✅ Article found:', newsData.title);
-          
-          // Tambahkan fungsi helper untuk strip HTML tags
-          const stripHtmlTags = (html: string): string => {
-            if (!html) return '';
-            return html.replace(/<[^>]*>/g, '').trim();
-          };
+
+                  // Tambahkan fungsi helper untuk strip HTML tags
+        const stripHtmlTags = (html: string): string => {
+          if (!html) return '';
+          return html.replace(/<[^>]*>/g, '').trim();
+        };
           
           // Update kedua setArticle call untuk menggunakan author_image
           setArticle({
@@ -95,9 +95,9 @@ const BeritaDetailSlug = ({ params }: BeritaDetailProps) => {
           console.log('✅ Direct endpoint worked:', newsData.title);
           
           const stripHtmlTags = (html: string): string => {
-            if (!html) return '';
-            return html.replace(/<[^>]*>/g, '').trim();
-          };
+          if (!html) return '';
+          return html.replace(/<[^>]*>/g, '').trim();
+        };
           
           setArticle({
             id: newsData.id,
