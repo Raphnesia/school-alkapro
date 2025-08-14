@@ -47,7 +47,14 @@ export interface ApiResponse<T> {
 // Get all teachers and staff
 export const getAllTeachers = async (): Promise<Teacher[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/teachers`)
+    const response = await fetch(`${API_BASE_URL}/teachers`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors',
+    })
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
@@ -66,7 +73,14 @@ export const getTeachersBySubject = async (): Promise<TeachersBySubject> => {
   try {
     // Mengambil data dari endpoint /teachers yang tersedia
     console.log('Fetching from:', `${API_BASE_URL}/teachers`)
-    const response = await fetch(`${API_BASE_URL}/teachers`)
+    const response = await fetch(`${API_BASE_URL}/teachers`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors',
+    })
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)

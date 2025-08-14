@@ -92,6 +92,57 @@ export const useTeachers = (): UseTeachersReturn => {
     } catch (err) {
       console.error('API Error:', err)
       
+      // Coba ambil data langsung dari API tanpa processing
+      try {
+        console.log('Trying direct API call...')
+        const response = await fetch('http://api.raphnesia.my.id/api/v1/teachers')
+        if (response.ok) {
+          const data = await response.json()
+          console.log('Direct API call successful:', data)
+          
+          if (data.success && data.data && data.data.length > 0) {
+            // Process data manually
+            const teachers = data.data
+            const groupedTeachers: TeachersBySubject = {}
+            
+            teachers.forEach((teacher: any) => {
+              if (teacher.type === 'teacher') {
+                const subjectKey = teacher.subject.toLowerCase().replace(/\s+/g, '_')
+                
+                if (!groupedTeachers[subjectKey]) {
+                  groupedTeachers[subjectKey] = []
+                }
+                
+                const teacherDisplay: TeacherDisplay = {
+                  name: teacher.name,
+                  image: teacher.photo,
+                  position: teacher.position,
+                  description: teacher.bio || `${teacher.position} - ${teacher.subject}`,
+                  subject: teacher.subject
+                }
+                
+                groupedTeachers[subjectKey].push(teacherDisplay)
+              }
+            })
+            
+            console.log('Processed teachers data:', groupedTeachers)
+            setTeachersData(groupedTeachers)
+            
+            // Generate subjects array
+            const subjectsArray = generateSubjectsArray(groupedTeachers)
+            setSubjects(subjectsArray)
+            
+            // Use fallback settings
+            setTeacherSettings(fallbackTeacherSettings)
+            
+            console.log('Successfully loaded real data from API')
+            return
+          }
+        }
+      } catch (directError) {
+        console.error('Direct API call also failed:', directError)
+      }
+      
       // Fallback ke data sample jika API tidak tersedia
       console.log('Using fallback data for testing...')
       setTeachersData(fallbackTeachersData)
@@ -101,7 +152,7 @@ export const useTeachers = (): UseTeachersReturn => {
       const subjectsArray = generateSubjectsArray(fallbackTeachersData)
       setSubjects(subjectsArray)
       
-      setError('Menggunakan data sample - Backend belum tersedia')
+      setError(`Gagal mengambil data dari API: ${err instanceof Error ? err.message : 'Unknown error'}`)
     } finally {
       setLoading(false)
     }
