@@ -94,6 +94,92 @@
   opacity: 0.6;
 }
 
+/* Responsive Subject Navigation untuk Guru */
+.subject-navigation-mobile {
+  @apply flex flex-wrap justify-center gap-2;
+}
+
+.subject-navigation-tablet {
+  @apply flex flex-wrap justify-center gap-3;
+}
+
+.subject-navigation-desktop {
+  @apply flex flex-wrap justify-center gap-4;
+}
+
+.subject-button-mobile {
+  @apply px-3 py-2 text-sm font-medium rounded-lg;
+}
+
+.subject-button-tablet {
+  @apply px-4 py-2.5 text-base font-semibold rounded-lg;
+}
+
+.subject-button-desktop {
+  @apply px-6 py-3 text-base font-semibold rounded-lg;
+}
+
+/* Responsive Subject Navigation untuk Guru - Enhanced */
+@media (max-width: 480px) {
+  .subject-navigation-mobile {
+    gap: 0.5rem;
+  }
+  
+  .subject-button-mobile {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    border-radius: 0.5rem;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 640px) {
+  .subject-navigation-mobile {
+    gap: 0.75rem;
+  }
+  
+  .subject-button-mobile {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .subject-navigation-tablet {
+    gap: 1rem;
+  }
+  
+  .subject-button-tablet {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .subject-navigation-tablet {
+    gap: 1.25rem;
+  }
+  
+  .subject-button-tablet {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 0.75rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .subject-navigation-desktop {
+    gap: 1.5rem;
+  }
+  
+  .subject-button-desktop {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border-radius: 0.75rem;
+  }
+}
+
 /* Glass morphism effects */
 .glass-effect {
   background: rgba(255, 255, 255, 0.85);

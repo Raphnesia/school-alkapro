@@ -194,16 +194,16 @@ const GuruPage = ({ searchParams }: GuruPageProps) => {
         </div>
 
         {/* Navigation Mata Pelajaran */}
-        <section className="py-8 bg-gray-50 border-t border-gray-200">
-          <div className="container mx-auto px-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-800 mb-4">Pilih Mata Pelajaran</h2>
-              <p className="text-gray-600">Klik mata pelajaran untuk melihat guru yang mengajar</p>
+        <section className="py-3 sm:py-4 md:py-6 lg:py-8 bg-gray-50 border-t border-gray-200">
+          <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+            <div className="text-center mb-3 sm:mb-4 md:mb-6 lg:mb-8">
+              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2 sm:mb-3 md:mb-3 lg:mb-4">Pilih Mata Pelajaran</h2>
+              <p className="text-xs sm:text-sm md:text-base text-gray-600 px-2 sm:px-0">Klik mata pelajaran untuk melihat guru yang mengajar</p>
             </div>
             
             {/* Subject Navigation */}
             <motion.div 
-              className="flex flex-wrap justify-center gap-4 mb-8"
+              className="subject-navigation-mobile sm:subject-navigation-tablet lg:subject-navigation-desktop mb-4 sm:mb-6 lg:mb-8"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -213,7 +213,7 @@ const GuruPage = ({ searchParams }: GuruPageProps) => {
                 <motion.button
                   key={subject.key}
                   onClick={() => setActiveSubject(subject.key)}
-                  className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
+                  className={`subject-button-mobile sm:subject-button-tablet lg:subject-button-desktop transition-all duration-300 ${
                     activeSubject === subject.key
                       ? `${subject.color} text-white shadow-lg transform scale-105`
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -240,13 +240,13 @@ const GuruPage = ({ searchParams }: GuruPageProps) => {
         </section>
 
         {/* Guru Cards Section */}
-        <section className="py-8 bg-white">
-          <div className="container mx-auto px-8">
+        <section className="py-4 sm:py-6 md:py-8 bg-white">
+          <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="space-y-8"
+              className="space-y-4 sm:space-y-6 md:space-y-8"
             >
               {teachersData[activeSubject] && teachersData[activeSubject].length > 0 ? (
                 teachersData[activeSubject].map((teacher: TeacherDisplay, index: number) => (
