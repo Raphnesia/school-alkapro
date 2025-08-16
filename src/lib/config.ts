@@ -66,16 +66,37 @@ export function getApiUrl(endpoint: string): string {
 
 // Helper function untuk mendapatkan image URL
 export function getImageUrl(path: string): string {
+  console.log('🖼️ getImageUrl called with path:', path)
+  
+  if (!path || typeof path !== 'string') {
+    console.log('⚠️ Invalid path, using default image')
+    return '/pace.jpeg'
+  }
+  
   if (path.startsWith('http')) {
-    return path;
+    console.log('✅ Full URL detected, returning as is')
+    return path
   }
   
-  // Jika menggunakan proxy, gunakan Laravel URL asli untuk gambar
-  if (config.api.baseUrl === '/api/proxy') {
-    return `${config.api.laravelUrl.replace('/api/v1', '')}${path}`;
+  // Base URL untuk gambar (tanpa /api/v1)
+  const baseUrl = 'https://api.raphnesia.my.id'
+  console.log('🖼️ Base URL for images:', baseUrl)
+  
+  // Normalize path
+  let normalizedPath = path.trim()
+  
+  // Jika path tidak dimulai dengan '/', tambahkan '/storage/'
+  if (!normalizedPath.startsWith('/')) {
+    if (!normalizedPath.startsWith('storage/')) {
+      normalizedPath = 'storage/' + normalizedPath
+    }
+    normalizedPath = '/' + normalizedPath
   }
   
-  return `${config.api.baseUrl.replace('/api/v1', '')}${path}`;
+  const finalUrl = `${baseUrl}${normalizedPath}`
+  console.log('🖼️ Final image URL:', finalUrl)
+  
+  return finalUrl
 }
 
 // Helper function untuk mengecek apakah menggunakan proxy
