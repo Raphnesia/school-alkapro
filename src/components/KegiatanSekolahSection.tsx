@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination, Navigation } from 'swiper/modules'
 import { InteractiveGridPattern } from './MagicUIAnimations'
 import { ScrollReveal } from './ScrollReveal'
-import { getApiUrl } from '@/lib/config'
+import { getApiUrl, getImageUrl } from '@/lib/config'
 
 // Import Swiper styles
 import 'swiper/css'
@@ -21,23 +21,6 @@ const KegiatanSekolahSection = () => {
   type ActivityCard = { id: number | string; title: string; image: string; category?: string; type?: string }
   const [activities, setActivities] = useState<ActivityCard[]>([])
   const [loading, setLoading] = useState(true)
-  const normalizeImageUrl = (src?: string): string => {
-    try {
-      if (!src || typeof src !== 'string') return '/placeholder.jpg'
-      const trimmed = src.trim()
-      if (/^https?:\/\//i.test(trimmed)) return trimmed
-      const origin = getApiUrl('')
-        .replace(/\/api\/v\d+$/i, '')
-        .replace(/\/$/, '')
-      let path = trimmed
-      if (!path.startsWith('/')) {
-        path = path.startsWith('storage/') ? `/${path}` : `/storage/${path}`
-      }
-      return `${origin}${path}`
-    } catch {
-      return '/placeholder.jpg'
-    }
-  }
 
   // Fetch activities images (from /activities/complete then fallback /activities)
   useEffect(() => {
@@ -58,7 +41,7 @@ const KegiatanSekolahSection = () => {
               .map(it => ({
                 id: it.id,
                 title: it.title,
-                image: normalizeImageUrl(it.image),
+                image: getImageUrl(it.image),
                 category: it.category,
                 type: it.type,
               }))
@@ -80,7 +63,7 @@ const KegiatanSekolahSection = () => {
                 .map(it => ({
                   id: it.id,
                   title: it.title,
-                  image: normalizeImageUrl(it.image),
+                  image: getImageUrl(it.image),
                   category: it.category,
                   type: it.type,
                 }))

@@ -3,7 +3,9 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Header } from '@/components/Header'
-import { getApiUrl, config } from '@/lib/config'
+import { getApiUrl, getImageUrl } from '@/lib/config'
+import { activityApi, PaginatedResponse, SchoolActivity } from '@/lib/api'
+import { config } from '@/lib/config'
 
 interface ActivityDetail {
   id: number
@@ -36,21 +38,6 @@ const ShareButton = ({ icon, bg, size = 'normal' }: { icon: string; bg: string; 
       <span className="font-bold">{icon}</span>
     </button>
   )
-}
-
-function normalizeImage(path?: string): string {
-  const origin = config.api.baseUrl.replace('/api/v1', '')
-  if (!path || typeof path !== 'string') return '/pace.jpeg'
-  const trimmed = path.trim()
-  if (trimmed.startsWith('http')) return trimmed
-  let normalized = trimmed
-  if (!normalized.startsWith('/')) {
-    if (!normalized.startsWith('storage/')) {
-      normalized = 'storage/' + normalized
-    }
-    normalized = '/' + normalized
-  }
-  return `${origin}${normalized}`
 }
 
 export default function ActivityDetailPage({ params }: ActivityDetailProps) {
@@ -111,8 +98,8 @@ export default function ActivityDetailPage({ params }: ActivityDetailProps) {
   const activityData = activity ? {
     title: activity.title,
     subtitle: activity.excerpt || activity.location || '',
-    bannerDesktop: normalizeImage(activity.image),
-    bannerMobile: normalizeImage(activity.image),
+    bannerDesktop: getImageUrl(activity.image),
+    bannerMobile: getImageUrl(activity.image),
     date: formatDate(activity.date),
     readTime: '3 Menit untuk membaca',
     author: activity.author,
