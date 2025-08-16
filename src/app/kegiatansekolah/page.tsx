@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Header } from '@/components/Header'
-import { getApiUrl } from '@/lib/config'
+import { getApiUrl, getImageUrl } from '@/lib/config'
 import { activityApi, PaginatedResponse, SchoolActivity } from '@/lib/api'
 import { config } from '@/lib/config'
 
@@ -34,22 +34,6 @@ interface KegiatanSettings {
   banner_mobile: string
 }
 
-function normalizeImage(path?: string): string {
-  const origin = config.api.baseUrl.replace('/api/v1', '')
-  if (!path || typeof path !== 'string') return '/pace.jpeg'
-  const trimmed = path.trim()
-  if (trimmed.startsWith('http')) return trimmed
-  // ensure it starts with '/'; if not, prepend probable 'storage/' and leading slash
-  let normalized = trimmed
-  if (!normalized.startsWith('/')) {
-    if (!normalized.startsWith('storage/')) {
-      normalized = 'storage/' + normalized
-    }
-    normalized = '/' + normalized
-  }
-  return `${origin}${normalized}`
-}
-
 const KegiatanSekolahPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('Semua Kegiatan')
   const [activities, setActivities] = useState<KegiatanItem[]>([])
@@ -66,12 +50,26 @@ const KegiatanSekolahPage = () => {
     bannerMobile: '/Programkhusus/html-code-on-computer-monitor-software-web-developer-programming-code-photo.jpg'
   }
 
-  const bannerData = useMemo(() => ({
-    title: settings?.title || defaultBanner.title,
-    subtitle: settings?.subtitle || defaultBanner.subtitle,
-    bannerDesktop: settings?.banner_desktop ? normalizeImage(settings.banner_desktop) : defaultBanner.bannerDesktop,
-    bannerMobile: settings?.banner_mobile ? normalizeImage(settings.banner_mobile) : defaultBanner.bannerMobile,
-  }), [settings])
+  const bannerData = useMemo(() => {
+    const result = {
+      title: settings?.title || defaultBanner.title,
+      subtitle: settings?.subtitle || defaultBanner.subtitle,
+      bannerDesktop: settings?.banner_desktop && settings.banner_desktop !== 'null' 
+        ? getImageUrl(settings.banner_desktop) 
+        : defaultBanner.bannerDesktop,
+      bannerMobile: settings?.banner_mobile && settings.banner_mobile !== 'null'
+        ? getImageUrl(settings.banner_mobile) 
+        : defaultBanner.bannerMobile,
+    }
+    
+    console.log('🎨 Banner data computed:', {
+      settings,
+      defaultBanner,
+      result
+    })
+    
+    return result
+  }, [settings])
 
   // Fetch activities + settings from backend (complete endpoint)
   useEffect(() => {
@@ -86,38 +84,53 @@ const KegiatanSekolahPage = () => {
           const res = await fetch(getApiUrl('/activities/complete'), { cache: 'no-store' })
           if (res.ok) {
             const json = await res.json()
+            console.log('📡 Complete endpoint response:', json)
             const payload = json?.data || json
             const list: any[] = payload?.activities || []
             const cfg: any = payload?.settings || null
+            
+            console.log('📊 Processed data:', { activities: list.length, settings: cfg })
 
-            const mapped: KegiatanItem[] = list.map((it: any) => ({
-              id: it.id,
-              title: it.title,
-              slug: it.slug,
-              excerpt: it.excerpt || '',
-              image: normalizeImage(it.image),
-              category: it.category || 'Lainnya',
-              date: it.date || it.activity_date || '',
-              author: it.author || 'Admin',
-              type: ((): KegiatanItem['type'] => {
-                const v = String(it.type || it.category || '').toLowerCase()
-                if (v.includes('prestasi')) return 'prestasi'
-                if (v.includes('ekstrakurikuler')) return 'ekstrakurikuler'
-                if (v.includes('sosial')) return 'sosial'
-                return 'akademik'
-              })(),
-            }))
+            const mapped: KegiatanItem[] = list.map((it: any) => {
+              const normalizedImage = getImageUrl(it.image)
+              console.log('🖼️ Processing activity image:', {
+                id: it.id,
+                title: it.title,
+                originalImage: it.image,
+                normalizedImage: normalizedImage
+              })
+              
+              return {
+                id: it.id,
+                title: it.title,
+                slug: it.slug,
+                excerpt: it.excerpt || '',
+                image: normalizedImage || '/pace.jpeg', // Fallback ke default image
+                category: it.category || 'Lainnya',
+                date: it.date || it.activity_date || '',
+                author: it.author || 'Admin',
+                type: ((): KegiatanItem['type'] => {
+                  const v = String(it.type || it.category || '').toLowerCase()
+                  if (v.includes('prestasi')) return 'prestasi'
+                  if (v.includes('ekstrakurikuler')) return 'ekstrakurikuler'
+                  if (v.includes('sosial')) return 'sosial'
+                  return 'akademik'
+                })(),
+              }
+            })
 
             setActivities(mapped)
             if (cfg) {
+              console.log('📊 Settings data received:', cfg)
               setSettings({
                 id: cfg.id,
                 title: cfg.title || defaultBanner.title,
                 subtitle: cfg.subtitle || defaultBanner.subtitle,
-                banner_desktop: cfg.banner_desktop || defaultBanner.bannerDesktop,
-                banner_mobile: cfg.banner_mobile || defaultBanner.bannerMobile,
+                banner_desktop: cfg.banner_desktop && cfg.banner_desktop !== 'null' ? cfg.banner_desktop : null,
+                banner_mobile: cfg.banner_mobile && cfg.banner_mobile !== 'null' ? cfg.banner_mobile : null,
               })
             } else {
+              console.log('⚠️ No settings data received, using defaults')
               setSettings(null)
             }
             success = true
@@ -136,7 +149,7 @@ const KegiatanSekolahPage = () => {
                 title: it.title,
                 slug: it.slug,
                 excerpt: it.excerpt || it.description || '',
-                image: normalizeImage(it.image),
+                image: getImageUrl(it.image),
                 category: it.category || 'Lainnya',
                 date: it.date || it.activity_date || '',
                 author: it.author || 'Admin',
@@ -166,7 +179,7 @@ const KegiatanSekolahPage = () => {
             title: it.title,
             slug: it.slug,
             excerpt: it.description || it.content || '',
-            image: normalizeImage(it.image),
+            image: getImageUrl(it.image),
             category: it.category || 'Lainnya',
             date: it.date || '',
             author: 'Admin',
