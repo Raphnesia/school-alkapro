@@ -27,11 +27,13 @@ export default function ArtikelSekolahPage() {
     try {
       setLoading(true)
       console.log('Fetching articles from API...')
-      const response = await postApi.getAll(currentPage)
+      
+      // Gunakan postApi.getArticles() yang khusus untuk artikel
+      const response = await postApi.getArticles(currentPage)
       console.log('API Response:', response)
       
       // Handle both direct array and paginated response formats
-let articlesData: Post[] = []
+      let articlesData: Post[] = []
       let totalPagesCount = 1
       
       if (Array.isArray(response)) {
@@ -46,17 +48,16 @@ let articlesData: Post[] = []
         totalPagesCount = 1
       }
       
-      // Filter untuk hanya menampilkan artikel (bukan berita)
-      articlesData = articlesData.filter(article => 
-        article.type === 'article'
-      )
+      console.log('Raw articles data:', articlesData)
       
-      // Filter berdasarkan kategori jika dipilih
+      // Filter berdasarkan kategori jika dipilih (tidak perlu filter type karena sudah dari articles endpoint)
       if (selectedCategory !== 'all') {
         articlesData = articlesData.filter(article => 
           article.category === selectedCategory
         )
       }
+      
+      console.log('Filtered articles:', articlesData)
       
       setArticles(articlesData)
       setTotalPages(totalPagesCount)
@@ -143,32 +144,39 @@ let articlesData: Post[] = []
                       className="object-cover object-center"
                     />
                     <div className="absolute top-0 right-0 bg-green-600 text-white text-xs font-bold px-3 py-1 m-2 rounded">
-                      {article.category}
+                      {article.category || 'Artikel'}
                     </div>
                   </div>
                   <div className="p-4">
                     <h3 className="text-lg font-semibold text-primary mb-2 line-clamp-2">{article.title}</h3>
                     <p className="text-black text-sm mb-3 line-clamp-3">
-                      {article.subtitle || stripHtmlTags(article.content)}
+                      {article.subtitle || stripHtmlTags(article.content || '')}
                     </p>
                     
                     <div className="flex items-center mb-3">
                       <div className="relative w-8 h-8 rounded-full overflow-hidden mr-2">
                         <Image 
                           src={article.image || '/guru/default-teacher.jpg'} 
-                          alt={article.author}
+                          alt={article.author || 'Author'}
                           fill
                           className="object-cover object-center"
                         />
                       </div>
                       <div>
-                        <p className="text-black text-sm font-medium">{article.author}</p>
-                        <p className="text-gray-500 text-xs">{new Date(article.published_at).toLocaleDateString('id-ID')}</p>
+                        <p className="text-black text-sm font-medium">{article.author || 'Admin'}</p>
+                        <p className="text-gray-500 text-xs">
+                          {article.published_at 
+                            ? new Date(article.published_at).toLocaleDateString('id-ID')
+                            : 'Tanggal tidak tersedia'
+                          }
+                        </p>
                       </div>
                     </div>
                     
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-500 text-xs">{article.read_time} menit baca</span>
+                      <span className="text-gray-500 text-xs">
+                        {article.read_time ? `${article.read_time} menit baca` : 'Waktu baca tidak tersedia'}
+                      </span>
                       <Link href={`/artikel/${article.slug}`} className="text-green-600 hover:text-green-800 font-medium text-sm inline-flex items-center">
                         Baca Selengkapnya
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
