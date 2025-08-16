@@ -62,27 +62,37 @@ export default function ArtikelDetailSlug({ params }: ArtikelDetailProps) {
           throw new Error('Slug parameter tidak valid')
         }
         
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://api.raphnesia.my.id/api/v1'
+        console.log('🔍 Fetching artikel detail for slug:', slug);
         
-        // Try direct slug endpoint first (same as berita)
-        let response = await fetch(`${apiUrl}/posts/${slug}`)
+        // Gunakan proxy internal untuk menghindari Mixed Content error (sama seperti berita)
+        let response = await fetch(`/api/proxy/articles/${slug}`)
         
-        // If direct endpoint fails, try fetching all articles
+        // Jika direct endpoint gagal, coba fetch semua articles
         if (!response.ok) {
-          const allArticlesResponse = await fetch(`${apiUrl}/articles`)
+          console.log('⚠️ Direct endpoint gagal, coba fetch semua articles...');
+          console.log('❌ Direct endpoint response:', response.status, response.statusText);
+          const allArticlesResponse = await fetch('/api/proxy/articles')
           if (!allArticlesResponse.ok) {
+            console.error('❌ Failed to fetch all articles:', allArticlesResponse.status, allArticlesResponse.statusText);
             throw new Error('Gagal mengambil data artikel')
           }
           
           const data = await allArticlesResponse.json()
+          console.log('📊 Raw API response:', data);
           const articlesList = data.data || []
+          console.log('📰 All articles fetched:', articlesList.length);
           
           // Find article by exact slug match
           const article = articlesList.find((item: any) => item.slug === slug)
           
           if (!article) {
+            console.error('❌ Article not found for slug:', slug);
+            console.log('🔍 Available slugs:', articlesList.map((item: any) => item.slug));
             throw new Error('Artikel tidak ditemukan')
           }
+
+          console.log('✅ Article found:', article.title);
+          console.log('📝 Article data:', article);
 
           setArtikelData({
             id: article.id,
@@ -119,6 +129,7 @@ export default function ArtikelDetailSlug({ params }: ArtikelDetailProps) {
           // Direct endpoint worked
           const data = await response.json()
           const article = data.data || data
+          console.log('✅ Direct endpoint worked:', article.title);
           
           setArtikelData({
             id: article.id,
