@@ -1,47 +1,16 @@
-# TODO - Update /prestasi Page: Single-Column Continuous Carousel
+# TODO List
 
-Approved scope:
-- Focus only on src/app/prestasi/page.tsx
-- Implement a single-column (one card per view) carousel that runs continuously without pause on hover
-- Do NOT touch components/PrestasiSwiper.tsx
+## Completed Tasks
+- [x] Tambah env NEXT_PUBLIC_API_BASE di .env.local
+- [x] Buat/rapikan tipe TypeScript untuk data API di utils/types atau types
+- [x] Tambah service fetch untuk Tapak Suci, Hisbul Wathan, Prestasi
+- [x] Integrasi data Tapak Suci ke halaman/komponen tanpa ubah layout
+- [x] Integrasi data Hisbul Wathan ke halaman/komponen tanpa ubah layout
+- [x] Integrasi data Prestasi ke halaman/komponen tanpa ubah layout
+- [x] Integrasi data Tahfidz ke section Ujian Tahfidz
+- [x] Validasi dan update next.config.ts image domains untuk API
+- [x] Pastikan Right Image pakai data API di hero
+- [x] Cek build dan perbaiki error jika ada
 
-Steps:
-1) Imports
-   - Add Swiper imports to src/app/prestasi/page.tsx:
-     - import { Swiper, SwiperSlide } from 'swiper/react'
-     - import { Autoplay } from 'swiper/modules'
-     - import 'swiper/css'
-
-2) Replace Custom Marquee with Swiper
-   - Remove the current CSS-based marquee carousel inside the "Prestasi List Section"
-   - Implement Swiper with:
-     - slidesPerView: 1
-     - spaceBetween: 24
-     - loop: true
-     - autoplay: { delay: 0, disableOnInteraction: false, pauseOnMouseEnter: false }
-     - speed: 6000 (for smooth continuous motion)
-   - Each slide contains exactly one card centered (max-w-xl mx-auto)
-
-3) Preserve Card Content
-   - Keep existing three cards (Akademik, Olahraga, Seni) with their badges, titles, descriptions, and years
-   - Use the same images as in the current file
-
-4) Fix Broken JSX
-   - The third card has malformed/unclosed tags; ensure proper JSX structure
-   - Remove inline <style jsx> block related to the old marquee
-
-5) Verification
-   - Build/run locally to ensure no TypeScript/JSX errors
-   - Verify continuous autoplay works without pausing on hover
-   - Ensure responsiveness is maintained
-
-Progress:
-- [ ] Step 1
-- [ ] Step 2
-- [ ] Step 3
-- [ ] Step 4
-- [ ] Step 5
-
-Notes:
-- No new dependency is added; Swiper is already in the project.
-- Keep the rest of the /prestasi page unchanged (Hero and Statistics sections remain intact).
+## Summary
+Semua tugas integrasi backend untuk Tapak Suci, Hisbul Wathan, dan Prestasi telah selesai. Layout tidak diubah, hanya data yang di-wire dari API backend.

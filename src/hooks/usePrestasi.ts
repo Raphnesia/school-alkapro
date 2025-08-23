@@ -13,6 +13,13 @@ export function usePrestasi() {
         setLoading(true)
         setError(null)
         const res = await prestasiService.getCompleteData()
+        
+        // Debug: Log data yang dikirim ke komponen
+        console.log('🔍 Hook Data Result:', res)
+        console.log('🔍 Hook Right Image:', res?.right_image)
+        console.log('🔍 Hook Prestasi Count:', res?.prestasi?.length)
+        console.log('🔍 Hook Tahfidz Count:', res?.tahfidz?.length)
+        
         if (res) setData(res)
       } catch (e) {
         setError('Gagal memuat data Prestasi')

@@ -8,10 +8,16 @@ import Image from 'next/image';
 import { Header } from '@/components/Header';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { usePrestasi } from '@/hooks/usePrestasi'
-import { prestasiService } from '@/services/prestasiService'
+import { prestasiService, SimplePost } from '@/services/prestasiService'
 
 export default function PrestasiPage() {
   const { data } = usePrestasi()
+
+  // Debug: Log data yang diterima
+  console.log('🔍 Prestasi Data:', data)
+  console.log('🔍 Right Image:', data?.right_image)
+  console.log('🔍 Prestasi List:', data?.prestasi)
+  console.log('🔍 Tahfidz List:', data?.tahfidz)
 
   const heroBgFrom = data?.settings?.hero_bg_from || '#d1fae5'
   const heroBgVia = data?.settings?.hero_bg_via || '#eff6ff'
@@ -21,6 +27,69 @@ export default function PrestasiPage() {
   const rightImageUrl = prestasiService.getImageUrl(data?.right_image?.image || null, 
     "/prestasi siswa/'Prestasi gemilangmu tidak hanya mencerminkan bakatmu, tetapi juga dedikasi dan kerja keras yang (1).jpg")
   const rightImageTitle = data?.right_image?.title || 'Prestasi Siswa SMP Muhammadiyah Al Kautsar'
+
+  // Debug: Log URL yang digunakan
+  console.log('🔍 Right Image URL:', rightImageUrl)
+  console.log('🔍 Right Image Title:', rightImageTitle)
+
+  // Fallback data jika API kosong
+  const fallbackPrestasi: SimplePost[] = [
+    {
+      id: 1,
+      title: 'Juara 1 Olimpiade Matematika',
+      subtitle: 'Meraih juara 1 dalam Olimpiade Matematika tingkat Kabupaten',
+      image: '/prestasi siswa/Selamat kepada Ananda Amir Zaki El S. yang telah mendapat JUARA 2 dalam Kejuaraan Karate Pelaja.webp',
+      published_at: '2024-01-01',
+      slug: 'juara-1-olimpiade-matematika',
+      author_image: null,
+      category: null,
+      author: null,
+      tags: ['prestasi']
+    },
+    {
+      id: 2,
+      title: 'Juara 2 Kejuaraan Karate',
+      subtitle: 'Amir Zaki El S. meraih juara 2 dalam Kejuaraan Karate Pelajar',
+      image: '/prestasi siswa/Prestasi gemilangmu tidak hanya mencerminkan bakatmu, tetapi juga dedikasi dan kerja keras yang.jpg',
+      published_at: '2024-01-02',
+      slug: 'juara-2-kejuaraan-karate',
+      author_image: null,
+      category: null,
+      author: null,
+      tags: ['prestasi']
+    }
+  ]
+
+  const fallbackTahfidz: SimplePost[] = [
+    {
+      id: 1,
+      title: 'Hafal 30 Juz Al-Qur\'an',
+      subtitle: 'Ahmad Fadhil berhasil menghafal 30 Juz Al-Qur\'an dengan lancar',
+      image: '/ilustrasi/alquran.png',
+      published_at: '2024-01-01',
+      slug: 'hafal-30-juz-alquran',
+      author_image: null,
+      category: null,
+      author: null,
+      tags: ['ujian tahfidz']
+    },
+    {
+      id: 2,
+      title: 'Hafal 25 Juz Al-Qur\'an',
+      subtitle: 'Siti Aisyah menunjukkan kemampuan luar biasa dengan menghafal 25 Juz',
+      image: '/ilustrasi/mosque.png',
+      published_at: '2024-01-02',
+      slug: 'hafal-25-juz-alquran',
+      author_image: null,
+      category: null,
+      author: null,
+      tags: ['ujian tahfidz']
+    }
+  ]
+
+  // Gunakan data API atau fallback
+  const prestasiData = (data?.prestasi && data.prestasi.length > 0) ? data.prestasi : fallbackPrestasi
+  const tahfidzData = (data?.tahfidz && data.tahfidz.length > 0) ? data.tahfidz : fallbackTahfidz
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -467,7 +536,7 @@ export default function PrestasiPage() {
 
                 <div className="prestasi-carousel">
                   {/* Map daftar prestasi bertag "prestasi" maksimal 20 dari API */}
-                  {(data?.prestasi || []).slice(0, 20).map((post) => (
+                  {prestasiData.slice(0, 20).map((post) => (
                     <div key={post.id} className="prestasi-card">
                       <div className="relative h-48 w-full">
                         <Image
@@ -783,7 +852,7 @@ export default function PrestasiPage() {
                 `}</style>
                 
                 <div className="tahfidz-carousel">
-                  {(data?.tahfidz || []).slice(0, 20).map((post) => (
+                  {tahfidzData.slice(0, 20).map((post) => (
                     <div key={post.id} className="tahfidz-card">
                       <div className="relative h-72">
                         <Image

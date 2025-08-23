@@ -51,6 +51,14 @@ class PrestasiService {
       clearTimeout(timeoutId)
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const json = await res.json()
+      
+      // Debug: Log response API
+      console.log('🔍 API Response:', json)
+      console.log('🔍 API Data:', json?.data)
+      console.log('🔍 Right Image from API:', json?.data?.right_image)
+      console.log('🔍 Prestasi from API:', json?.data?.prestasi)
+      console.log('🔍 Tahfidz from API:', json?.data?.tahfidz)
+      
       return json?.data ?? null
     } catch (e) {
       console.error('Error fetching Prestasi complete:', e)
