@@ -2,32 +2,42 @@
 import { getApiUrl } from '@/lib/config'
 
 export interface PrestasiSettings {
-  id: number
-  hero_bg_from: string
-  hero_bg_via: string
-  hero_bg_to: string
-  badge_text: string
-  is_active: boolean
+  main_heading: string
+  hero_background_color: string
+  hero_text_color: string
 }
 
-export interface SimplePost {
+export interface PrestasiRightImage {
   id: number
   title: string
-  slug: string
-  subtitle?: string | null
-  image: string | null
-  author_image: string | null
-  category: string | null
-  author: string | null
+  excerpt: string
+  image: string
+  published_at: string
+}
+
+export interface PrestasiPost {
+  id: number
+  title: string
+  excerpt: string
+  image: string
+  published_at: string
   tags: string[]
-  published_at: string | null
+}
+
+export interface TahfidzPost {
+  id: number
+  title: string
+  excerpt: string
+  image: string
+  published_at: string
+  tags: string[]
 }
 
 export interface PrestasiCompleteData {
   settings: PrestasiSettings | null
-  right_image: { image: string | null; title: string; slug: string } | null
-  prestasi: SimplePost[]
-  tahfidz: SimplePost[]
+  right_image: PrestasiRightImage | null
+  prestasi_list: PrestasiPost[]
+  tahfidz_list: TahfidzPost[]
 }
 
 class PrestasiService {
@@ -56,12 +66,72 @@ class PrestasiService {
       console.log('🔍 API Response:', json)
       console.log('🔍 API Data:', json?.data)
       console.log('🔍 Right Image from API:', json?.data?.right_image)
-      console.log('🔍 Prestasi from API:', json?.data?.prestasi)
-      console.log('🔍 Tahfidz from API:', json?.data?.tahfidz)
+      console.log('🔍 Prestasi List from API:', json?.data?.prestasi_list)
+      console.log('🔍 Tahfidz List from API:', json?.data?.tahfidz_list)
       
       return json?.data ?? null
     } catch (e) {
       console.error('Error fetching Prestasi complete:', e)
+      return null
+    }
+  }
+
+  async getSettings(): Promise<PrestasiSettings | null> {
+    try {
+      const res = await fetch(getApiUrl('/prestasi/settings'), {
+        headers: { Accept: 'application/json' },
+        cache: 'no-store',
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const json = await res.json()
+      return json?.data ?? null
+    } catch (e) {
+      console.error('Error fetching Prestasi settings:', e)
+      return null
+    }
+  }
+
+  async getRightImage(): Promise<PrestasiRightImage | null> {
+    try {
+      const res = await fetch(getApiUrl('/prestasi/right-image'), {
+        headers: { Accept: 'application/json' },
+        cache: 'no-store',
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const json = await res.json()
+      return json?.data ?? null
+    } catch (e) {
+      console.error('Error fetching Prestasi right image:', e)
+      return null
+    }
+  }
+
+  async getPrestasiList(page = 1): Promise<{ data: PrestasiPost[]; pagination: any } | null> {
+    try {
+      const res = await fetch(getApiUrl(`/prestasi/list?page=${page}`), {
+        headers: { Accept: 'application/json' },
+        cache: 'no-store',
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const json = await res.json()
+      return json ?? null
+    } catch (e) {
+      console.error('Error fetching Prestasi list:', e)
+      return null
+    }
+  }
+
+  async getTahfidzList(page = 1): Promise<{ data: TahfidzPost[]; pagination: any } | null> {
+    try {
+      const res = await fetch(getApiUrl(`/prestasi/tahfidz?page=${page}`), {
+        headers: { Accept: 'application/json' },
+        cache: 'no-store',
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const json = await res.json()
+      return json ?? null
+    } catch (e) {
+      console.error('Error fetching Tahfidz list:', e)
       return null
     }
   }
