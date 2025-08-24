@@ -11,13 +11,52 @@ import { usePrestasi } from '@/hooks/usePrestasi'
 import { prestasiService, PrestasiPost, TahfidzPost } from '@/services/prestasiService'
 
 export default function PrestasiPage() {
-  const { data } = usePrestasi()
+  const { data, loading, error } = usePrestasi()
 
   // Debug: Log data yang diterima
   console.log('🔍 Prestasi Data:', data)
   console.log('🔍 Right Image:', data?.right_image)
   console.log('🔍 Prestasi List:', data?.prestasi_list)
   console.log('🔍 Tahfidz List:', data?.tahfidz_list)
+  console.log('🔍 Loading State:', loading)
+  console.log('🔍 Error State:', error)
+
+  // Tampilkan loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-white">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-xl text-gray-600">Memuat data prestasi...</p>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  // Tampilkan error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col bg-white">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-red-500 text-6xl mb-4">⚠️</div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Gagal Memuat Data</h1>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+            >
+              Coba Lagi
+            </button>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
   const heroBgColor = data?.settings?.hero_background_color || '#1e40af'
   const heroTextColor = data?.settings?.hero_text_color || '#ffffff'
@@ -77,6 +116,48 @@ export default function PrestasiPage() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
+      
+      {/* Debug Info - Hanya tampilkan di development */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 p-4 m-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-yellow-800">Debug Info</h3>
+              <div className="mt-2 text-sm text-yellow-700">
+                <p><strong>API Data:</strong> {data ? '✅ Tersedia' : '❌ Kosong'}</p>
+                <p><strong>Settings:</strong> {data?.settings ? '✅ Tersedia' : '❌ Kosong'}</p>
+                <p><strong>Right Image:</strong> {data?.right_image ? '✅ Tersedia' : '❌ Kosong'}</p>
+                <p><strong>Prestasi List:</strong> {data?.prestasi_list?.length || 0} item</p>
+                <p><strong>Tahfidz List:</strong> {data?.tahfidz_list?.length || 0} item</p>
+                <p><strong>Using Fallback:</strong> {(!data?.prestasi_list || data.prestasi_list.length === 0) ? '✅ Ya' : '❌ Tidak'}</p>
+              </div>
+              <div className="mt-3">
+                <button 
+                  onClick={async () => {
+                    try {
+                      const response = await fetch('https://api.raphnesia.my.id/api/v1/prestasi/complete')
+                      const result = await response.json()
+                      console.log('🔍 Test API Response:', result)
+                      alert(`API Test: ${response.status} - ${response.statusText}\nCheck console for details`)
+                    } catch (e) {
+                      console.error('🔍 API Test Error:', e)
+                      alert(`API Test Error: ${e}`)
+                    }
+                  }}
+                  className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700"
+                >
+                  Test API Endpoint
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Hero Section - Inspired by Jagoan Hosting Layout */}
       <main className="flex-1">
