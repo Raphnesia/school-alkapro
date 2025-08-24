@@ -17,6 +17,10 @@ export default function PrestasiPage() {
   const [prestasiBeritaData, setPrestasiBeritaData] = useState<PrestasiPost[]>([])
   const [tahfidzBeritaData, setTahfidzBeritaData] = useState<PrestasiPost[]>([])
   const [beritaLoading, setBeritaLoading] = useState(true)
+  
+  // State untuk carousel gambar kanan (ganti-ganti setiap 5 detik)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [allImages, setAllImages] = useState<PrestasiPost[]>([])
 
   // Fallback data jika API kosong (menggunakan PrestasiPost interface)
   const fallbackPrestasi: PrestasiPost[] = [
@@ -110,6 +114,28 @@ export default function PrestasiPage() {
     fetchBeritaData()
   }, [])
 
+  // Update gabungan gambar setiap kali data prestasi atau tahfidz berubah
+  useEffect(() => {
+    const combined = [...prestasiBeritaData, ...tahfidzBeritaData]
+    setAllImages(combined)
+    console.log('🔍 All Images untuk carousel:', combined.length, 'items')
+  }, [prestasiBeritaData, tahfidzBeritaData])
+
+  // Carousel gambar ganti setiap 5 detik
+  useEffect(() => {
+    if (allImages.length === 0) return
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % allImages.length
+        console.log('🔄 Carousel: Gambar', nextIndex + 1, 'dari', allImages.length)
+        return nextIndex
+      })
+    }, 5000) // 5 detik
+
+    return () => clearInterval(interval)
+  }, [allImages.length])
+
   // Gunakan data berita untuk List Section
   const prestasiData = prestasiBeritaData
   const tahfidzData = tahfidzBeritaData
@@ -167,11 +193,15 @@ export default function PrestasiPage() {
   const heroSubtitle = data?.settings?.hero_subtitle || 'Siswa berprestasi dengan pencapaian luar biasa dan aktivasi instan bikin prestasi akademik dan non-akademik siap jalan bebas hambatan'
   const featureLists = data?.settings?.feature_lists || ['Prestasi Akademik Tinggi', 'Juara Olimpiade Nasional', 'Prestasi up to 150+ Penghargaan', 'Pengembangan Bakat Terpadu']
 
-  const rightImageUrl = prestasiService.getImageUrl(data?.right_image?.featured_image || null, 
-    "/prestasi siswa/Prestasi gemilangmu tidak hanya mencerminkan bakatmu, tetapi juga dedikasi dan kerja keras yang.jpg")
-  const rightImageTitle = data?.right_image?.title || 'Prestasi Siswa SMP Muhammadiyah Al Kautsar'
+  // Right image dari carousel (ganti-ganti setiap 5 detik)
+  const currentImage = allImages.length > 0 ? allImages[currentImageIndex] : null
+  const rightImageUrl = currentImage ? 
+    prestasiService.getImageUrl(currentImage.featured_image || null, "/prestasi siswa/Prestasi gemilangmu tidak hanya mencerminkan bakatmu, tetapi juga dedikasi dan kerja keras yang.jpg") :
+    "/prestasi siswa/Prestasi gemilangmu tidak hanya mencerminkan bakatmu, tetapi juga dedikasi dan kerja keras yang.jpg"
+  const rightImageTitle = currentImage?.title || 'Prestasi Siswa SMP Muhammadiyah Al Kautsar'
 
   // Debug: Log URL yang digunakan
+  console.log('🔍 Current Carousel Image:', currentImageIndex + 1, 'dari', allImages.length)
   console.log('🔍 Right Image URL:', rightImageUrl)
   console.log('🔍 Right Image Title:', rightImageTitle)
 
@@ -194,9 +224,10 @@ export default function PrestasiPage() {
             <div className="ml-3">
               <h3 className="text-sm font-medium text-yellow-800">Debug Info</h3>
               <div className="mt-2 text-sm text-yellow-700">
-                <p><strong>Hero API (/prestasi):</strong> {data ? '✅ Tersedia' : '❌ Kosong'}</p>
+                <p><strong>Hero API (/prestasi/settings):</strong> {data ? '✅ Tersedia' : '❌ Kosong'}</p>
                 <p><strong>Settings:</strong> {data?.settings ? '✅ Tersedia' : '❌ Kosong'}</p>
-                <p><strong>Right Image:</strong> {data?.right_image ? '✅ Tersedia' : '❌ Kosong'}</p>
+                <p><strong>Carousel Images:</strong> {allImages.length} item (berubah setiap 5 detik)</p>
+                <p><strong>Current Image:</strong> {currentImageIndex + 1} dari {allImages.length}</p>
                 <hr className="my-2" />
                 <p><strong>Berita API (/news):</strong> {beritaLoading ? '⏳ Loading...' : '✅ Tersedia'}</p>
                 <p><strong>Prestasi List (berita):</strong> {prestasiData.length} item</p>
@@ -205,7 +236,8 @@ export default function PrestasiPage() {
                 <hr className="my-2" />
                 <p><strong>Data Source:</strong></p>
                 <div className="ml-4 text-xs">
-                  <p>• Hero: API /prestasi</p>
+                  <p>• Hero Settings: API /prestasi/settings</p>
+                  <p>• Right Image: Carousel dari prestasi + tahfidz (5 detik)</p>
                   <p>• Prestasi List: API /news?tags=prestasi</p>
                   <p>• Tahfidz List: API /news?tags=ujian%20tahfidz</p>
                 </div>
@@ -220,22 +252,6 @@ export default function PrestasiPage() {
                 <button 
                   onClick={async () => {
                     try {
-                      const response = await fetch('https://api.raphnesia.my.id/api/v1/prestasi')
-                      const result = await response.json()
-                      console.log('🔍 Test API /prestasi Response:', result)
-                      alert(`API Test /prestasi: ${response.status} - ${response.statusText}\nCheck console for details`)
-                    } catch (e) {
-                      console.error('🔍 API Test Error:', e)
-                      alert(`API Test Error: ${e}`)
-                    }
-                  }}
-                  className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 mr-2"
-                >
-                  Test API /prestasi
-                </button>
-                <button 
-                  onClick={async () => {
-                    try {
                       const response = await fetch('https://api.raphnesia.my.id/api/v1/prestasi/settings')
                       const result = await response.json()
                       console.log('🔍 Test API /prestasi/settings Response:', result)
@@ -245,9 +261,9 @@ export default function PrestasiPage() {
                       alert(`API Test Error: ${e}`)
                     }
                   }}
-                  className="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700 mr-2"
+                  className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 mr-2"
                 >
-                  Test /prestasi/settings
+                  Test API /prestasi/settings
                 </button>
                 <button 
                   onClick={async () => {
@@ -370,9 +386,31 @@ export default function PrestasiPage() {
                         alt={rightImageTitle}
                         width={400}
                         height={500}
-                        className="w-full h-auto max-h-[520px] object-cover rounded-xl"
+                        className="w-full h-auto max-h-[520px] object-cover rounded-xl transition-all duration-700 ease-in-out"
                         priority
+                        unoptimized
                       />
+                      
+                      {/* Carousel Title Overlay */}
+                      {currentImage && (
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 rounded-b-xl">
+                          <h3 className="text-white font-semibold text-sm md:text-base line-clamp-2 transition-all duration-500">
+                            {rightImageTitle}
+                          </h3>
+                        </div>
+                      )}
+                      
+                      {/* Carousel Indicators */}
+                      {allImages.length > 1 && (
+                        <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
+                          <div className="flex items-center gap-1">
+                            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                            <span className="text-white text-xs font-medium">
+                              {currentImageIndex + 1}/{allImages.length}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                     
                     {/* Floating Elements */}

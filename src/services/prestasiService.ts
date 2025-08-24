@@ -42,8 +42,8 @@ class PrestasiService {
       
       let res
       try {
-        // Try direct API first
-        res = await fetch(getApiUrl('/prestasi'), {
+        // Try direct API first untuk settings
+        res = await fetch(getApiUrl('/prestasi/settings'), {
           signal: controller.signal,
           headers: { Accept: 'application/json' },
           cache: 'no-store',
@@ -51,7 +51,7 @@ class PrestasiService {
       } catch (directError) {
         console.log('🔄 Direct API failed, trying proxy...')
         // Fallback to proxy
-        res = await fetch('/api/proxy/prestasi', {
+        res = await fetch('/api/proxy?endpoint=/prestasi/settings', {
           signal: controller.signal,
           headers: { Accept: 'application/json' },
           cache: 'no-store',
@@ -60,18 +60,20 @@ class PrestasiService {
       
       clearTimeout(timeoutId)
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const json = await res.json()
+      const settings = await res.json()
       
       // Debug: Log response API
-      console.log('🔍 Prestasi API Response:', json)
-      console.log('🔍 Settings:', json?.settings)
-      console.log('🔍 Right Image:', json?.right_image)
-      console.log('🔍 List Prestasi:', json?.list_prestasi)
-      console.log('🔍 List Tahfidz:', json?.list_tahfidz)
+      console.log('🔍 Prestasi Settings Response:', settings)
       
-      return json ?? null
+      // Return dengan structure yang benar - settings langsung dari API
+      return {
+        settings: settings,
+        right_image: null, // Akan diisi dari carousel gambar
+        list_prestasi: [], // Diisi dari berita API terpisah
+        list_tahfidz: []   // Diisi dari berita API terpisah
+      }
     } catch (e) {
-      console.error('Error fetching Prestasi complete:', e)
+      console.error('Error fetching Prestasi settings:', e)
       return null
     }
   }
