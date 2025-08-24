@@ -320,58 +320,29 @@ export default function PrestasiPage() {
 
                 {/* Main Heading */}
                 <div className="space-y-4">
-                  <h1 className="text-4xl lg:text-6xl font-bold leading-tight font-serif" style={{fontFamily: 'Philosopher, serif'}}>
+                  <h1 className="text-4xl lg:text-6xl font-bold leading-tight font-serif" style={{fontFamily: 'Philosopher, serif', color: heroTextColor}}>
                     {mainHeading}
                   </h1>
                   
-                  <p className="text-gray-600 text-lg leading-relaxed">
+                  <p className="text-lg leading-relaxed" style={{ color: heroTextColor }}>
                     {heroSubtitle}
                   </p>
                 </div>
 
                 {/* Feature Lists - Two Columns */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Left Column */}
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
+                  {featureLists.map((feature, index) => (
+                    <div key={index} className="flex items-center gap-3">
                       <div className="flex-shrink-0 w-5 h-5 bg-green-500 rounded-sm flex items-center justify-center">
                         <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>
-                      <span className="text-gray-700 font-medium">Prestasi Akademik Tinggi</span>
+                      <span className="font-medium" style={{ color: heroTextColor }}>
+                        {feature}
+                      </span>
                     </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 bg-green-500 rounded-sm flex items-center justify-center">
-                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <span className="text-gray-700 font-medium">Juara Olimpiade Nasional</span>
-                    </div>
-                  </div>
-
-                  {/* Right Column */}
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 bg-green-500 rounded-sm flex items-center justify-center">
-                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <span className="text-gray-700 font-medium">Prestasi up to 150+ Penghargaan</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 bg-green-500 rounded-sm flex items-center justify-center">
-                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <span className="text-gray-700 font-medium">Pengembangan Bakat Terpadu</span>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
