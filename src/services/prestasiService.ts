@@ -26,7 +26,7 @@ export interface Post {
 }
 
 export interface PrestasiComplete {
-  settings: PrestasiSettings
+  settings: PrestasiSettings | null
   right_image: Post | null
   list_prestasi: Post[]
   list_tahfidz: Post[]
@@ -43,27 +43,41 @@ class PrestasiService {
 
   async getCompleteData(): Promise<PrestasiComplete | null> {
     try {
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 8000)
-      const res = await fetch(getApiUrl('/prestasi'), {
-        signal: controller.signal,
+      // Ambil data prestasi dari berita dengan tag "prestasi"
+      const prestasiResponse = await fetch(getApiUrl('/posts?tags=prestasi'), {
         headers: { Accept: 'application/json' },
         cache: 'no-store',
       })
-      clearTimeout(timeoutId)
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const json = await res.json()
       
+      // Ambil data tahfidz dari berita dengan tag "ujian tahfidz"
+      const tahfidzResponse = await fetch(getApiUrl('/posts?tags=ujian%20tahfidz'), {
+        headers: { Accept: 'application/json' },
+        cache: 'no-store',
+      })
+
+      if (!prestasiResponse.ok || !tahfidzResponse.ok) {
+        throw new Error(`HTTP Error: Prestasi ${prestasiResponse.status}, Tahfidz ${tahfidzResponse.status}`)
+      }
+
+      const prestasiData = await prestasiResponse.json()
+      const tahfidzData = await tahfidzResponse.json()
+
+      // Ambil right image dari berita prestasi pertama
+      const rightImage = prestasiData?.data?.[0] || null
+
       // Debug: Log response API
-      console.log('🔍 API Response:', json)
-      console.log('🔍 API Data:', json?.data)
-      console.log('🔍 Right Image from API:', json?.data?.right_image)
-      console.log('🔍 Prestasi List from API:', json?.data?.list_prestasi)
-      console.log('🔍 Tahfidz List from API:', json?.data?.list_tahfidz)
+      console.log('🔍 Prestasi Posts Response:', prestasiData)
+      console.log('🔍 Tahfidz Posts Response:', tahfidzData)
+      console.log('🔍 Right Image from Prestasi:', rightImage)
       
-      return json?.data ?? null
+      return {
+        settings: null, // Settings tidak tersedia dari posts endpoint
+        right_image: rightImage,
+        list_prestasi: prestasiData?.data || [],
+        list_tahfidz: tahfidzData?.data || []
+      }
     } catch (e) {
-      console.error('Error fetching Prestasi complete:', e)
+      console.error('Error fetching Prestasi data from posts:', e)
       return null
     }
   }
@@ -85,13 +99,13 @@ class PrestasiService {
 
   async getRightImage(): Promise<Post | null> {
     try {
-      const res = await fetch(getApiUrl('/prestasi/right-image'), {
+      const res = await fetch(getApiUrl('/posts?tags=prestasi&limit=1'), {
         headers: { Accept: 'application/json' },
         cache: 'no-store',
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const json = await res.json()
-      return json?.data ?? null
+      return json?.data?.[0] ?? null
     } catch (e) {
       console.error('Error fetching Prestasi right image:', e)
       return null
@@ -100,7 +114,7 @@ class PrestasiService {
 
   async getPrestasiList(page = 1): Promise<{ data: Post[]; pagination: any } | null> {
     try {
-      const res = await fetch(getApiUrl(`/prestasi/list-prestasi?page=${page}`), {
+      const res = await fetch(getApiUrl(`/posts?tags=prestasi&page=${page}`), {
         headers: { Accept: 'application/json' },
         cache: 'no-store',
       })
@@ -115,7 +129,7 @@ class PrestasiService {
 
   async getTahfidzList(page = 1): Promise<{ data: Post[]; pagination: any } | null> {
     try {
-      const res = await fetch(getApiUrl(`/prestasi/list-tahfidz?page=${page}`), {
+      const res = await fetch(getApiUrl(`/posts?tags=ujian%20tahfidz&page=${page}`), {
         headers: { Accept: 'application/json' },
         cache: 'no-store',
       })

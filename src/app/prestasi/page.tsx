@@ -29,7 +29,7 @@ export default function PrestasiPage() {
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-xl text-gray-600">Memuat data prestasi...</p>
+            <p className="text-xl text-gray-600">Memuat data prestasi dari berita...</p>
           </div>
         </main>
       </div>
@@ -132,9 +132,12 @@ export default function PrestasiPage() {
     }
   ]
 
-  // Gunakan data API atau fallback
+  // Gunakan data dari berita dengan tag prestasi dan tahfidz
   const prestasiData = (data?.list_prestasi && data.list_prestasi.length > 0) ? data.list_prestasi : fallbackPrestasi
   const tahfidzData = (data?.list_tahfidz && data.list_tahfidz.length > 0) ? data.list_tahfidz : fallbackTahfidz
+
+  console.log('🔍 Final Prestasi Data:', prestasiData)
+  console.log('🔍 Final Tahfidz Data:', tahfidzData)
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -159,6 +162,7 @@ export default function PrestasiPage() {
                 <p><strong>Tahfidz List:</strong> {data?.list_tahfidz?.length || 0} item</p>
                 <p><strong>Using Fallback:</strong> {(!data?.list_prestasi || data.list_prestasi.length === 0) ? '✅ Ya' : '❌ Tidak'}</p>
                 <p><strong>API Base URL:</strong> {process.env.NEXT_PUBLIC_API_BASE || 'https://api.raphnesia.my.id/api/v1'}</p>
+                <p><strong>Data Source:</strong> Berita dengan tag "prestasi" dan "ujian tahfidz"</p>
               </div>
               <div className="mt-3 space-y-2">
                 <button 
