@@ -3,7 +3,7 @@
 
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Header } from '@/components/Header';
 import { ScrollReveal } from '@/components/ScrollReveal';
@@ -12,6 +12,11 @@ import { prestasiService, PrestasiPost } from '@/services/prestasiService'
 
 export default function PrestasiPage() {
   const { data, loading, error } = usePrestasi()
+
+  // State untuk data berita (terpisah dari API prestasi)
+  const [prestasiBeritaData, setPrestasiBeritaData] = useState<PrestasiPost[]>([])
+  const [tahfidzBeritaData, setTahfidzBeritaData] = useState<PrestasiPost[]>([])
+  const [beritaLoading, setBeritaLoading] = useState(true)
 
   // Debug: Log data yang diterima
   console.log('🔍 Prestasi Data:', data)
@@ -109,12 +114,73 @@ export default function PrestasiPage() {
     }
   ]
 
-  // Gunakan data dari API atau fallback
-  const prestasiData = (data?.list_prestasi && data.list_prestasi.length > 0) ? data.list_prestasi : fallbackPrestasi
-  const tahfidzData = (data?.list_tahfidz && data.list_tahfidz.length > 0) ? data.list_tahfidz : fallbackTahfidz
+  // Fetch data berita untuk Prestasi List Section dan Tahfidz Section
+  useEffect(() => {
+    const fetchBeritaData = async () => {
+      try {
+        setBeritaLoading(true)
+        
+        // Fetch berita prestasi
+        const prestasiResponse = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=prestasi')
+        if (prestasiResponse.ok) {
+          const prestasiResult = await prestasiResponse.json()
+          console.log('🔍 Berita Prestasi:', prestasiResult?.data)
+          if (prestasiResult?.data && prestasiResult.data.length > 0) {
+            // Convert format news ke format PrestasiPost
+            const convertedPrestasi = prestasiResult.data.map((news: any) => ({
+              id: news.id,
+              title: news.title,
+              featured_image: news.image,
+              excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
+              published_at: news.published_at
+            }))
+            setPrestasiBeritaData(convertedPrestasi)
+          } else {
+            setPrestasiBeritaData(fallbackPrestasi)
+          }
+        } else {
+          setPrestasiBeritaData(fallbackPrestasi)
+        }
 
-  console.log('🔍 Final Prestasi Data:', prestasiData)
-  console.log('🔍 Final Tahfidz Data:', tahfidzData)
+        // Fetch berita tahfidz
+        const tahfidzResponse = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=ujian%20tahfidz')
+        if (tahfidzResponse.ok) {
+          const tahfidzResult = await tahfidzResponse.json()
+          console.log('🔍 Berita Tahfidz:', tahfidzResult?.data)
+          if (tahfidzResult?.data && tahfidzResult.data.length > 0) {
+            // Convert format news ke format PrestasiPost
+            const convertedTahfidz = tahfidzResult.data.map((news: any) => ({
+              id: news.id,
+              title: news.title,
+              featured_image: news.image,
+              excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
+              published_at: news.published_at
+            }))
+            setTahfidzBeritaData(convertedTahfidz)
+          } else {
+            setTahfidzBeritaData(fallbackTahfidz)
+          }
+        } else {
+          setTahfidzBeritaData(fallbackTahfidz)
+        }
+      } catch (error) {
+        console.error('Error fetching berita data:', error)
+        setPrestasiBeritaData(fallbackPrestasi)
+        setTahfidzBeritaData(fallbackTahfidz)
+      } finally {
+        setBeritaLoading(false)
+      }
+    }
+
+    fetchBeritaData()
+  }, [])
+
+  // Gunakan data berita untuk List Section
+  const prestasiData = prestasiBeritaData
+  const tahfidzData = tahfidzBeritaData
+
+  console.log('🔍 Final Prestasi Data (dari berita):', prestasiData)
+  console.log('🔍 Final Tahfidz Data (dari berita):', tahfidzData)
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -132,15 +198,22 @@ export default function PrestasiPage() {
             <div className="ml-3">
               <h3 className="text-sm font-medium text-yellow-800">Debug Info</h3>
               <div className="mt-2 text-sm text-yellow-700">
-                <p><strong>API Data:</strong> {data ? '✅ Tersedia' : '❌ Kosong'}</p>
+                <p><strong>Hero API (/prestasi):</strong> {data ? '✅ Tersedia' : '❌ Kosong'}</p>
                 <p><strong>Settings:</strong> {data?.settings ? '✅ Tersedia' : '❌ Kosong'}</p>
                 <p><strong>Right Image:</strong> {data?.right_image ? '✅ Tersedia' : '❌ Kosong'}</p>
-                <p><strong>Prestasi List:</strong> {data?.list_prestasi?.length || 0} item</p>
-                <p><strong>Tahfidz List:</strong> {data?.list_tahfidz?.length || 0} item</p>
-                <p><strong>Using Fallback:</strong> {(!data?.list_prestasi || data.list_prestasi.length === 0) ? '✅ Ya' : '❌ Tidak'}</p>
-                <p><strong>API Base URL:</strong> {process.env.NEXT_PUBLIC_API_BASE || 'https://api.raphnesia.my.id/api/v1'}</p>
-                <p><strong>Data Source:</strong> API /prestasi (sudah difilter di backend)</p>
-                <p><strong>Sample Image URLs:</strong></p>
+                <hr className="my-2" />
+                <p><strong>Berita API (/news):</strong> {beritaLoading ? '⏳ Loading...' : '✅ Tersedia'}</p>
+                <p><strong>Prestasi List (berita):</strong> {prestasiData.length} item</p>
+                <p><strong>Tahfidz List (berita):</strong> {tahfidzData.length} item</p>
+                <p><strong>Using Fallback:</strong> {prestasiData.length === 0 ? '✅ Ya' : '❌ Tidak'}</p>
+                <hr className="my-2" />
+                <p><strong>Data Source:</strong></p>
+                <div className="ml-4 text-xs">
+                  <p>• Hero: API /prestasi</p>
+                  <p>• Prestasi List: API /news?tags=prestasi</p>
+                  <p>• Tahfidz List: API /news?tags=ujian%20tahfidz</p>
+                </div>
+                <p><strong>Sample Prestasi URLs:</strong></p>
                 <div className="ml-4 text-xs">
                   {prestasiData.slice(0, 3).map((post, index) => (
                     <p key={index}>• {post.title}: {post.featured_image ? '✅' : '❌'} {post.featured_image || 'No image'}</p>
