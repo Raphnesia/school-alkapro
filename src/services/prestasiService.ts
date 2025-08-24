@@ -3,41 +3,33 @@ import { getApiUrl } from '@/lib/config'
 
 export interface PrestasiSettings {
   main_heading: string
-  hero_background_color: string
-  hero_text_color: string
+  hero_bg_from: string
+  hero_bg_via: string
+  hero_bg_to: string
+  badge_text: string
+  floating_elements_bg_color: string
+  floating_elements_text_color: string
 }
 
-export interface PrestasiRightImage {
+export interface Post {
   id: number
   title: string
   excerpt: string
-  image: string
-  published_at: string
-}
-
-export interface PrestasiPost {
-  id: number
-  title: string
-  excerpt: string
-  image: string
-  published_at: string
+  content: string
+  featured_image: string
+  category: 'academic' | 'achievement' | 'activity' | 'announcement' | 'history'
   tags: string[]
-}
-
-export interface TahfidzPost {
-  id: number
-  title: string
-  excerpt: string
-  image: string
+  is_published: boolean
   published_at: string
-  tags: string[]
+  created_at: string
+  updated_at: string
 }
 
-export interface PrestasiCompleteData {
-  settings: PrestasiSettings | null
-  right_image: PrestasiRightImage | null
-  prestasi_list: PrestasiPost[]
-  tahfidz_list: TahfidzPost[]
+export interface PrestasiComplete {
+  settings: PrestasiSettings
+  right_image: Post | null
+  list_prestasi: Post[]
+  list_tahfidz: Post[]
 }
 
 class PrestasiService {
@@ -49,11 +41,11 @@ class PrestasiService {
     return PrestasiService.instance
   }
 
-  async getCompleteData(): Promise<PrestasiCompleteData | null> {
+  async getCompleteData(): Promise<PrestasiComplete | null> {
     try {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 8000)
-      const res = await fetch(getApiUrl('/prestasi/complete'), {
+      const res = await fetch(getApiUrl('/prestasi'), {
         signal: controller.signal,
         headers: { Accept: 'application/json' },
         cache: 'no-store',
@@ -66,8 +58,8 @@ class PrestasiService {
       console.log('🔍 API Response:', json)
       console.log('🔍 API Data:', json?.data)
       console.log('🔍 Right Image from API:', json?.data?.right_image)
-      console.log('🔍 Prestasi List from API:', json?.data?.prestasi_list)
-      console.log('🔍 Tahfidz List from API:', json?.data?.tahfidz_list)
+      console.log('🔍 Prestasi List from API:', json?.data?.list_prestasi)
+      console.log('🔍 Tahfidz List from API:', json?.data?.list_tahfidz)
       
       return json?.data ?? null
     } catch (e) {
@@ -91,7 +83,7 @@ class PrestasiService {
     }
   }
 
-  async getRightImage(): Promise<PrestasiRightImage | null> {
+  async getRightImage(): Promise<Post | null> {
     try {
       const res = await fetch(getApiUrl('/prestasi/right-image'), {
         headers: { Accept: 'application/json' },
@@ -106,9 +98,9 @@ class PrestasiService {
     }
   }
 
-  async getPrestasiList(page = 1): Promise<{ data: PrestasiPost[]; pagination: any } | null> {
+  async getPrestasiList(page = 1): Promise<{ data: Post[]; pagination: any } | null> {
     try {
-      const res = await fetch(getApiUrl(`/prestasi/list?page=${page}`), {
+      const res = await fetch(getApiUrl(`/prestasi/list-prestasi?page=${page}`), {
         headers: { Accept: 'application/json' },
         cache: 'no-store',
       })
@@ -121,9 +113,9 @@ class PrestasiService {
     }
   }
 
-  async getTahfidzList(page = 1): Promise<{ data: TahfidzPost[]; pagination: any } | null> {
+  async getTahfidzList(page = 1): Promise<{ data: Post[]; pagination: any } | null> {
     try {
-      const res = await fetch(getApiUrl(`/prestasi/tahfidz?page=${page}`), {
+      const res = await fetch(getApiUrl(`/prestasi/list-tahfidz?page=${page}`), {
         headers: { Accept: 'application/json' },
         cache: 'no-store',
       })

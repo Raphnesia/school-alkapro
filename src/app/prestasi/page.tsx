@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { Header } from '@/components/Header';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { usePrestasi } from '@/hooks/usePrestasi'
-import { prestasiService, PrestasiPost, TahfidzPost } from '@/services/prestasiService'
+import { prestasiService, Post } from '@/services/prestasiService'
 
 export default function PrestasiPage() {
   const { data, loading, error } = usePrestasi()
@@ -16,8 +16,8 @@ export default function PrestasiPage() {
   // Debug: Log data yang diterima
   console.log('🔍 Prestasi Data:', data)
   console.log('🔍 Right Image:', data?.right_image)
-  console.log('🔍 Prestasi List:', data?.prestasi_list)
-  console.log('🔍 Tahfidz List:', data?.tahfidz_list)
+  console.log('🔍 Prestasi List:', data?.list_prestasi)
+  console.log('🔍 Tahfidz List:', data?.list_tahfidz)
   console.log('🔍 Loading State:', loading)
   console.log('🔍 Error State:', error)
 
@@ -58,11 +58,14 @@ export default function PrestasiPage() {
     )
   }
 
-  const heroBgColor = data?.settings?.hero_background_color || '#1e40af'
-  const heroTextColor = data?.settings?.hero_text_color || '#ffffff'
+  // Gunakan settings dari API atau fallback
+  const heroBgFrom = data?.settings?.hero_bg_from || '#1e40af'
+  const heroBgVia = data?.settings?.hero_bg_via || '#3b82f6'
+  const heroBgTo = data?.settings?.hero_bg_to || '#60a5fa'
   const mainHeading = data?.settings?.main_heading || 'Prestasi Siswa untuk Berbagai Kebutuhan'
+  const badgeText = data?.settings?.badge_text || 'SMP Muhammadiyah Al Kautsar'
 
-  const rightImageUrl = prestasiService.getImageUrl(data?.right_image?.image || null, 
+  const rightImageUrl = prestasiService.getImageUrl(data?.right_image?.featured_image || null, 
     "/prestasi siswa/Prestasi gemilangmu tidak hanya mencerminkan bakatmu, tetapi juga dedikasi dan kerja keras yang.jpg")
   const rightImageTitle = data?.right_image?.title || 'Prestasi Siswa SMP Muhammadiyah Al Kautsar'
 
@@ -71,47 +74,67 @@ export default function PrestasiPage() {
   console.log('🔍 Right Image Title:', rightImageTitle)
 
   // Fallback data jika API kosong
-  const fallbackPrestasi: PrestasiPost[] = [
+  const fallbackPrestasi: Post[] = [
     {
       id: 1,
       title: 'Juara 1 Olimpiade Matematika',
       excerpt: 'Meraih juara 1 dalam Olimpiade Matematika tingkat Kabupaten',
-      image: '/prestasi siswa/Selamat kepada Ananda Amir Zaki El S. yang telah mendapat JUARA 2 dalam Kejuaraan Karate Pelaja.webp',
-      published_at: '2024-01-01',
-      tags: ['prestasi', 'akademik']
+      content: 'Konten lengkap prestasi matematika...',
+      featured_image: '/prestasi siswa/Selamat kepada Ananda Amir Zaki El S. yang telah mendapat JUARA 2 dalam Kejuaraan Karate Pelaja.webp',
+      category: 'achievement',
+      tags: ['prestasi', 'akademik'],
+      is_published: true,
+      published_at: '2024-01-01T00:00:00.000000Z',
+      created_at: '2024-01-01T00:00:00.000000Z',
+      updated_at: '2024-01-01T00:00:00.000000Z'
     },
     {
       id: 2,
       title: 'Juara 2 Kejuaraan Karate',
       excerpt: 'Amir Zaki El S. meraih juara 2 dalam Kejuaraan Karate Pelajar',
-      image: '/prestasi siswa/Prestasi gemilangmu tidak hanya mencerminkan bakatmu, tetapi juga dedikasi dan kerja keras yang.jpg',
-      published_at: '2024-01-02',
-      tags: ['prestasi', 'non-akademik']
+      content: 'Konten lengkap prestasi karate...',
+      featured_image: '/prestasi siswa/Prestasi gemilangmu tidak hanya mencerminkan bakatmu, tetapi juga dedikasi dan kerja keras yang.jpg',
+      category: 'achievement',
+      tags: ['prestasi', 'non-akademik'],
+      is_published: true,
+      published_at: '2024-01-02T00:00:00.000000Z',
+      created_at: '2024-01-02T00:00:00.000000Z',
+      updated_at: '2024-01-02T00:00:00.000000Z'
     }
   ]
 
-  const fallbackTahfidz: TahfidzPost[] = [
+  const fallbackTahfidz: Post[] = [
     {
       id: 1,
       title: 'Hafal 30 Juz Al-Qur\'an',
       excerpt: 'Ahmad Fadhil berhasil menghafal 30 Juz Al-Qur\'an dengan lancar',
-      image: '/ilustrasi/alquran.png',
-      published_at: '2024-01-01',
-      tags: ['ujian tahfidz']
+      content: 'Konten lengkap prestasi tahfidz...',
+      featured_image: '/ilustrasi/alquran.png',
+      category: 'achievement',
+      tags: ['ujian tahfidz'],
+      is_published: true,
+      published_at: '2024-01-01T00:00:00.000000Z',
+      created_at: '2024-01-01T00:00:00.000000Z',
+      updated_at: '2024-01-01T00:00:00.000000Z'
     },
     {
       id: 2,
       title: 'Hafal 25 Juz Al-Qur\'an',
       excerpt: 'Siti Aisyah menunjukkan kemampuan luar biasa dengan menghafal 25 Juz',
-      image: '/ilustrasi/mosque.png',
-      published_at: '2024-01-02',
-      tags: ['ujian tahfidz']
+      content: 'Konten lengkap prestasi tahfidz...',
+      featured_image: '/ilustrasi/mosque.png',
+      category: 'achievement',
+      tags: ['ujian tahfidz'],
+      is_published: true,
+      published_at: '2024-01-02T00:00:00.000000Z',
+      created_at: '2024-01-02T00:00:00.000000Z',
+      updated_at: '2024-01-02T00:00:00.000000Z'
     }
   ]
 
   // Gunakan data API atau fallback
-  const prestasiData = (data?.prestasi_list && data.prestasi_list.length > 0) ? data.prestasi_list : fallbackPrestasi
-  const tahfidzData = (data?.tahfidz_list && data.tahfidz_list.length > 0) ? data.tahfidz_list : fallbackTahfidz
+  const prestasiData = (data?.list_prestasi && data.list_prestasi.length > 0) ? data.list_prestasi : fallbackPrestasi
+  const tahfidzData = (data?.list_tahfidz && data.list_tahfidz.length > 0) ? data.list_tahfidz : fallbackTahfidz
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -132,15 +155,15 @@ export default function PrestasiPage() {
                 <p><strong>API Data:</strong> {data ? '✅ Tersedia' : '❌ Kosong'}</p>
                 <p><strong>Settings:</strong> {data?.settings ? '✅ Tersedia' : '❌ Kosong'}</p>
                 <p><strong>Right Image:</strong> {data?.right_image ? '✅ Tersedia' : '❌ Kosong'}</p>
-                <p><strong>Prestasi List:</strong> {data?.prestasi_list?.length || 0} item</p>
-                <p><strong>Tahfidz List:</strong> {data?.tahfidz_list?.length || 0} item</p>
-                <p><strong>Using Fallback:</strong> {(!data?.prestasi_list || data.prestasi_list.length === 0) ? '✅ Ya' : '❌ Tidak'}</p>
+                <p><strong>Prestasi List:</strong> {data?.list_prestasi?.length || 0} item</p>
+                <p><strong>Tahfidz List:</strong> {data?.list_tahfidz?.length || 0} item</p>
+                <p><strong>Using Fallback:</strong> {(!data?.list_prestasi || data.list_prestasi.length === 0) ? '✅ Ya' : '❌ Tidak'}</p>
               </div>
               <div className="mt-3">
                 <button 
                   onClick={async () => {
                     try {
-                      const response = await fetch('https://api.raphnesia.my.id/api/v1/prestasi/complete')
+                      const response = await fetch('https://api.raphnesia.my.id/api/v1/prestasi')
                       const result = await response.json()
                       console.log('🔍 Test API Response:', result)
                       alert(`API Test: ${response.status} - ${response.statusText}\nCheck console for details`)
@@ -163,8 +186,8 @@ export default function PrestasiPage() {
       <main className="flex-1">
         <div className="bg-gradient-to-br from-green-100 via-blue-50 to-green-200 py-16 lg:py-24 relative overflow-hidden"
              style={{
-               backgroundColor: heroBgColor,
-               color: heroTextColor
+               backgroundColor: heroBgFrom,
+               backgroundImage: `linear-gradient(to right, ${heroBgFrom}, ${heroBgVia}, ${heroBgTo})`
              }}>
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-10">
@@ -186,7 +209,7 @@ export default function PrestasiPage() {
                 {/* Badge */}
                 <div className="inline-block">
                   <span className="bg-white border border-orange-200 text-orange-600 px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
-                    SMP Muhammadiyah Al Kautsar
+                    {badgeText}
                   </span>
                 </div>
 
@@ -584,7 +607,7 @@ export default function PrestasiPage() {
                     <div key={post.id} className="prestasi-card">
                       <div className="relative h-48 w-full">
                         <Image
-                          src={prestasiService.getImageUrl(post.image, rightImageUrl)}
+                          src={prestasiService.getImageUrl(post.featured_image, rightImageUrl)}
                           alt={post.title}
                           fill
                           className="object-cover"
@@ -593,7 +616,7 @@ export default function PrestasiPage() {
                       <div className="p-4">
                         <div className="flex items-center gap-2 mb-2">
                           <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                          <span className="text-xs text-gray-500">Prestasi</span>
+                          <span className="text-xs text-gray-500">{post.category === 'achievement' ? 'Prestasi' : post.category}</span>
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">{post.title}</h3>
                         {post.excerpt && (
@@ -900,14 +923,14 @@ export default function PrestasiPage() {
                     <div key={post.id} className="tahfidz-card">
                       <div className="relative h-72">
                         <Image
-                          src={prestasiService.getImageUrl(post.image, '/ilustrasi/alquran.png')}
+                          src={prestasiService.getImageUrl(post.featured_image, '/ilustrasi/alquran.png')}
                           alt={post.title}
                           fill
                           className="object-cover object-center"
                         />
                         <div className="absolute top-4 left-4">
                           <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                            Tahfidz
+                            {post.tags?.includes('ujian tahfidz') ? 'Tahfidz' : 'Prestasi'}
                           </span>
                         </div>
                       </div>
@@ -915,9 +938,9 @@ export default function PrestasiPage() {
                         <h3 className="text-xl font-bold text-gray-900 mb-2">
                           {post.title}
                         </h3>
-                                       {post.excerpt && (
-                 <p className="text-gray-600 mb-4" dangerouslySetInnerHTML={{ __html: post.excerpt }} />
-               )}
+                        {post.excerpt && (
+                          <p className="text-gray-600 mb-4" dangerouslySetInnerHTML={{ __html: post.excerpt }} />
+                        )}
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-500">{post.published_at ? new Date(post.published_at).getFullYear() : ''}</span>
                           <div className="flex items-center gap-2">
