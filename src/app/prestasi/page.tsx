@@ -158,23 +158,56 @@ export default function PrestasiPage() {
                 <p><strong>Prestasi List:</strong> {data?.list_prestasi?.length || 0} item</p>
                 <p><strong>Tahfidz List:</strong> {data?.list_tahfidz?.length || 0} item</p>
                 <p><strong>Using Fallback:</strong> {(!data?.list_prestasi || data.list_prestasi.length === 0) ? '✅ Ya' : '❌ Tidak'}</p>
+                <p><strong>API Base URL:</strong> {process.env.NEXT_PUBLIC_API_BASE || 'https://api.raphnesia.my.id/api/v1'}</p>
               </div>
-              <div className="mt-3">
+              <div className="mt-3 space-y-2">
                 <button 
                   onClick={async () => {
                     try {
                       const response = await fetch('https://api.raphnesia.my.id/api/v1/prestasi')
                       const result = await response.json()
-                      console.log('🔍 Test API Response:', result)
-                      alert(`API Test: ${response.status} - ${response.statusText}\nCheck console for details`)
+                      console.log('🔍 Test API /prestasi Response:', result)
+                      alert(`API Test /prestasi: ${response.status} - ${response.statusText}\nCheck console for details`)
                     } catch (e) {
                       console.error('🔍 API Test Error:', e)
                       alert(`API Test Error: ${e}`)
                     }
                   }}
-                  className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700"
+                  className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 mr-2"
                 >
-                  Test API Endpoint
+                  Test /prestasi
+                </button>
+                <button 
+                  onClick={async () => {
+                    try {
+                      const response = await fetch('https://api.raphnesia.my.id/api/v1/posts?tags=prestasi')
+                      const result = await response.json()
+                      console.log('🔍 Test API /posts?tags=prestasi Response:', result)
+                      alert(`API Test /posts?tags=prestasi: ${response.status} - ${response.statusText}\nCheck console for details`)
+                    } catch (e) {
+                      console.error('🔍 API Test Error:', e)
+                      alert(`API Test Error: ${e}`)
+                    }
+                  }}
+                  className="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700 mr-2"
+                >
+                  Test /posts?tags=prestasi
+                </button>
+                <button 
+                  onClick={async () => {
+                    try {
+                      const response = await fetch('https://api.raphnesia.my.id/api/v1/posts?tags=ujian%20tahfidz')
+                      const result = await response.json()
+                      console.log('🔍 Test API /posts?tags=ujian tahfidz Response:', result)
+                      alert(`API Test /posts?tags=ujian tahfidz: ${response.status} - ${response.statusText}\nCheck console for details`)
+                    } catch (e) {
+                      console.error('🔍 API Test Error:', e)
+                      alert(`API Test Error: ${e}`)
+                    }
+                  }}
+                  className="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700"
+                >
+                  Test /posts?tags=ujian tahfidz
                 </button>
               </div>
             </div>
