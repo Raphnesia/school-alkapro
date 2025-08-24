@@ -39,11 +39,25 @@ class PrestasiService {
     try {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 8000)
-      const res = await fetch(getApiUrl('/prestasi'), {
-        signal: controller.signal,
-        headers: { Accept: 'application/json' },
-        cache: 'no-store',
-      })
+      
+      let res
+      try {
+        // Try direct API first
+        res = await fetch(getApiUrl('/prestasi'), {
+          signal: controller.signal,
+          headers: { Accept: 'application/json' },
+          cache: 'no-store',
+        })
+      } catch (directError) {
+        console.log('🔄 Direct API failed, trying proxy...')
+        // Fallback to proxy
+        res = await fetch('/api/proxy/prestasi', {
+          signal: controller.signal,
+          headers: { Accept: 'application/json' },
+          cache: 'no-store',
+        })
+      }
+      
       clearTimeout(timeoutId)
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const json = await res.json()

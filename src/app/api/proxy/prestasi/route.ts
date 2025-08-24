@@ -1,33 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 const API_BASE_URL = 'https://api.raphnesia.my.id/api/v1'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams, pathname } = new URL(request.url)
-    
-    // Get endpoint dari path atau parameter
-    let endpoint = searchParams.get('endpoint')
-    
-    // Jika tidak ada endpoint parameter, ambil dari path
-    if (!endpoint) {
-      // Ambil path setelah /api/proxy/
-      endpoint = pathname.replace('/api/proxy', '')
-      if (!endpoint.startsWith('/')) {
-        endpoint = '/' + endpoint
-      }
-    }
-    
-    if (!endpoint || endpoint === '/') {
-      return NextResponse.json({ error: 'Endpoint parameter required' }, { status: 400 })
-    }
-
-    console.log('🔍 Proxy request to:', `${API_BASE_URL}${endpoint}`)
+    console.log('🔍 Proxy prestasi request to:', `${API_BASE_URL}/prestasi`)
 
     const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 10000)
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const response = await fetch(`${API_BASE_URL}/prestasi`, {
       signal: controller.signal,
       headers: {
         'Accept': 'application/json',
@@ -54,21 +36,27 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error: any) {
-    console.error('Proxy API Error:', error)
+    console.error('Proxy Prestasi API Error:', error)
     
     // Return fallback data when backend is down
     if (error.name === 'AbortError') {
       return NextResponse.json({ 
         error: 'Request timeout', 
         fallback: true,
-        data: []
+        settings: null,
+        right_image: null,
+        list_prestasi: [],
+        list_tahfidz: []
       }, { status: 408 })
     }
 
     return NextResponse.json({ 
       error: error.message || 'Backend unavailable', 
       fallback: true,
-      data: []
+      settings: null,
+      right_image: null,
+      list_prestasi: [],
+      list_tahfidz: []
     }, { status: 503 })
   }
 }

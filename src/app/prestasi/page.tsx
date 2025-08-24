@@ -18,6 +18,102 @@ export default function PrestasiPage() {
   const [tahfidzBeritaData, setTahfidzBeritaData] = useState<PrestasiPost[]>([])
   const [beritaLoading, setBeritaLoading] = useState(true)
 
+  // Fallback data jika API kosong (menggunakan PrestasiPost interface)
+  const fallbackPrestasi: PrestasiPost[] = [
+    {
+      id: 1,
+      title: 'Juara 1 Olimpiade Matematika',
+      excerpt: 'Meraih juara 1 dalam Olimpiade Matematika tingkat Kabupaten',
+      featured_image: '/prestasi siswa/Selamat kepada Ananda Amir Zaki El S. yang telah mendapat JUARA 2 dalam Kejuaraan Karate Pelaja.webp',
+      published_at: '2024-01-01T00:00:00.000000Z'
+    },
+    {
+      id: 2,
+      title: 'Juara 2 Kejuaraan Karate',
+      excerpt: 'Amir Zaki El S. meraih juara 2 dalam Kejuaraan Karate Pelajar',
+      featured_image: '/prestasi siswa/Prestasi gemilangmu tidak hanya mencerminkan bakatmu, tetapi juga dedikasi dan kerja keras yang.jpg',
+      published_at: '2024-01-02T00:00:00.000000Z'
+    }
+  ]
+
+  const fallbackTahfidz: PrestasiPost[] = [
+    {
+      id: 1,
+      title: 'Hafal 30 Juz Al-Qur\'an',
+      excerpt: 'Ahmad Fadhil berhasil menghafal 30 Juz Al-Qur\'an dengan lancar',
+      featured_image: '/ilustrasi/alquran.png',
+      published_at: '2024-01-01T00:00:00.000000Z'
+    },
+    {
+      id: 2,
+      title: 'Hafal 25 Juz Al-Qur\'an',
+      excerpt: 'Siti Aisyah menunjukkan kemampuan luar biasa dengan menghafal 25 Juz',
+      featured_image: '/ilustrasi/mosque.png',
+      published_at: '2024-01-02T00:00:00.000000Z'
+    }
+  ]
+
+  // Fetch data berita untuk Prestasi List Section dan Tahfidz Section
+  useEffect(() => {
+    async function fetchBeritaData() {
+      setBeritaLoading(true)
+      
+      try {
+        // Fetch prestasi
+        const prestasiResponse = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=prestasi')
+        if (prestasiResponse.ok) {
+          const prestasiData = await prestasiResponse.json()
+          if (prestasiData?.data?.length > 0) {
+            const converted = prestasiData.data.map((news: any) => ({
+              id: news.id,
+              title: news.title,
+              featured_image: news.image,
+              excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
+              published_at: news.published_at
+            }))
+            setPrestasiBeritaData(converted)
+          } else {
+            setPrestasiBeritaData(fallbackPrestasi)
+          }
+        } else {
+          setPrestasiBeritaData(fallbackPrestasi)
+        }
+
+        // Fetch tahfidz
+        const tahfidzResponse = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=ujian%20tahfidz')
+        if (tahfidzResponse.ok) {
+          const tahfidzData = await tahfidzResponse.json()
+          if (tahfidzData?.data?.length > 0) {
+            const converted = tahfidzData.data.map((news: any) => ({
+              id: news.id,
+              title: news.title,
+              featured_image: news.image,
+              excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
+              published_at: news.published_at
+            }))
+            setTahfidzBeritaData(converted)
+          } else {
+            setTahfidzBeritaData(fallbackTahfidz)
+          }
+        } else {
+          setTahfidzBeritaData(fallbackTahfidz)
+        }
+      } catch (error) {
+        console.error('Error fetching berita:', error)
+        setPrestasiBeritaData(fallbackPrestasi)
+        setTahfidzBeritaData(fallbackTahfidz)
+      }
+      
+      setBeritaLoading(false)
+    }
+
+    fetchBeritaData()
+  }, [])
+
+  // Gunakan data berita untuk List Section
+  const prestasiData = prestasiBeritaData
+  const tahfidzData = tahfidzBeritaData
+
   // Debug: Log data yang diterima
   console.log('🔍 Prestasi Data:', data)
   console.log('🔍 Settings:', data?.settings)
@@ -78,180 +174,6 @@ export default function PrestasiPage() {
   // Debug: Log URL yang digunakan
   console.log('🔍 Right Image URL:', rightImageUrl)
   console.log('🔍 Right Image Title:', rightImageTitle)
-
-  // Fallback data jika API kosong (menggunakan PrestasiPost interface)
-  const fallbackPrestasi: PrestasiPost[] = [
-    {
-      id: 1,
-      title: 'Juara 1 Olimpiade Matematika',
-      excerpt: 'Meraih juara 1 dalam Olimpiade Matematika tingkat Kabupaten',
-      featured_image: '/prestasi siswa/Selamat kepada Ananda Amir Zaki El S. yang telah mendapat JUARA 2 dalam Kejuaraan Karate Pelaja.webp',
-      published_at: '2024-01-01T00:00:00.000000Z'
-    },
-    {
-      id: 2,
-      title: 'Juara 2 Kejuaraan Karate',
-      excerpt: 'Amir Zaki El S. meraih juara 2 dalam Kejuaraan Karate Pelajar',
-      featured_image: '/prestasi siswa/Prestasi gemilangmu tidak hanya mencerminkan bakatmu, tetapi juga dedikasi dan kerja keras yang.jpg',
-      published_at: '2024-01-02T00:00:00.000000Z'
-    }
-  ]
-
-  const fallbackTahfidz: PrestasiPost[] = [
-    {
-      id: 1,
-      title: 'Hafal 30 Juz Al-Qur\'an',
-      excerpt: 'Ahmad Fadhil berhasil menghafal 30 Juz Al-Qur\'an dengan lancar',
-      featured_image: '/ilustrasi/alquran.png',
-      published_at: '2024-01-01T00:00:00.000000Z'
-    },
-    {
-      id: 2,
-      title: 'Hafal 25 Juz Al-Qur\'an',
-      excerpt: 'Siti Aisyah menunjukkan kemampuan luar biasa dengan menghafal 25 Juz',
-      featured_image: '/ilustrasi/mosque.png',
-      published_at: '2024-01-02T00:00:00.000000Z'
-    }
-  ]
-
-  // Fetch data berita untuk Prestasi List Section dan Tahfidz Section
-  useEffect(() => {
-    let isMounted = true
-    
-    const fetchBeritaData = async () => {
-      try {
-        if (!isMounted) return
-        setBeritaLoading(true)
-        
-        // Fetch berita prestasi dengan timeout dan error handling
-        let prestasiResult = null
-        try {
-          const prestasiController = new AbortController()
-          const prestasiTimeoutId = setTimeout(() => prestasiController.abort(), 10000)
-          
-          // Try direct API first, then fallback to proxy
-          let prestasiResponse
-          try {
-            prestasiResponse = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=prestasi', {
-              signal: prestasiController.signal,
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              }
-            })
-          } catch (directError) {
-            console.log('🔄 Direct API failed, trying proxy...')
-            prestasiResponse = await fetch('/api/proxy?endpoint=/news?tags=prestasi', {
-              signal: prestasiController.signal,
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              }
-            })
-          }
-          
-          clearTimeout(prestasiTimeoutId)
-          
-          if (prestasiResponse.ok) {
-            prestasiResult = await prestasiResponse.json()
-            console.log('🔍 Berita Prestasi:', prestasiResult?.data)
-          }
-        } catch (prestasiError) {
-          console.error('Error fetching prestasi:', prestasiError)
-        }
-
-        // Fetch berita tahfidz dengan timeout dan error handling
-        let tahfidzResult = null
-        try {
-          const tahfidzController = new AbortController()
-          const tahfidzTimeoutId = setTimeout(() => tahfidzController.abort(), 10000)
-          
-          // Try direct API first, then fallback to proxy
-          let tahfidzResponse
-          try {
-            tahfidzResponse = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=ujian%20tahfidz', {
-              signal: tahfidzController.signal,
-              headers: {
-                'Accept': 'application/json', 
-                'Content-Type': 'application/json'
-              }
-            })
-          } catch (directError) {
-            console.log('🔄 Direct API failed, trying proxy...')
-            tahfidzResponse = await fetch('/api/proxy?endpoint=/news?tags=ujian%20tahfidz', {
-              signal: tahfidzController.signal,
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              }
-            })
-          }
-          
-          clearTimeout(tahfidzTimeoutId)
-          
-          if (tahfidzResponse.ok) {
-            tahfidzResult = await tahfidzResponse.json()
-            console.log('🔍 Berita Tahfidz:', tahfidzResult?.data)
-          }
-        } catch (tahfidzError) {
-          console.error('Error fetching tahfidz:', tahfidzError)
-        }
-
-        // Update state hanya jika component masih mounted
-        if (!isMounted) return
-
-        // Process prestasi data
-        if (prestasiResult?.data && prestasiResult.data.length > 0) {
-          const convertedPrestasi = prestasiResult.data.map((news: any) => ({
-            id: news.id,
-            title: news.title,
-            featured_image: news.image,
-            excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
-            published_at: news.published_at
-          }))
-          setPrestasiBeritaData(convertedPrestasi)
-        } else {
-          setPrestasiBeritaData(fallbackPrestasi)
-        }
-
-        // Process tahfidz data
-        if (tahfidzResult?.data && tahfidzResult.data.length > 0) {
-          const convertedTahfidz = tahfidzResult.data.map((news: any) => ({
-            id: news.id,
-            title: news.title,
-            featured_image: news.image,
-            excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
-            published_at: news.published_at
-          }))
-          setTahfidzBeritaData(convertedTahfidz)
-        } else {
-          setTahfidzBeritaData(fallbackTahfidz)
-        }
-
-      } catch (error) {
-        console.error('Error fetching berita data:', error)
-        if (isMounted) {
-          setPrestasiBeritaData(fallbackPrestasi)
-          setTahfidzBeritaData(fallbackTahfidz)
-        }
-      } finally {
-        if (isMounted) {
-          setBeritaLoading(false)
-        }
-      }
-    }
-
-    fetchBeritaData()
-
-    // Cleanup function
-    return () => {
-      isMounted = false
-    }
-  }, []) // Empty dependency array untuk mencegah re-run
-
-  // Gunakan data berita untuk List Section
-  const prestasiData = prestasiBeritaData
-  const tahfidzData = tahfidzBeritaData
 
   console.log('🔍 Final Prestasi Data (dari berita):', prestasiData)
   console.log('🔍 Final Tahfidz Data (dari berita):', tahfidzData)

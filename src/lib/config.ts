@@ -7,10 +7,10 @@ export const config = {
     // Gunakan proxy Next.js untuk menghindari CORS
     baseUrl: process.env.NEXT_PUBLIC_USE_PROXY === 'true' 
       ? '/api/proxy' 
-      : (process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.raphnesia.my.id/api/v1'),
+      : 'https://api.raphnesia.my.id/api/v1',
     timeout: 10000, // 10 seconds
     // Laravel API URL asli (untuk proxy)
-    laravelUrl: process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.raphnesia.my.id/api/v1',
+    laravelUrl: 'https://api.raphnesia.my.id/api/v1',
   },
   
   // Site Configuration
