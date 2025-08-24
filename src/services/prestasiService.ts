@@ -4,6 +4,7 @@ import { getApiUrl } from '@/lib/config'
 export interface PrestasiSettings {
   main_heading: string
   hero_subtitle: string
+  badge_text: string
   hero_background_color: string
   hero_text_color: string
   floating_elements_bg_color: string

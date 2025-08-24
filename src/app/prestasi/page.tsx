@@ -192,6 +192,7 @@ export default function PrestasiPage() {
   const mainHeading = data?.settings?.main_heading || 'Prestasi Siswa untuk Berbagai Kebutuhan'
   const heroSubtitle = data?.settings?.hero_subtitle || 'Siswa berprestasi dengan pencapaian luar biasa dan aktivasi instan bikin prestasi akademik dan non-akademik siap jalan bebas hambatan'
   const featureLists = data?.settings?.feature_lists || ['Prestasi Akademik Tinggi', 'Juara Olimpiade Nasional', 'Prestasi up to 150+ Penghargaan', 'Pengembangan Bakat Terpadu']
+  const badgeText = data?.settings?.badge_text || 'SMP Muhammadiyah Al Kautsar'
 
   // Right image dari carousel (ganti-ganti setiap 5 detik)
   const currentImage = allImages.length > 0 ? allImages[currentImageIndex] : null
@@ -226,6 +227,7 @@ export default function PrestasiPage() {
               <div className="mt-2 text-sm text-yellow-700">
                 <p><strong>Hero API (/prestasi/settings):</strong> {data ? '✅ Tersedia' : '❌ Kosong'}</p>
                 <p><strong>Settings:</strong> {data?.settings ? '✅ Tersedia' : '❌ Kosong'}</p>
+                <p><strong>Badge Text:</strong> {data?.settings?.badge_text || '❌ Kosong'}</p>
                 <p><strong>Carousel Images:</strong> {allImages.length} item (berubah setiap 5 detik)</p>
                 <p><strong>Current Image:</strong> {currentImageIndex + 1} dari {allImages.length}</p>
                 <hr className="my-2" />
@@ -237,6 +239,7 @@ export default function PrestasiPage() {
                 <p><strong>Data Source:</strong></p>
                 <div className="ml-4 text-xs">
                   <p>• Hero Settings: API /prestasi/settings</p>
+                  <p>• Badge Text: {badgeText}</p>
                   <p>• Right Image: Carousel dari prestasi + tahfidz (5 detik)</p>
                   <p>• Prestasi List: API /news?tags=prestasi</p>
                   <p>• Tahfidz List: API /news?tags=ujian%20tahfidz</p>
@@ -314,7 +317,7 @@ export default function PrestasiPage() {
                 {/* Badge */}
                                   <div className="inline-block">
                     <span className="bg-white border border-orange-200 text-orange-600 px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
-                      SMP Muhammadiyah Al Kautsar
+                      {badgeText}
                     </span>
                   </div>
 
