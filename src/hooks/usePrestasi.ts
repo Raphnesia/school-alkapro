@@ -16,6 +16,7 @@ export function usePrestasi() {
         
         // Debug: Log data yang dikirim ke komponen
         console.log('🔍 Hook Data Result:', res)
+        console.log('🔍 Hook Settings:', res?.settings)
         console.log('🔍 Hook Right Image:', res?.right_image)
         console.log('🔍 Hook Prestasi Count:', res?.list_prestasi?.length)
         console.log('🔍 Hook Tahfidz Count:', res?.list_tahfidz?.length)
