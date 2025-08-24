@@ -655,6 +655,14 @@ export default function PrestasiPage() {
                       console.log('🔍 Rendering post:', post.title)
                       console.log('🔍 Post featured_image:', post.featured_image)
                       console.log('🔍 Post tags:', post.tags)
+                      console.log('🔍 Full post object:', post)
+                      console.log('🔍 Available image fields:', {
+                        featured_image: post.featured_image,
+                        image: (post as any).image,
+                        banner: (post as any).banner,
+                        photo: (post as any).photo,
+                        thumbnail: (post as any).thumbnail
+                      })
                       
                       return (
                         <div key={post.id} className="prestasi-card">
@@ -987,6 +995,14 @@ export default function PrestasiPage() {
                       console.log('🔍 Rendering tahfidz post:', post.title)
                       console.log('🔍 Tahfidz post featured_image:', post.featured_image)
                       console.log('🔍 Tahfidz post tags:', post.tags)
+                      console.log('🔍 Full tahfidz post object:', post)
+                      console.log('🔍 Available tahfidz image fields:', {
+                        featured_image: post.featured_image,
+                        image: (post as any).image,
+                        banner: (post as any).banner,
+                        photo: (post as any).photo,
+                        thumbnail: (post as any).thumbnail
+                      })
                       
                       return (
                         <div key={post.id} className="tahfidz-card">
