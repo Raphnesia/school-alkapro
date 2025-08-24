@@ -3,6 +3,20 @@ const nextConfig = {
   output: 'standalone',
   images: {
     domains: ['api.raphnesia.my.id', 'raphnesia.my.id'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'api.raphnesia.my.id',
+        port: '',
+        pathname: '/storage/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'raphnesia.my.id',
+        port: '',
+        pathname: '/**',
+      }
+    ],
     unoptimized: true
   },
   async headers() {
@@ -14,6 +28,14 @@ const nextConfig = {
           { key: 'Access-Control-Allow-Methods', value: 'GET, POST, PUT, DELETE, OPTIONS' },
           { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization, X-Requested-With' },
           { key: 'Access-Control-Allow-Credentials', value: 'true' }
+        ]
+      },
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET, POST, PUT, DELETE, OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization, X-Requested-With' }
         ]
       }
     ]
