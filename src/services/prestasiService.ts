@@ -14,15 +14,17 @@ export interface PrestasiSettings {
 export interface Post {
   id: number
   title: string
-  excerpt: string
-  content: string
-  featured_image: string
-  category: 'academic' | 'achievement' | 'activity' | 'announcement' | 'history'
+  subtitle: string
+  content: string | null
+  image: string
+  author_image: string
+  category: string | null
+  author: string
   tags: string[]
-  is_published: boolean
+  slug: string
+  navigation_sections: any[]
   published_at: string
   created_at: string
-  updated_at: string
 }
 
 export interface PrestasiComplete {
@@ -44,13 +46,13 @@ class PrestasiService {
   async getCompleteData(): Promise<PrestasiComplete | null> {
     try {
       // Ambil data prestasi dari berita dengan tag "prestasi"
-      const prestasiResponse = await fetch(getApiUrl('/posts?tags=prestasi'), {
+      const prestasiResponse = await fetch(getApiUrl('/news?tags=prestasi'), {
         headers: { Accept: 'application/json' },
         cache: 'no-store',
       })
       
       // Ambil data tahfidz dari berita dengan tag "ujian tahfidz"
-      const tahfidzResponse = await fetch(getApiUrl('/posts?tags=ujian%20tahfidz'), {
+      const tahfidzResponse = await fetch(getApiUrl('/news?tags=ujian%20tahfidz'), {
         headers: { Accept: 'application/json' },
         cache: 'no-store',
       })
@@ -66,18 +68,18 @@ class PrestasiService {
       const rightImage = prestasiData?.data?.[0] || null
 
       // Debug: Log response API
-      console.log('🔍 Prestasi Posts Response:', prestasiData)
-      console.log('🔍 Tahfidz Posts Response:', tahfidzData)
+      console.log('🔍 Prestasi News Response:', prestasiData)
+      console.log('🔍 Tahfidz News Response:', tahfidzData)
       console.log('🔍 Right Image from Prestasi:', rightImage)
       
       return {
-        settings: null, // Settings tidak tersedia dari posts endpoint
+        settings: null, // Settings tidak tersedia dari news endpoint
         right_image: rightImage,
         list_prestasi: prestasiData?.data || [],
         list_tahfidz: tahfidzData?.data || []
       }
     } catch (e) {
-      console.error('Error fetching Prestasi data from posts:', e)
+      console.error('Error fetching Prestasi data from news:', e)
       return null
     }
   }
@@ -99,7 +101,7 @@ class PrestasiService {
 
   async getRightImage(): Promise<Post | null> {
     try {
-      const res = await fetch(getApiUrl('/posts?tags=prestasi&limit=1'), {
+      const res = await fetch(getApiUrl('/news?tags=prestasi&limit=1'), {
         headers: { Accept: 'application/json' },
         cache: 'no-store',
       })
@@ -114,7 +116,7 @@ class PrestasiService {
 
   async getPrestasiList(page = 1): Promise<{ data: Post[]; pagination: any } | null> {
     try {
-      const res = await fetch(getApiUrl(`/posts?tags=prestasi&page=${page}`), {
+      const res = await fetch(getApiUrl(`/news?tags=prestasi&page=${page}`), {
         headers: { Accept: 'application/json' },
         cache: 'no-store',
       })
@@ -129,7 +131,7 @@ class PrestasiService {
 
   async getTahfidzList(page = 1): Promise<{ data: Post[]; pagination: any } | null> {
     try {
-      const res = await fetch(getApiUrl(`/posts?tags=ujian%20tahfidz&page=${page}`), {
+      const res = await fetch(getApiUrl(`/news?tags=ujian%20tahfidz&page=${page}`), {
         headers: { Accept: 'application/json' },
         cache: 'no-store',
       })
