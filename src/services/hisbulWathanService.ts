@@ -18,6 +18,15 @@ export interface HisbulWathanContent {
   updated_at: string
 }
 
+export interface HisbulWathanPengurus {
+  id: number
+  name: string
+  position: string
+  kelas: string
+  description: string
+  photo: string
+}
+
 export interface HisbulWathanCompleteData {
   settings: HisbulWathanSettings | null
   content: HisbulWathanContent[]
@@ -92,6 +101,11 @@ class HisbulWathanService {
     if (!url || typeof url !== 'string' || url.trim() === '') return fallback
     return url
   }
+
+  getPhotoUrl(url: string | null, fallback: string = '/ilustrasi/default-avatar.png'): string {
+    if (!url || typeof url !== 'string' || url.trim() === '') return fallback
+    return url
+  }
 }
 
-export const hisbulWathanService = HisbulWathanService.getInstance()
+export const hisbulWathanService = HisbulWathanService.getInstance() 

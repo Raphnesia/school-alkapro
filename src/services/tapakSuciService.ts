@@ -18,6 +18,15 @@ export interface TapakSuciContent {
   updated_at: string
 }
 
+export interface TapakSuciPengurus {
+  id: number
+  name: string
+  position: string
+  kelas: string
+  description: string
+  photo: string
+}
+
 export interface TapakSuciCompleteData {
   settings: TapakSuciSettings | null
   content: TapakSuciContent[]
@@ -92,6 +101,11 @@ class TapakSuciService {
     if (!url || typeof url !== 'string' || url.trim() === '') return fallback
     return url
   }
+
+  getPhotoUrl(url: string | null, fallback: string = '/ilustrasi/default-avatar.png'): string {
+    if (!url || typeof url !== 'string' || url.trim() === '') return fallback
+    return url
+  }
 }
 
-export const tapakSuciService = TapakSuciService.getInstance()
+export const tapakSuciService = TapakSuciService.getInstance() 
