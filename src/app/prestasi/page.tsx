@@ -163,6 +163,8 @@ export default function PrestasiPage() {
                 <p><strong>Using Fallback:</strong> {(!data?.list_prestasi || data.list_prestasi.length === 0) ? '✅ Ya' : '❌ Tidak'}</p>
                 <p><strong>API Base URL:</strong> {process.env.NEXT_PUBLIC_API_BASE || 'https://api.raphnesia.my.id/api/v1'}</p>
                 <p><strong>Data Source:</strong> Berita dengan tag "prestasi" dan "ujian tahfidz"</p>
+                <p><strong>Filtered Prestasi:</strong> {prestasiData.filter(post => post.tags && post.tags.includes('prestasi')).length} item</p>
+                <p><strong>Filtered Tahfidz:</strong> {tahfidzData.filter(post => post.tags && post.tags.includes('ujian tahfidz')).length} item</p>
               </div>
               <div className="mt-3 space-y-2">
                 <button 
@@ -640,11 +642,14 @@ export default function PrestasiPage() {
 
                 <div className="prestasi-carousel">
                   {/* Map daftar prestasi bertag "prestasi" maksimal 20 dari API */}
-                  {prestasiData.slice(0, 20).map((post) => (
+                  {prestasiData
+                    .filter(post => post.tags && post.tags.includes('prestasi'))
+                    .slice(0, 20)
+                    .map((post) => (
                     <div key={post.id} className="prestasi-card">
                       <div className="relative h-48 w-full">
                         <Image
-                          src={prestasiService.getImageUrl(post.featured_image, rightImageUrl)}
+                          src={post.featured_image || rightImageUrl}
                           alt={post.title}
                           fill
                           className="object-cover"
@@ -653,7 +658,7 @@ export default function PrestasiPage() {
                       <div className="p-4">
                         <div className="flex items-center gap-2 mb-2">
                           <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                          <span className="text-xs text-gray-500">{post.category === 'achievement' ? 'Prestasi' : post.category}</span>
+                          <span className="text-xs text-gray-500">Prestasi</span>
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">{post.title}</h3>
                         {post.excerpt && (
@@ -956,18 +961,21 @@ export default function PrestasiPage() {
                 `}</style>
                 
                 <div className="tahfidz-carousel">
-                  {tahfidzData.slice(0, 20).map((post) => (
+                  {tahfidzData
+                    .filter(post => post.tags && post.tags.includes('ujian tahfidz'))
+                    .slice(0, 20)
+                    .map((post) => (
                     <div key={post.id} className="tahfidz-card">
                       <div className="relative h-72">
                         <Image
-                          src={prestasiService.getImageUrl(post.featured_image, '/ilustrasi/alquran.png')}
+                          src={post.featured_image || '/ilustrasi/alquran.png'}
                           alt={post.title}
                           fill
                           className="object-cover object-center"
                         />
                         <div className="absolute top-4 left-4">
                           <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                            {post.tags?.includes('ujian tahfidz') ? 'Tahfidz' : 'Prestasi'}
+                            Tahfidz
                           </span>
                         </div>
                       </div>
@@ -984,7 +992,7 @@ export default function PrestasiPage() {
                             <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
                               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                             </svg>
-                            <span className="text-sm font-semibold text-gray-700">{post.tags?.includes('ujian tahfidz') ? 'Tahfidz' : 'Prestasi'}</span>
+                            <span className="text-sm font-semibold text-gray-700">Tahfidz</span>
                           </div>
                         </div>
                       </div>
