@@ -1,5 +1,5 @@
 // Base URL untuk API
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://api.raphnesia.my.id/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.raphnesia.my.id/api/v1';
 // Origin tanpa suffix /api (/api/v1)
 const API_ORIGIN = API_BASE.replace(/\/(api)(?:\/v\d+)?\/?$/i, '');
 
@@ -143,8 +143,8 @@ export const navigationApi = {
   getHeader: async (): Promise<HeaderData> => {
     try {
       const data = await fetchNavigationApi<HeaderData>([
-        '/v1/navigation/header',
         '/navigation/header',
+        '/v1/navigation/header',
       ]);
       return normalizeHeader(data);
     } catch (error) {
@@ -178,8 +178,8 @@ export const navigationApi = {
   getFooter: async (): Promise<FooterData> => {
     try {
       const data = await fetchNavigationApi<any>([
-        '/v1/navigation/footer',
         '/navigation/footer',
+        '/v1/navigation/footer',
       ]);
       return normalizeFooter(data);
     } catch (error) {

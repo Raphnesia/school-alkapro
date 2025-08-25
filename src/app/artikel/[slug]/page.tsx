@@ -484,7 +484,7 @@ export default function ArtikelDetailSlug({ params }: ArtikelDetailProps) {
                 </article>
 
                 {/* TAG BAWAH */}
-                {artikelData?.tags && artikelData.tags.length > 0 && (
+                {artikelData?.tags && Array.isArray(artikelData.tags) && artikelData.tags.length > 0 && (
                     <div className="mt-8 space-y-6 bg-white rounded-lg text-black shadow-sm p-6 md:p-8">
                       <h3 className="text-lg font-bold text-gray-800 mb-3">Tags</h3>
                       <div className="flex flex-wrap gap-2">

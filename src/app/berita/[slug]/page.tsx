@@ -84,7 +84,7 @@ const BeritaDetailSlug = ({ params }: BeritaDetailProps) => {
             published_at: newsData.published_at || new Date().toISOString(),
             author: newsData.author || 'Admin',
             authorImage: newsData.author_image || '/pace.jpeg',
-            tags: newsData.tags || [],
+            tags: Array.isArray(newsData.tags) ? newsData.tags : [],
             slug: newsData.slug,
             navigation_sections: newsData.navigation_sections || []
           })
@@ -109,7 +109,7 @@ const BeritaDetailSlug = ({ params }: BeritaDetailProps) => {
             published_at: newsData.published_at || new Date().toISOString(),
             author: newsData.author || 'Admin',
             authorImage: newsData.author_image || '/pace.jpeg', // Added missing required authorImage property
-            tags: newsData.tags || [],
+            tags: Array.isArray(newsData.tags) ? newsData.tags : [],
             slug: newsData.slug,
             navigation_sections: newsData.navigation_sections || []
           })
@@ -403,7 +403,7 @@ const BeritaDetailSlug = ({ params }: BeritaDetailProps) => {
                 </article>
 
                 {/* TAG BAWAH */}
-                {article?.tags && article.tags.length > 0 && (
+                {article?.tags && Array.isArray(article.tags) && article.tags.length > 0 && (
                     <div className="mt-8 space-y-6 bg-white rounded-lg text-black shadow-sm p-6 md:p-8">
                       {article.tags.map((tag, index) => (
                         <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
