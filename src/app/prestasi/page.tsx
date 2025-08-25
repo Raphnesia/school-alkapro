@@ -21,6 +21,9 @@ export default function PrestasiPage() {
   // State untuk carousel gambar kanan (ganti-ganti setiap 5 detik)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [allImages, setAllImages] = useState<PrestasiPost[]>([])
+  
+  // State untuk carousel tahfidz
+  const [tahfidzCarouselIndex, setTahfidzCarouselIndex] = useState(0)
 
   // Fallback data jika API kosong (menggunakan PrestasiPost interface)
   const fallbackPrestasi: PrestasiPost[] = [
@@ -159,6 +162,35 @@ export default function PrestasiPage() {
   // Gunakan data berita untuk List Section
   const prestasiData = prestasiBeritaData
   const tahfidzData = tahfidzBeritaData
+
+  // Carousel tahfidz section - ganti setiap 3 detik
+  useEffect(() => {
+    const filteredTahfidzData = tahfidzData.filter(post => 
+      post.tags && (
+        post.tags.includes('ujian tahfidz') || 
+        post.tags.includes('Ujian Tahfidz') ||
+        post.tags.includes('tahfidz') ||
+        post.tags.includes('Tahfidz')
+      )
+    )
+    
+    if (filteredTahfidzData.length === 0) return
+
+    console.log('🔄 Starting tahfidz carousel with', filteredTahfidzData.length, 'items')
+
+    const interval = setInterval(() => {
+      setTahfidzCarouselIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % filteredTahfidzData.length
+        console.log('🔄 Tahfidz Carousel: Item', nextIndex + 1, 'dari', filteredTahfidzData.length, 'Title:', filteredTahfidzData[nextIndex]?.title)
+        return nextIndex
+      })
+    }, 3000) // 3 detik
+
+    return () => {
+      console.log('🔄 Clearing tahfidz carousel interval')
+      clearInterval(interval)
+    }
+  }, [tahfidzData])
 
   // Debug: Log data yang diterima
   console.log('🔍 Prestasi Data:', data)
@@ -1066,77 +1098,111 @@ export default function PrestasiPage() {
                 `}</style>
                 
                 <div className="tahfidz-carousel">
-                  {tahfidzData
-                    .slice(0, 20)
-                    .map((post) => {
-                      console.log('🔍 Rendering tahfidz post:', post.title)
-                      console.log('🔍 Tahfidz post image:', post.featured_image)
-                      console.log('🔍 Tahfidz post tags:', post.tags)
-                      console.log('🔍 Full tahfidz post object:', post)
-                      console.log('🔍 Available tahfidz image fields:', {
-                        featured_image: post.featured_image,
-                        id: post.id,
-                        title: post.title,
-                        tags: post.tags
-                      })
-                      
-                      // Filter hanya berita dengan tag tahfidz
-                      const hasTahfidzTag = post.tags && (
+                  {(() => {
+                    // Filter hanya berita dengan tag tahfidz
+                    const filteredTahfidzData = tahfidzData.filter(post => 
+                      post.tags && (
                         post.tags.includes('ujian tahfidz') || 
                         post.tags.includes('Ujian Tahfidz') ||
                         post.tags.includes('tahfidz') ||
                         post.tags.includes('Tahfidz')
                       )
-                      
-                      if (!hasTahfidzTag) {
-                        console.log('❌ Skipping non-tahfidz post:', post.title, 'Tags:', post.tags)
-                        return null
-                      }
-                      
-                      console.log('✅ Rendering tahfidz post:', post.title, 'Tags:', post.tags)
-                      
-                      return (
-                    <div key={post.id} className="tahfidz-card">
-                      <div className="relative h-72">
+                    )
+                    
+                    console.log('🔍 Filtered Tahfidz Data:', filteredTahfidzData.length, 'items')
+                    
+                    // Jika tidak ada data tahfidz, tampilkan fallback
+                    if (filteredTahfidzData.length === 0) {
+                      return fallbackTahfidz.map((post) => (
+                        <div key={post.id} className="tahfidz-card">
+                          <div className="relative h-72">
                             {post.featured_image ? (
-                        <Image
+                              <Image
                                 src={post.featured_image}
-                          alt={post.title}
-                          fill
-                          className="object-cover object-center"
+                                alt={post.title}
+                                fill
+                                className="object-cover object-center"
                                 unoptimized
-                        />
+                              />
                             ) : (
                               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                                 <span className="text-gray-500 text-sm">No Image</span>
                               </div>
                             )}
-                        <div className="absolute top-4 left-4">
-                          <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                            Tahfidz
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-6">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">
-                          {post.title}
-                        </h3>
-                                       {post.excerpt && (
+                            <div className="absolute top-4 left-4">
+                              <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                Tahfidz
+                              </span>
+                            </div>
+                          </div>
+                          <div className="p-6">
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">
+                              {post.title}
+                            </h3>
+                            {post.excerpt && (
                               <p className="text-gray-600 mb-4">{post.excerpt}</p>
-               )}
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-500">{post.published_at ? new Date(post.published_at).getFullYear() : ''}</span>
-                          <div className="flex items-center gap-2">
-                            <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
+                            )}
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-gray-500">{post.published_at ? new Date(post.published_at).getFullYear() : ''}</span>
+                              <div className="flex items-center gap-2">
+                                <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
                                 <span className="text-sm font-semibold text-gray-700">Tahfidz</span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
+                      ))
+                    }
+                    
+                    // Tampilkan data tahfidz yang sudah difilter
+                    return filteredTahfidzData.map((post) => {
+                      console.log('✅ Rendering tahfidz post:', post.title, 'Tags:', post.tags)
+                      
+                      return (
+                        <div key={post.id} className="tahfidz-card">
+                          <div className="relative h-72">
+                            {post.featured_image ? (
+                              <Image
+                                src={post.featured_image}
+                                alt={post.title}
+                                fill
+                                className="object-cover object-center"
+                                unoptimized
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <span className="text-gray-500 text-sm">No Image</span>
+                              </div>
+                            )}
+                            <div className="absolute top-4 left-4">
+                              <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                Tahfidz
+                              </span>
+                            </div>
+                          </div>
+                          <div className="p-6">
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">
+                              {post.title}
+                            </h3>
+                            {post.excerpt && (
+                              <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                            )}
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-gray-500">{post.published_at ? new Date(post.published_at).getFullYear() : ''}</span>
+                              <div className="flex items-center gap-2">
+                                <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                <span className="text-sm font-semibold text-gray-700">Tahfidz</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       )
-                    })}
+                    })
+                  })()}
                 </div>
               </div>
             </ScrollReveal>
