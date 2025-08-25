@@ -1064,8 +1064,9 @@ export default function PrestasiPage() {
                   
                   .tahfidz-carousel {
                     display: flex;
-                    animation: scroll 35s linear infinite;
+                    animation: scroll 30s linear infinite;
                     gap: 2rem;
+                    width: max-content;
                   }
                   
                   .tahfidz-carousel:hover {
@@ -1077,7 +1078,7 @@ export default function PrestasiPage() {
                       transform: translateX(0);
                     }
                     100% {
-                      transform: translateX(-50%);
+                      transform: translateX(-100%);
                     }
                   }
                   
@@ -1113,7 +1114,7 @@ export default function PrestasiPage() {
                     
                     // Jika tidak ada data tahfidz, tampilkan fallback
                     if (filteredTahfidzData.length === 0) {
-                      return fallbackTahfidz.map((post) => (
+                      const fallbackCards = fallbackTahfidz.map((post) => (
                         <div key={post.id} className="tahfidz-card">
                           <div className="relative h-72">
                             {post.featured_image ? (
@@ -1154,10 +1155,13 @@ export default function PrestasiPage() {
                           </div>
                         </div>
                       ))
+                      
+                      // Duplikasi fallback cards untuk carousel berulang
+                      return [...fallbackCards, ...fallbackCards]
                     }
                     
                     // Tampilkan data tahfidz yang sudah difilter
-                    return filteredTahfidzData.map((post) => {
+                    const tahfidzCards = filteredTahfidzData.map((post) => {
                       console.log('✅ Rendering tahfidz post:', post.title, 'Tags:', post.tags)
                       
                       return (
@@ -1202,6 +1206,9 @@ export default function PrestasiPage() {
                         </div>
                       )
                     })
+                    
+                    // Duplikasi cards untuk carousel berulang sempurna
+                    return [...tahfidzCards, ...tahfidzCards]
                   })()}
                 </div>
               </div>
