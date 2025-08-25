@@ -108,4 +108,4 @@ class TapakSuciService {
   }
 }
 
-export const tapakSuciService = TapakSuciService.getInstance() 
+export const tapakSuciService = TapakSuciService.getInstance()

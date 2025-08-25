@@ -85,8 +85,14 @@ export default function PrestasiPage() {
 
         // Fetch tahfidz
         const tahfidzResponse = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=ujian%20tahfidz')
+        console.log('🔍 Tahfidz API URL:', 'https://api.raphnesia.my.id/api/v1/news?tags=ujian%20tahfidz')
+        console.log('🔍 Tahfidz Response Status:', tahfidzResponse.status)
+        
         if (tahfidzResponse.ok) {
           const tahfidzData = await tahfidzResponse.json()
+          console.log('🔍 Raw Tahfidz API Response:', tahfidzData)
+          console.log('🔍 Tahfidz Data Length:', tahfidzData?.data?.length || 0)
+          
           if (tahfidzData?.data?.length > 0) {
             const converted = tahfidzData.data.map((news: any) => ({
               id: news.id,
@@ -95,11 +101,14 @@ export default function PrestasiPage() {
               excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
               published_at: news.published_at
             }))
+            console.log('🔍 Converted Tahfidz Data:', converted)
             setTahfidzBeritaData(converted)
           } else {
+            console.log('🔍 No tahfidz data found, using fallback')
             setTahfidzBeritaData(fallbackTahfidz)
           }
         } else {
+          console.log('🔍 Tahfidz API failed, using fallback')
           setTahfidzBeritaData(fallbackTahfidz)
         }
       } catch (error) {
@@ -151,9 +160,9 @@ export default function PrestasiPage() {
 
   // Tampilkan loading state
   if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col bg-white">
-        <Header />
+  return (
+    <div className="min-h-screen flex flex-col bg-white">
+      <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -242,11 +251,17 @@ export default function PrestasiPage() {
                   <p>• Badge Text: {badgeText}</p>
                   <p>• Right Image: Carousel dari prestasi + tahfidz (5 detik)</p>
                   <p>• Prestasi List: API /news?tags=prestasi</p>
-                  <p>• Tahfidz List: API /news?tags=ujian%20tahfidz</p>
+                  <p>• Tahfidz List: API /news?tags=ujian%20tahfidz (BUKAN prestasi)</p>
                 </div>
                 <p><strong>Sample Prestasi URLs:</strong></p>
                 <div className="ml-4 text-xs">
                   {prestasiData.slice(0, 3).map((post, index) => (
+                    <p key={index}>• {post.title}: {post.featured_image ? '✅' : '❌'} {post.featured_image || 'No image'}</p>
+                  ))}
+                </div>
+                <p><strong>Sample Tahfidz URLs:</strong></p>
+                <div className="ml-4 text-xs">
+                  {tahfidzData.slice(0, 3).map((post, index) => (
                     <p key={index}>• {post.title}: {post.featured_image ? '✅' : '❌'} {post.featured_image || 'No image'}</p>
                   ))}
                 </div>
@@ -315,11 +330,11 @@ export default function PrestasiPage() {
               {/* Left Content Section */}
               <div className="lg:w-1/2 space-y-6">
                 {/* Badge */}
-                                  <div className="inline-block">
-                    <span className="bg-white border border-orange-200 text-orange-600 px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
+                <div className="inline-block">
+                  <span className="bg-white border border-orange-200 text-orange-600 px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
                       {badgeText}
-                    </span>
-                  </div>
+                  </span>
+                </div>
 
                 {/* Main Heading */}
                 <div className="space-y-4">
@@ -716,33 +731,33 @@ export default function PrestasiPage() {
                       })
                       
                       return (
-                        <div key={post.id} className="prestasi-card">
-                          <div className="relative h-48 w-full">
+                    <div key={post.id} className="prestasi-card">
+                      <div className="relative h-48 w-full">
                             {post.featured_image ? (
-                              <Image
+                        <Image
                                 src={post.featured_image}
-                                alt={post.title}
-                                fill
-                                className="object-cover"
+                          alt={post.title}
+                          fill
+                          className="object-cover"
                                 unoptimized
-                              />
+                        />
                             ) : (
                               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                                 <span className="text-gray-500 text-sm">No Image</span>
                               </div>
                             )}
-                          </div>
-                          <div className="p-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                              <span className="text-xs text-gray-500">Prestasi</span>
-                            </div>
-                            <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">{post.title}</h3>
-                            {post.excerpt && (
-                              <p className="text-sm text-gray-600 line-clamp-2">{post.excerpt}</p>
-                            )}
-                          </div>
+                      </div>
+                      <div className="p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                          <span className="text-xs text-gray-500">Prestasi</span>
                         </div>
+                        <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">{post.title}</h3>
+                        {post.excerpt && (
+                              <p className="text-sm text-gray-600 line-clamp-2">{post.excerpt}</p>
+                        )}
+                      </div>
+                    </div>
                       )
                     })}
                 </div>
@@ -1052,45 +1067,45 @@ export default function PrestasiPage() {
                       })
                       
                       return (
-                        <div key={post.id} className="tahfidz-card">
-                          <div className="relative h-72">
+                    <div key={post.id} className="tahfidz-card">
+                      <div className="relative h-72">
                             {post.featured_image ? (
-                              <Image
+                        <Image
                                 src={post.featured_image}
-                                alt={post.title}
-                                fill
-                                className="object-cover object-center"
+                          alt={post.title}
+                          fill
+                          className="object-cover object-center"
                                 unoptimized
-                              />
+                        />
                             ) : (
                               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                                 <span className="text-gray-500 text-sm">No Image</span>
                               </div>
                             )}
-                            <div className="absolute top-4 left-4">
-                              <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                                Tahfidz
-                              </span>
-                            </div>
-                          </div>
-                          <div className="p-6">
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">
-                              {post.title}
-                            </h3>
-                            {post.excerpt && (
+                        <div className="absolute top-4 left-4">
+                          <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            Tahfidz
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-6">
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                          {post.title}
+                        </h3>
+                                       {post.excerpt && (
                               <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                            )}
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm text-gray-500">{post.published_at ? new Date(post.published_at).getFullYear() : ''}</span>
-                              <div className="flex items-center gap-2">
-                                <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                </svg>
+               )}
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-500">{post.published_at ? new Date(post.published_at).getFullYear() : ''}</span>
+                          <div className="flex items-center gap-2">
+                            <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
                                 <span className="text-sm font-semibold text-gray-700">Tahfidz</span>
-                              </div>
-                            </div>
                           </div>
                         </div>
+                      </div>
+                    </div>
                       )
                     })}
                 </div>

@@ -108,4 +108,4 @@ class HisbulWathanService {
   }
 }
 
-export const hisbulWathanService = HisbulWathanService.getInstance() 
+export const hisbulWathanService = HisbulWathanService.getInstance()
