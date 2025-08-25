@@ -18,6 +18,7 @@ export interface PrestasiPost {
   featured_image: string
   excerpt: string
   published_at: string
+  tags: string[]
 }
 
 export interface PrestasiComplete {

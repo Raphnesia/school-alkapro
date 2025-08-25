@@ -29,14 +29,16 @@ export default function PrestasiPage() {
       title: 'Juara 1 Olimpiade Matematika',
       excerpt: 'Meraih juara 1 dalam Olimpiade Matematika tingkat Kabupaten',
       featured_image: '/prestasi siswa/Selamat kepada Ananda Amir Zaki El S. yang telah mendapat JUARA 2 dalam Kejuaraan Karate Pelaja.webp',
-      published_at: '2024-01-01T00:00:00.000000Z'
+      published_at: '2024-01-01T00:00:00.000000Z',
+      tags: ['prestasi', 'akademik']
     },
     {
       id: 2,
       title: 'Juara 2 Kejuaraan Karate',
       excerpt: 'Amir Zaki El S. meraih juara 2 dalam Kejuaraan Karate Pelajar',
       featured_image: '/prestasi siswa/Prestasi gemilangmu tidak hanya mencerminkan bakatmu, tetapi juga dedikasi dan kerja keras yang.jpg',
-      published_at: '2024-01-02T00:00:00.000000Z'
+      published_at: '2024-01-02T00:00:00.000000Z',
+      tags: ['prestasi', 'olahraga']
     }
   ]
 
@@ -46,14 +48,16 @@ export default function PrestasiPage() {
       title: 'Hafal 30 Juz Al-Qur\'an',
       excerpt: 'Ahmad Fadhil berhasil menghafal 30 Juz Al-Qur\'an dengan lancar',
       featured_image: '/ilustrasi/alquran.png',
-      published_at: '2024-01-01T00:00:00.000000Z'
+      published_at: '2024-01-01T00:00:00.000000Z',
+      tags: ['ujian tahfidz', 'tahfidz']
     },
     {
       id: 2,
       title: 'Hafal 25 Juz Al-Qur\'an',
       excerpt: 'Siti Aisyah menunjukkan kemampuan luar biasa dengan menghafal 25 Juz',
       featured_image: '/ilustrasi/mosque.png',
-      published_at: '2024-01-02T00:00:00.000000Z'
+      published_at: '2024-01-02T00:00:00.000000Z',
+      tags: ['ujian tahfidz', 'tahfidz']
     }
   ]
 
@@ -73,7 +77,8 @@ export default function PrestasiPage() {
               title: news.title,
               featured_image: news.image,
               excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
-              published_at: news.published_at
+              published_at: news.published_at,
+              tags: news.tags || []
             }))
             setPrestasiBeritaData(converted)
           } else {
@@ -99,7 +104,8 @@ export default function PrestasiPage() {
               title: news.title,
               featured_image: news.image,
               excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
-              published_at: news.published_at
+              published_at: news.published_at,
+              tags: news.tags || []
             }))
             console.log('🔍 Converted Tahfidz Data:', converted)
             setTahfidzBeritaData(converted)
@@ -1059,12 +1065,29 @@ export default function PrestasiPage() {
                     .map((post) => {
                       console.log('🔍 Rendering tahfidz post:', post.title)
                       console.log('🔍 Tahfidz post image:', post.featured_image)
+                      console.log('🔍 Tahfidz post tags:', post.tags)
                       console.log('🔍 Full tahfidz post object:', post)
                       console.log('🔍 Available tahfidz image fields:', {
                         featured_image: post.featured_image,
                         id: post.id,
-                        title: post.title
+                        title: post.title,
+                        tags: post.tags
                       })
+                      
+                      // Filter hanya berita dengan tag tahfidz
+                      const hasTahfidzTag = post.tags && (
+                        post.tags.includes('ujian tahfidz') || 
+                        post.tags.includes('Ujian Tahfidz') ||
+                        post.tags.includes('tahfidz') ||
+                        post.tags.includes('Tahfidz')
+                      )
+                      
+                      if (!hasTahfidzTag) {
+                        console.log('❌ Skipping non-tahfidz post:', post.title, 'Tags:', post.tags)
+                        return null
+                      }
+                      
+                      console.log('✅ Rendering tahfidz post:', post.title, 'Tags:', post.tags)
                       
                       return (
                     <div key={post.id} className="tahfidz-card">
