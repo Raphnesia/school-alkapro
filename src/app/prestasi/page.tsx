@@ -140,16 +140,21 @@ export default function PrestasiPage() {
   useEffect(() => {
     if (allImages.length === 0) return
 
+    console.log('🔄 Starting carousel with', allImages.length, 'images')
+
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => {
         const nextIndex = (prevIndex + 1) % allImages.length
-        console.log('🔄 Carousel: Gambar', nextIndex + 1, 'dari', allImages.length)
+        console.log('🔄 Carousel: Gambar', nextIndex + 1, 'dari', allImages.length, 'Title:', allImages[nextIndex]?.title)
         return nextIndex
       })
     }, 5000) // 5 detik
 
-    return () => clearInterval(interval)
-  }, [allImages.length])
+    return () => {
+      console.log('🔄 Clearing carousel interval')
+      clearInterval(interval)
+    }
+  }, [allImages]) // Gunakan allImages sebagai dependency, bukan hanya length
 
   // Gunakan data berita untuk List Section
   const prestasiData = prestasiBeritaData
@@ -218,6 +223,7 @@ export default function PrestasiPage() {
 
   // Debug: Log URL yang digunakan
   console.log('🔍 Current Carousel Image:', currentImageIndex + 1, 'dari', allImages.length)
+  console.log('🔍 All Images for Carousel:', allImages.map((img, idx) => `${idx + 1}. ${img.title}`))
   console.log('🔍 Right Image URL:', rightImageUrl)
   console.log('🔍 Right Image Title:', rightImageTitle)
 
