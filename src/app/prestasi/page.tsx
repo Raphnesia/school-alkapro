@@ -135,14 +135,18 @@ export default function PrestasiPage() {
   // Update gambar carousel hanya dari prestasi (bukan tahfidz)
   useEffect(() => {
     // Filter hanya prestasi untuk carousel hero
-    const filteredPrestasi = prestasiBeritaData.filter(post => 
-      post.tags && 
-      post.tags.some(tag => 
+    const filteredPrestasi = prestasiBeritaData.filter(post => {
+      // Pastikan tags ada dan berupa array
+      if (!post.tags || !Array.isArray(post.tags)) {
+        return false
+      }
+      
+      return post.tags.some(tag => 
         tag.toLowerCase().includes('prestasi') && 
         !tag.toLowerCase().includes('ujian tahfidz') &&
         !tag.toLowerCase().includes('tahfidz')
       )
-    )
+    })
     setAllImages(filteredPrestasi)
     console.log('🔍 Prestasi Images untuk carousel:', filteredPrestasi.length, 'items')
   }, [prestasiBeritaData])
@@ -173,14 +177,17 @@ export default function PrestasiPage() {
 
   // Carousel tahfidz section - ganti setiap 3 detik
   useEffect(() => {
-    const filteredTahfidzData = tahfidzData.filter(post => 
-      post.tags && (
-        post.tags.includes('ujian tahfidz') || 
-        post.tags.includes('Ujian Tahfidz') ||
-        post.tags.includes('tahfidz') ||
-        post.tags.includes('Tahfidz')
+    const filteredTahfidzData = tahfidzData.filter(post => {
+      // Pastikan tags ada dan berupa array
+      if (!post.tags || !Array.isArray(post.tags)) {
+        return false
+      }
+      
+      return post.tags.some(tag => 
+        tag.toLowerCase().includes('ujian tahfidz') || 
+        tag.toLowerCase().includes('tahfidz')
       )
-    )
+    })
     
     if (filteredTahfidzData.length === 0) return
 
@@ -771,14 +778,18 @@ export default function PrestasiPage() {
                 <div className="prestasi-carousel">
                   {/* Filter hanya prestasi (bukan ujian tahfidz) */}
                   {prestasiData
-                    .filter(post => 
-                      post.tags && 
-                      post.tags.some(tag => 
+                    .filter(post => {
+                      // Pastikan tags ada dan berupa array
+                      if (!post.tags || !Array.isArray(post.tags)) {
+                        return false
+                      }
+                      
+                      return post.tags.some(tag => 
                         tag.toLowerCase().includes('prestasi') && 
                         !tag.toLowerCase().includes('ujian tahfidz') &&
                         !tag.toLowerCase().includes('tahfidz')
                       )
-                    )
+                    })
                     .slice(0, 20)
                     .map((post) => {
                       console.log('🔍 Rendering prestasi post:', post.title, 'Tags:', post.tags)
@@ -1110,14 +1121,17 @@ export default function PrestasiPage() {
                 <div className="tahfidz-carousel">
                   {(() => {
                     // Filter hanya berita dengan tag tahfidz
-                    const filteredTahfidzData = tahfidzData.filter(post => 
-                      post.tags && (
-                        post.tags.includes('ujian tahfidz') || 
-                        post.tags.includes('Ujian Tahfidz') ||
-                        post.tags.includes('tahfidz') ||
-                        post.tags.includes('Tahfidz')
+                    const filteredTahfidzData = tahfidzData.filter(post => {
+                      // Pastikan tags ada dan berupa array
+                      if (!post.tags || !Array.isArray(post.tags)) {
+                        return false
+                      }
+                      
+                      return post.tags.some(tag => 
+                        tag.toLowerCase().includes('ujian tahfidz') || 
+                        tag.toLowerCase().includes('tahfidz')
                       )
-                    )
+                    })
                     
                     console.log('🔍 Filtered Tahfidz Data:', filteredTahfidzData.length, 'items')
                     
