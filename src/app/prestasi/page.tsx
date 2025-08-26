@@ -91,33 +91,60 @@ export default function PrestasiPage() {
           setPrestasiBeritaData(fallbackPrestasi)
         }
 
-        // Fetch tahfidz
-        const tahfidzResponse = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=ujian%20tahfidz')
-        console.log('🔍 Tahfidz API URL:', 'https://api.raphnesia.my.id/api/v1/news?tags=ujian%20tahfidz')
-        console.log('🔍 Tahfidz Response Status:', tahfidzResponse.status)
+        // Fetch tahfidz - coba beberapa URL alternatif
+        let tahfidzData = null
+        let tahfidzResponse = null
+        
+        // Coba URL 1: ujian tahfidz
+        tahfidzResponse = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=ujian%20tahfidz')
+        console.log('🔍 Tahfidz API URL 1:', 'https://api.raphnesia.my.id/api/v1/news?tags=ujian%20tahfidz')
+        console.log('🔍 Tahfidz Response 1 Status:', tahfidzResponse.status)
         
         if (tahfidzResponse.ok) {
-          const tahfidzData = await tahfidzResponse.json()
-          console.log('🔍 Raw Tahfidz API Response:', tahfidzData)
-          console.log('🔍 Tahfidz Data Length:', tahfidzData?.data?.length || 0)
+          tahfidzData = await tahfidzResponse.json()
+          console.log('🔍 Raw Tahfidz API Response 1:', tahfidzData)
+          console.log('🔍 Tahfidz Data 1 Length:', tahfidzData?.data?.length || 0)
+        }
+        
+        // Jika URL 1 tidak ada data, coba URL 2: tahfidz
+        if (!tahfidzData?.data?.length) {
+          tahfidzResponse = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=tahfidz')
+          console.log('🔍 Tahfidz API URL 2:', 'https://api.raphnesia.my.id/api/v1/news?tags=tahfidz')
+          console.log('🔍 Tahfidz Response 2 Status:', tahfidzResponse.status)
           
-          if (tahfidzData?.data?.length > 0) {
-            const converted = tahfidzData.data.map((news: any) => ({
-              id: news.id,
-              title: news.title,
-              featured_image: news.image,
-              excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
-              published_at: news.published_at,
-              tags: news.tags || []
-            }))
-            console.log('🔍 Converted Tahfidz Data:', converted)
-            setTahfidzBeritaData(converted)
-          } else {
-            console.log('🔍 No tahfidz data found, using fallback')
-            setTahfidzBeritaData(fallbackTahfidz)
+          if (tahfidzResponse.ok) {
+            tahfidzData = await tahfidzResponse.json()
+            console.log('🔍 Raw Tahfidz API Response 2:', tahfidzData)
+            console.log('🔍 Tahfidz Data 2 Length:', tahfidzData?.data?.length || 0)
           }
+        }
+        
+        // Jika URL 2 tidak ada data, coba URL 3: ujian
+        if (!tahfidzData?.data?.length) {
+          tahfidzResponse = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=ujian')
+          console.log('🔍 Tahfidz API URL 3:', 'https://api.raphnesia.my.id/api/v1/news?tags=ujian')
+          console.log('🔍 Tahfidz Response 3 Status:', tahfidzResponse.status)
+          
+          if (tahfidzResponse.ok) {
+            tahfidzData = await tahfidzResponse.json()
+            console.log('🔍 Raw Tahfidz API Response 3:', tahfidzData)
+            console.log('🔍 Tahfidz Data 3 Length:', tahfidzData?.data?.length || 0)
+          }
+        }
+        
+        if (tahfidzData?.data?.length > 0) {
+          const converted = tahfidzData.data.map((news: any) => ({
+            id: news.id,
+            title: news.title,
+            featured_image: news.image,
+            excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
+            published_at: news.published_at,
+            tags: news.tags || []
+          }))
+          console.log('🔍 Converted Tahfidz Data:', converted)
+          setTahfidzBeritaData(converted)
         } else {
-          console.log('🔍 Tahfidz API failed, using fallback')
+          console.log('🔍 No tahfidz data found from any URL, using fallback')
           setTahfidzBeritaData(fallbackTahfidz)
         }
       } catch (error) {
@@ -342,9 +369,25 @@ export default function PrestasiPage() {
                       alert(`API Test Error: ${e}`)
                     }
                   }}
-                  className="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700"
+                  className="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 mr-2"
                 >
                   Test /list-prestasi
+                </button>
+                <button 
+                  onClick={async () => {
+                    try {
+                      const response = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=ujian%20tahfidz')
+                      const result = await response.json()
+                      console.log('🔍 Test API /news?tags=ujian%20tahfidz Response:', result)
+                      alert(`API Test /news?tags=ujian%20tahfidz: ${response.status} - ${response.statusText}\nData: ${result?.data?.length || 0} items\nCheck console for details`)
+                    } catch (e) {
+                      console.error('🔍 API Test Error:', e)
+                      alert(`API Test Error: ${e}`)
+                    }
+                  }}
+                  className="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700"
+                >
+                  Test Tahfidz API
                 </button>
               </div>
             </div>
