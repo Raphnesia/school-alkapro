@@ -132,24 +132,12 @@ export default function PrestasiPage() {
     fetchBeritaData()
   }, [])
 
-  // Update gambar carousel hanya dari prestasi (bukan tahfidz)
+  // Update gabungan gambar setiap kali data prestasi atau tahfidz berubah
   useEffect(() => {
-    // Filter hanya prestasi untuk carousel hero
-    const filteredPrestasi = prestasiBeritaData.filter(post => {
-      // Pastikan tags ada dan berupa array
-      if (!post.tags || !Array.isArray(post.tags)) {
-        return false
-      }
-      
-      return post.tags.some(tag => 
-        tag.toLowerCase().includes('prestasi') && 
-        !tag.toLowerCase().includes('ujian tahfidz') &&
-        !tag.toLowerCase().includes('tahfidz')
-      )
-    })
-    setAllImages(filteredPrestasi)
-    console.log('🔍 Prestasi Images untuk carousel:', filteredPrestasi.length, 'items')
-  }, [prestasiBeritaData])
+    const combined = [...prestasiBeritaData, ...tahfidzBeritaData]
+    setAllImages(combined)
+    console.log('🔍 All Images untuk carousel:', combined.length, 'items')
+  }, [prestasiBeritaData, tahfidzBeritaData])
 
   // Carousel gambar ganti setiap 5 detik
   useEffect(() => {
@@ -308,8 +296,8 @@ export default function PrestasiPage() {
                 <div className="ml-4 text-xs">
                   <p>• Hero Settings: API /prestasi/settings</p>
                   <p>• Badge Text: {badgeText}</p>
-                  <p>• Right Image: Carousel dari prestasi saja (5 detik)</p>
-                  <p>• Prestasi List: API /news?tags=prestasi (filtered)</p>
+                  <p>• Right Image: Carousel dari prestasi + tahfidz (5 detik)</p>
+                  <p>• Prestasi List: API /news?tags=prestasi (filtered prestasi saja)</p>
                   <p>• Tahfidz List: API /news?tags=ujian%20tahfidz (section terpisah)</p>
                 </div>
                 <p><strong>Sample Prestasi URLs:</strong></p>
