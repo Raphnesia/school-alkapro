@@ -132,12 +132,20 @@ export default function PrestasiPage() {
     fetchBeritaData()
   }, [])
 
-  // Update gabungan gambar setiap kali data prestasi atau tahfidz berubah
+  // Update gambar carousel hanya dari prestasi (bukan tahfidz)
   useEffect(() => {
-    const combined = [...prestasiBeritaData, ...tahfidzBeritaData]
-    setAllImages(combined)
-    console.log('🔍 All Images untuk carousel:', combined.length, 'items')
-  }, [prestasiBeritaData, tahfidzBeritaData])
+    // Filter hanya prestasi untuk carousel hero
+    const filteredPrestasi = prestasiBeritaData.filter(post => 
+      post.tags && 
+      post.tags.some(tag => 
+        tag.toLowerCase().includes('prestasi') && 
+        !tag.toLowerCase().includes('ujian tahfidz') &&
+        !tag.toLowerCase().includes('tahfidz')
+      )
+    )
+    setAllImages(filteredPrestasi)
+    console.log('🔍 Prestasi Images untuk carousel:', filteredPrestasi.length, 'items')
+  }, [prestasiBeritaData])
 
   // Carousel gambar ganti setiap 5 detik
   useEffect(() => {
@@ -293,9 +301,9 @@ export default function PrestasiPage() {
                 <div className="ml-4 text-xs">
                   <p>• Hero Settings: API /prestasi/settings</p>
                   <p>• Badge Text: {badgeText}</p>
-                  <p>• Right Image: Carousel dari prestasi + tahfidz (5 detik)</p>
-                  <p>• Prestasi List: API /news?tags=prestasi</p>
-                  <p>• Tahfidz List: API /news?tags=ujian%20tahfidz (BUKAN prestasi)</p>
+                  <p>• Right Image: Carousel dari prestasi saja (5 detik)</p>
+                  <p>• Prestasi List: API /news?tags=prestasi (filtered)</p>
+                  <p>• Tahfidz List: API /news?tags=ujian%20tahfidz (section terpisah)</p>
                 </div>
                 <p><strong>Sample Prestasi URLs:</strong></p>
                 <div className="ml-4 text-xs">
@@ -761,18 +769,19 @@ export default function PrestasiPage() {
                 `}</style>
 
                 <div className="prestasi-carousel">
-                  {/* Map daftar prestasi maksimal 20 dari API (sudah difilter di backend) */}
+                  {/* Filter hanya prestasi (bukan ujian tahfidz) */}
                   {prestasiData
+                    .filter(post => 
+                      post.tags && 
+                      post.tags.some(tag => 
+                        tag.toLowerCase().includes('prestasi') && 
+                        !tag.toLowerCase().includes('ujian tahfidz') &&
+                        !tag.toLowerCase().includes('tahfidz')
+                      )
+                    )
                     .slice(0, 20)
                     .map((post) => {
-                      console.log('🔍 Rendering post:', post.title)
-                      console.log('🔍 Post image:', post.featured_image)
-                      console.log('🔍 Full post object:', post)
-                      console.log('🔍 Available image fields:', {
-                        featured_image: post.featured_image,
-                        id: post.id,
-                        title: post.title
-                      })
+                      console.log('🔍 Rendering prestasi post:', post.title, 'Tags:', post.tags)
                       
                       return (
                     <div key={post.id} className="prestasi-card">
