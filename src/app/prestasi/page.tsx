@@ -81,7 +81,8 @@ export default function PrestasiPage() {
               featured_image: news.image,
               excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
               published_at: news.published_at,
-              tags: news.tags || []
+              // Handle both string and array formats for tags
+              tags: Array.isArray(news.tags) ? news.tags : (news.tags ? [news.tags] : [])
             }))
             setPrestasiBeritaData(converted)
           } else {
@@ -139,9 +140,11 @@ export default function PrestasiPage() {
             featured_image: news.image,
             excerpt: news.subtitle?.replace(/<[^>]*>/g, '') || '',
             published_at: news.published_at,
-            tags: news.tags || []
+            // Handle both string and array formats for tags
+            tags: Array.isArray(news.tags) ? news.tags : (news.tags ? [news.tags] : [])
           }))
           console.log('🔍 Converted Tahfidz Data:', converted)
+          console.log('🔍 Sample tags format:', converted[0]?.tags)
           setTahfidzBeritaData(converted)
         } else {
           console.log('🔍 No tahfidz data found from any URL, using fallback')
@@ -190,23 +193,36 @@ export default function PrestasiPage() {
   const prestasiData = prestasiBeritaData
   const tahfidzData = tahfidzBeritaData
 
+  // Helper function untuk exact tag matching
+  const isExactTagMatch = (tags: string[], targetTag: string): boolean => {
+    if (!tags || tags.length === 0) return false
+    
+    return tags.some(tag => {
+      const normalizedTag = tag.toLowerCase().trim()
+      const normalizedTarget = targetTag.toLowerCase().trim()
+      return normalizedTag === normalizedTarget
+    })
+  }
+
   // Carousel tahfidz section - ganti setiap 3 detik
   useEffect(() => {
     const filteredTahfidzData = tahfidzData.filter(post => {
-      // Pastikan tags ada dan berupa array
-      if (!post.tags || !Array.isArray(post.tags)) {
+      // Pastikan tags ada
+      if (!post.tags || post.tags.length === 0) {
         return false
       }
       
-      return post.tags.some(tag => 
-        tag.toLowerCase().includes('ujian tahfidz') || 
-        tag.toLowerCase().includes('tahfidz')
-      )
+      // Hanya tampilkan yang memiliki tag exact "ujian tahfidz"
+      const hasExactUjianTahfidzTag = isExactTagMatch(post.tags, 'ujian tahfidz')
+      
+      console.log('🔍 Filtering tahfidz post:', post.title, 'Tags:', post.tags, 'Has exact ujian tahfidz:', hasExactUjianTahfidzTag)
+      
+      return hasExactUjianTahfidzTag
     })
     
     if (filteredTahfidzData.length === 0) return
 
-    console.log('🔄 Starting tahfidz carousel with', filteredTahfidzData.length, 'items')
+    console.log('🔄 Starting tahfidz carousel with', filteredTahfidzData.length, 'items (exact "ujian tahfidz" only)')
 
     const interval = setInterval(() => {
       setTahfidzCarouselIndex((prevIndex) => {
@@ -296,104 +312,6 @@ export default function PrestasiPage() {
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
       
-      {/* Debug Info - Hanya tampilkan di development */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="bg-yellow-100 border-l-4 border-yellow-500 p-4 m-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-yellow-800">Debug Info</h3>
-              <div className="mt-2 text-sm text-yellow-700">
-                <p><strong>Hero API (/prestasi/settings):</strong> {data ? '✅ Tersedia' : '❌ Kosong'}</p>
-                <p><strong>Settings:</strong> {data?.settings ? '✅ Tersedia' : '❌ Kosong'}</p>
-                <p><strong>Badge Text:</strong> {data?.settings?.badge_text || '❌ Kosong'}</p>
-                <p><strong>Carousel Images:</strong> {allImages.length} item (berubah setiap 5 detik)</p>
-                <p><strong>Current Image:</strong> {currentImageIndex + 1} dari {allImages.length}</p>
-                <hr className="my-2" />
-                <p><strong>Berita API (/news):</strong> {beritaLoading ? '⏳ Loading...' : '✅ Tersedia'}</p>
-                <p><strong>Prestasi List (berita):</strong> {prestasiData.length} item</p>
-                <p><strong>Tahfidz List (berita):</strong> {tahfidzData.length} item</p>
-                <p><strong>Using Fallback:</strong> {prestasiData.length === 0 ? '✅ Ya' : '❌ Tidak'}</p>
-                <hr className="my-2" />
-                <p><strong>Data Source:</strong></p>
-                <div className="ml-4 text-xs">
-                  <p>• Hero Settings: API /prestasi/settings</p>
-                  <p>• Badge Text: {badgeText}</p>
-                  <p>• Right Image: Carousel dari prestasi + tahfidz (5 detik)</p>
-                  <p>• Prestasi List: API /news?tags=prestasi (filtered prestasi saja)</p>
-                  <p>• Tahfidz List: API /news?tags=ujian%20tahfidz (section terpisah)</p>
-                </div>
-                <p><strong>Sample Prestasi URLs:</strong></p>
-                <div className="ml-4 text-xs">
-                  {prestasiData.slice(0, 3).map((post, index) => (
-                    <p key={index}>• {post.title}: {post.featured_image ? '✅' : '❌'} {post.featured_image || 'No image'}</p>
-                  ))}
-                </div>
-                <p><strong>Sample Tahfidz URLs:</strong></p>
-                <div className="ml-4 text-xs">
-                  {tahfidzData.slice(0, 3).map((post, index) => (
-                    <p key={index}>• {post.title}: {post.featured_image ? '✅' : '❌'} {post.featured_image || 'No image'}</p>
-                  ))}
-                </div>
-              </div>
-              <div className="mt-3 space-y-2">
-                <button 
-                  onClick={async () => {
-                    try {
-                      const response = await fetch('https://api.raphnesia.my.id/api/v1/prestasi/settings')
-                      const result = await response.json()
-                      console.log('🔍 Test API /prestasi/settings Response:', result)
-                      alert(`API Test /prestasi/settings: ${response.status} - ${response.statusText}\nCheck console for details`)
-                    } catch (e) {
-                      console.error('🔍 API Test Error:', e)
-                      alert(`API Test Error: ${e}`)
-                    }
-                  }}
-                  className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 mr-2"
-                >
-                  Test API /prestasi/settings
-                </button>
-                <button 
-                  onClick={async () => {
-                    try {
-                      const response = await fetch('https://api.raphnesia.my.id/api/v1/prestasi/list-prestasi')
-                      const result = await response.json()
-                      console.log('🔍 Test API /prestasi/list-prestasi Response:', result)
-                      alert(`API Test /prestasi/list-prestasi: ${response.status} - ${response.statusText}\nCheck console for details`)
-                    } catch (e) {
-                      console.error('🔍 API Test Error:', e)
-                      alert(`API Test Error: ${e}`)
-                    }
-                  }}
-                  className="bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 mr-2"
-                >
-                  Test /list-prestasi
-                </button>
-                <button 
-                  onClick={async () => {
-                    try {
-                      const response = await fetch('https://api.raphnesia.my.id/api/v1/news?tags=ujian%20tahfidz')
-                      const result = await response.json()
-                      console.log('🔍 Test API /news?tags=ujian%20tahfidz Response:', result)
-                      alert(`API Test /news?tags=ujian%20tahfidz: ${response.status} - ${response.statusText}\nData: ${result?.data?.length || 0} items\nCheck console for details`)
-                    } catch (e) {
-                      console.error('🔍 API Test Error:', e)
-                      alert(`API Test Error: ${e}`)
-                    }
-                  }}
-                  className="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700"
-                >
-                  Test Tahfidz API
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
       
       {/* Hero Section - Inspired by Jagoan Hosting Layout */}
       <main className="flex-1">
@@ -810,8 +728,8 @@ export default function PrestasiPage() {
                   {/* Filter hanya prestasi (bukan ujian tahfidz) */}
                   {prestasiData
                     .filter(post => {
-                      // Pastikan tags ada dan berupa array
-                      if (!post.tags || !Array.isArray(post.tags)) {
+                      // Pastikan tags ada
+                      if (!post.tags || post.tags.length === 0) {
                         return false
                       }
                       
@@ -1151,20 +1069,22 @@ export default function PrestasiPage() {
                 
                 <div className="tahfidz-carousel">
                   {(() => {
-                    // Filter hanya berita dengan tag tahfidz
+                    // Filter hanya berita dengan tag exact "ujian tahfidz"
                     const filteredTahfidzData = tahfidzData.filter(post => {
-                      // Pastikan tags ada dan berupa array
-                      if (!post.tags || !Array.isArray(post.tags)) {
+                      // Pastikan tags ada
+                      if (!post.tags || post.tags.length === 0) {
                         return false
                       }
                       
-                      return post.tags.some(tag => 
-                        tag.toLowerCase().includes('ujian tahfidz') || 
-                        tag.toLowerCase().includes('tahfidz')
-                      )
+                      // Hanya tampilkan yang memiliki tag exact "ujian tahfidz"
+                      const hasExactUjianTahfidzTag = isExactTagMatch(post.tags, 'ujian tahfidz')
+                      
+                      console.log('🔍 Rendering filter check - Post:', post.title, 'Tags:', post.tags, 'Has exact ujian tahfidz:', hasExactUjianTahfidzTag)
+                      
+                      return hasExactUjianTahfidzTag
                     })
                     
-                    console.log('🔍 Filtered Tahfidz Data:', filteredTahfidzData.length, 'items')
+                    console.log('🔍 Filtered Tahfidz Data (exact "ujian tahfidz" only):', filteredTahfidzData.length, 'items')
                     
                     // Jika tidak ada data tahfidz, tampilkan fallback
                     if (filteredTahfidzData.length === 0) {
