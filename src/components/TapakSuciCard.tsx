@@ -1,9 +1,11 @@
 // src/components/TapakSuciCard.tsx
-// Card component untuk menampilkan pengurus Tapak Suci
+// Komponen untuk menampilkan kartu profil pengurus Tapak Suci
 
 import React from 'react';
 import Image from 'next/image';
 import { TapakSuciPengurus, tapakSuciService } from '@/services/tapakSuciService';
+import { ScrollReveal } from './ScrollReveal';
+import { useI18n } from '@/hooks/useI18n';
 
 interface TapakSuciCardProps {
   pengurus: TapakSuciPengurus;
@@ -11,63 +13,208 @@ interface TapakSuciCardProps {
 }
 
 export function TapakSuciCard({ pengurus, layout }: TapakSuciCardProps) {
-  const photoUrl = tapakSuciService.getPhotoUrl(pengurus.photo);
+  const { t } = useI18n();
+  
+  if (!pengurus) {
+    return null;
+  }
+
+  const {
+    name,
+    position,
+    photo,
+    kelas,
+    description
+  } = pengurus;
+
+  // Fallback image jika photo tidak tersedia
+  const imageSrc = tapakSuciService.getPhotoUrl(photo, '/guru/Adam-Muttaqien-M.Si_.jpg');
+  
+  // Background pattern untuk section
+  const backgroundPattern = "https://www.ums.ac.id/__image__/uploads/KZ4tligbcEdhZFxCLan8FNQMirVQuIYtCOMHLOqd.svg";
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <div className={`md:flex ${layout === 'right' ? 'md:flex-row-reverse' : ''}`}>
-        {/* Photo Section */}
-        <div className="md:w-1/3 relative">
-          <div className="h-64 md:h-full relative">
-            <Image
-              src={photoUrl}
-              alt={pengurus.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 33vw"
-            />
-            {/* Orange overlay for Tapak Suci theme */}
-            <div className="absolute inset-0 bg-gradient-to-t from-orange-900/20 to-transparent"></div>
+    <section className="relative lg:h-[700px] h-auto overflow-hidden min-h-[600px] max-h-[750px]" style={{fontFamily: 'Ubuntu, sans-serif'}}>
+      <img 
+        draggable={false} 
+        alt="banner" 
+        src={backgroundPattern}
+        className="w-full absolute inset-0 object-cover h-full" 
+      />
+      
+      <div className="relative lg:relative top-0 w-full h-full flex">
+        <div className="w-full lg:relative mt-auto">
+          <div className="flex justify-center mx-0 mt-3 lg:mt-5 px-4 overflow-hidden">
+            {/* Mobile Layout - Foto di atas, teks di bawah */}
+            <div className="w-full lg:hidden flex flex-col items-center text-center py-6 pb-12" style={{fontFamily: 'Ubuntu, sans-serif'}}>
+              {/* Mobile Image */}
+              <ScrollReveal direction="up" delay={300} duration={600}>
+                <div className="mb-6">
+                  <Image 
+                    src={imageSrc}
+                    alt={`${name} image`}
+                    width={140}
+                    height={140}
+                    className="rounded-full bg-gray-300 mx-auto object-cover" 
+                    style={{width: '35vw', height: '35vw'}}
+                  />
+                </div>
+              </ScrollReveal>
+              
+              {/* Mobile Content */}
+              <ScrollReveal direction="up" delay={400} duration={600}>
+                <div className="px-4 text-left">
+                  <h4 className="text-sm mb-2 text-black" style={{fontFamily: 'Ubuntu, sans-serif'}}>
+                    Pengurus Tapak Suci
+                  </h4>
+                  
+                  <h3 className="mb-2 font-bold text-black" style={{fontFamily: 'Ubuntu, sans-serif', fontSize: '28px'}}>
+                    {name}
+                  </h3>
+                  
+                  <div className="flex mb-3">
+                    <span className="w-16 h-1 bg-orange-600"></span>
+                  </div>
+                  
+                  <p className="font-semibold text-sm font-regular mb-4 text-black" style={{fontFamily: 'Quicksand, sans-serif'}}>
+                    {position}
+                  </p>
+                  
+                  <p className="text-sm text-gray-600 mb-2">
+                    <strong>Kelas:</strong> {kelas}
+                  </p>
+                  
+                  <p className="text-sm text-gray-600 mb-4">
+                    {description}
+                  </p>
+                </div>
+              </ScrollReveal>
+            </div>
+            
+            {/* Desktop Layout - Perbaikan untuk container gambar */}
+            <div className="hidden lg:grid lg:grid-cols-2 w-full max-w-none mx-auto relative z-20 h-[600px] gap-4">
+              {layout === 'left' ? (
+                <>
+                  {/* Left Column - Image */}
+                  <ScrollReveal direction="left" delay={300} duration={700}>
+                    <div className="flex items-center justify-center p-4">
+                      <div className="w-full max-w-md h-[600px] flex items-start justify-center pt-0">
+                        <Image 
+                          src={imageSrc}
+                          alt={`${name} image`}
+                          width={500}
+                          height={550}
+                          className="object-cover object-top rounded-lg max-w-full max-h-full" 
+                        />
+                      </div>
+                    </div>
+                  </ScrollReveal>
+                  
+                  {/* Right Column - Content */}
+                  <ScrollReveal direction="right" delay={500} duration={700}>
+                    <div className="flex items-center pt-12" style={{fontFamily: 'Ubuntu, sans-serif'}}>
+                      <div className="max-w-none pr-4">
+                        <h4 className="text-lg font-medium text-black mb-2" style={{fontFamily: 'Ubuntu, sans-serif'}}>
+                          Pengurus Tapak Suci
+                        </h4>
+                        
+                        <h3 className="mb-3 text-3xl lg:text-5xl font-bold text-black" style={{fontFamily: 'Ubuntu, sans-serif'}}>
+                          {name}
+                        </h3>
+                        
+                        <div className="flex justify-start mb-3">
+                          <span className="w-16 h-1 bg-orange-600"></span>
+                        </div>
+                        
+                        <p className="font-bold text-xl font-semibold text-black mb-4" style={{fontFamily: 'Quicksand, sans-serif'}}>
+                          {position}
+                        </p>
+                        
+                        <p className="text-sm text-gray-700 mb-3 leading-relaxed">
+                          <strong className="text-black">Kelas:</strong> {kelas}
+                        </p>
+                        
+                        <p className="text-sm text-gray-700 mb-4 leading-relaxed">
+                          {description}
+                        </p>
+                      </div>
+                    </div>
+                  </ScrollReveal>
+                </>
+              ) : (
+                <>
+                  {/* Left Column - Content */}
+                  <ScrollReveal direction="left" delay={500} duration={700}>
+                    <div className="flex items-center pt-12 pl-16" style={{fontFamily: 'Ubuntu, sans-serif'}}>
+                      <div className="max-w-none">
+                        <h4 className="text-lg font-medium text-black mb-2" style={{fontFamily: 'Ubuntu, sans-serif'}}>
+                          Pengurus Tapak Suci
+                        </h4>
+                        
+                        <h3 className="mb-3 text-3xl lg:text-5xl font-bold text-black" style={{fontFamily: 'Ubuntu, sans-serif'}}>
+                          {name}
+                        </h3>
+                        
+                        <div className="flex justify-start mb-3">
+                          <span className="w-16 h-1 bg-orange-600"></span>
+                        </div>
+                        
+                        <p className="font-bold text-lg font-semibold text-black mb-4" style={{fontFamily: 'Quicksand, sans-serif'}}>
+                          {position}
+                        </p>
+                        
+                        <p className="text-sm text-gray-700 mb-3 leading-relaxed">
+                          <strong className="text-black">Kelas:</strong> {kelas}
+                        </p>
+                        
+                        <p className="text-sm text-gray-700 mb-4 leading-relaxed">
+                          {description}
+                        </p>
+                      </div>
+                    </div>
+                  </ScrollReveal>
+                  
+                  {/* Right Column - Image */}
+                  <ScrollReveal direction="right" delay={300} duration={700}>
+                    <div className="flex items-center justify-center">
+                      <div className="w-full max-w-md h-[600px] flex items-start justify-center">
+                        <Image 
+                          src={imageSrc}
+                          alt={`${name} image`}
+                          width={500}
+                          height={550}
+                          className="object-cover object-top rounded-lg max-w-full max-h-full" 
+                        />
+                      </div>
+                    </div>
+                  </ScrollReveal>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-
-        {/* Content Section */}
-        <div className="md:w-2/3 p-6">
-          <div className="flex flex-col h-full justify-center">
-            {/* Position Badge */}
-            <div className="inline-flex items-center mb-3">
-              <span className="bg-orange-100 text-orange-800 text-sm font-semibold px-3 py-1 rounded-full">
-                {pengurus.position}
-              </span>
+          
+          {/* Orange Bar - Posisi di bottom dengan height yang menyesuaikan */}
+          <ScrollReveal direction="up" delay={600} duration={500}>
+            <div className="w-full h-8 lg:h-20 bg-orange-600 flex justify-center absolute bottom-0 mx-0 z-50">
+              {layout === 'left' ? (
+                <>
+                  <div className="hidden lg:block lg:w-5/12"></div>
+                  <div className="w-full lg:w-7/12 text-xs lg:text-sm font-bold text-white py-1 lg:py-3 text-right flex items-center justify-end pr-4" style={{fontFamily: 'Ubuntu, sans-serif'}}>
+                    {/* Footer content dapat ditambahkan di sini */}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="w-full lg:w-7/12 text-xs lg:text-sm font-bold text-white py-1 lg:py-3 text-left flex items-center justify-start pl-4" style={{fontFamily: 'Ubuntu, sans-serif'}}>
+                    {/* Footer content dapat ditambahkan di sini */}
+                  </div>
+                  <div className="hidden lg:block lg:w-5/12"></div>
+                </>
+              )}
             </div>
-
-            {/* Name */}
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              {pengurus.name}
-            </h3>
-
-            {/* Class */}
-            <div className="flex items-center mb-4">
-              <svg className="w-4 h-4 text-orange-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
-              <span className="text-gray-600 font-medium">{pengurus.kelas}</span>
-            </div>
-
-            {/* Description */}
-            <p className="text-gray-700 leading-relaxed mb-4">
-              {pengurus.description}
-            </p>
-
-            {/* Decorative Element */}
-            <div className="flex items-center">
-              <div className="w-12 h-1 bg-orange-600 rounded-full"></div>
-              <div className="w-6 h-1 bg-orange-400 rounded-full ml-2"></div>
-              <div className="w-3 h-1 bg-orange-300 rounded-full ml-2"></div>
-            </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
