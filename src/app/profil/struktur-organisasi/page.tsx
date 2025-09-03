@@ -262,7 +262,19 @@ export default function StrukturOrganisasiPage() {
       </main>
 
       {/* Content Section */}
-      <main className="flex-grow container mx-auto px-4 py-8 bg-white" style={{ minHeight: 'auto', display: 'block' }}>
+      <main className="flex-grow container mx-auto px-4 py-8 bg-white" style={{ minHeight: 'auto', display: 'block', visibility: 'visible', opacity: 1, position: 'relative', zIndex: 10 }}>
+        {/* Debug Info - Hapus setelah testing */}
+        <div className="mb-6 p-4 bg-yellow-100 border border-yellow-300 rounded-lg">
+          <h3 className="text-lg font-semibold text-yellow-800 mb-2">🔍 Debug Info</h3>
+          <div className="text-sm text-yellow-700 space-y-1">
+            <p><strong>Content Length:</strong> {content?.length || 0}</p>
+            <p><strong>Struktur Organisasi Length:</strong> {strukturOrganisasi?.length || 0}</p>
+            <p><strong>Has Backend Data:</strong> {hasBackendData ? 'Yes' : 'No'}</p>
+            <p><strong>Backend Online:</strong> {isBackendOnline ? 'Yes' : 'No'}</p>
+            <p><strong>Settings:</strong> {settings ? 'Available' : 'Not Available'}</p>
+          </div>
+        </div>
+
         <ScrollReveal>
           {/* Struktur Organisasi Content Sections */}
           {content && content.length > 0 && (
@@ -384,6 +396,22 @@ export default function StrukturOrganisasiPage() {
               </div>
             </div>
           )}
+
+          {/* Test Content - Hapus setelah testing */}
+          <div className="mt-8 p-6 bg-blue-100 border border-blue-300 rounded-lg">
+            <h3 className="text-xl font-bold text-blue-800 mb-3">🧪 Test Content</h3>
+            <p className="text-blue-700 mb-4">Ini adalah test content untuk memastikan section ini terlihat.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-white p-4 rounded border">
+                <h4 className="font-semibold text-gray-800">Test Card 1</h4>
+                <p className="text-gray-600">Ini adalah test card pertama</p>
+              </div>
+              <div className="bg-white p-4 rounded border">
+                <h4 className="font-semibold text-gray-800">Test Card 2</h4>
+                <p className="text-gray-600">Ini adalah test card kedua</p>
+              </div>
+            </div>
+          </div>
         </ScrollReveal>
       </main>
     </div>
