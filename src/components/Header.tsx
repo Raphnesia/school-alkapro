@@ -349,13 +349,20 @@ export function Header() {
 
               {/* Mobile Menu Toggle */}
               <button 
-                className="xl:hidden text-white p-1 hover:bg-white hover:bg-opacity-10 rounded transition-colors"
+                className="xl:hidden text-white p-2 hover:bg-white hover:bg-opacity-10 rounded-lg transition-colors border border-white/20 hover:border-white/40"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label="Toggle mobile menu"
               >
                 <div className="w-5 h-5 flex flex-col justify-center items-center">
-                  <div className="w-4 h-0.5 bg-white mb-1"></div>
-                  <div className="w-4 h-0.5 bg-white mb-1"></div>
-                  <div className="w-4 h-0.5 bg-white"></div>
+                  <div className={`w-5 h-0.5 bg-white mb-1 transition-all duration-300 ${
+                    isMenuOpen ? 'rotate-45 translate-y-1.5' : ''
+                  }`}></div>
+                  <div className={`w-5 h-0.5 bg-white mb-1 transition-all duration-300 ${
+                    isMenuOpen ? 'opacity-0' : ''
+                  }`}></div>
+                  <div className={`w-5 h-0.5 bg-white transition-all duration-300 ${
+                    isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
+                  }`}></div>
                 </div>
               </button>
             </div>
@@ -366,23 +373,33 @@ export function Header() {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="xl:hidden bg-primary border-t border-gray-600">
-          <div className="container mx-auto px-4 py-2">
-            <nav className="flex flex-col space-y-1">
+          <div className="container mx-auto px-4 py-4">
+            <nav className="flex flex-col space-y-2">
               {menuItems.map((item) => (
                 <div key={item.name} className="relative">
+                  {/* Main Menu Item */}
                   <div 
-                    className="text-white hover:text-gray-200 font-semibold text-base py-1 px-2 rounded hover:bg-white hover:bg-opacity-10 transition-colors flex items-center justify-between cursor-pointer"
+                    className="text-white hover:text-gray-200 font-semibold text-base py-3 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors flex items-center justify-between cursor-pointer border border-transparent hover:border-white/20"
                     onClick={() => {
                       if (item.dropdown.length > 0) {
                         setActiveDropdown(activeDropdown === item.name ? null : item.name);
                       } else {
                         window.location.href = item.href;
+                        setIsMenuOpen(false);
                       }
                     }}
                   >
-                    {item.name}
+                    <span className="flex items-center gap-3">
+                      {/* Icon untuk setiap menu */}
+                      <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      {item.name}
+                    </span>
                     {item.dropdown.length > 0 && (
-                      <ChevronDownIcon className={`w-3 h-3 transition-transform duration-200 ${
+                      <ChevronDownIcon className={`w-4 h-4 transition-transform duration-200 ${
                         activeDropdown === item.name ? 'rotate-180' : ''
                       }`} />
                     )}
@@ -390,29 +407,47 @@ export function Header() {
                   
                   {/* Mobile Dropdown */}
                   {item.dropdown.length > 0 && activeDropdown === item.name && (
-                    <div className="bg-white rounded-lg mt-1 ml-4 shadow-lg border border-gray-200 overflow-hidden mobile-dropdown-enter">
-                      {item.dropdown.map((dropdownItem, index) => (
-                        <a
-                          key={dropdownItem.name}
-                          href={dropdownItem.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block px-4 py-3 text-gray-700 hover:bg-yellow-50 hover:text-primary transition-colors duration-200 border-b border-gray-100 last:border-b-0 mobile-dropdown-item"
-                          style={{
-                            animationDelay: `${index * 50}ms`
-                          }}
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            setActiveDropdown(null);
-                          }}
-                        >
-                          {dropdownItem.name}
-                        </a>
-                      ))}
+                    <div className="bg-white rounded-lg mt-2 ml-6 shadow-lg border border-gray-200 overflow-hidden mobile-dropdown-enter">
+                      <div className="py-2">
+                        {item.dropdown.map((dropdownItem, index) => (
+                          <a
+                            key={dropdownItem.name}
+                            href={dropdownItem.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block px-4 py-3 text-gray-700 hover:bg-yellow-50 hover:text-primary transition-colors duration-200 border-b border-gray-100 last:border-b-0 mobile-dropdown-item flex items-center gap-3"
+                            style={{
+                              animationDelay: `${index * 50}ms`
+                            }}
+                            onClick={() => {
+                              setIsMenuOpen(false);
+                              setActiveDropdown(null);
+                            }}
+                          >
+                            {/* Icon untuk dropdown item */}
+                            <div className="w-4 h-4 bg-yellow-100 rounded-full flex items-center justify-center">
+                              <svg className="w-2 h-2 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                            {dropdownItem.name}
+                          </a>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
               ))}
+              
+              {/* Mobile PPDB Button */}
+              <div className="pt-4 border-t border-white/20">
+                <a 
+                  href="/info-ppdb"
+                  className="block w-full bg-white text-primary px-4 py-3 text-center font-bold hover:bg-opacity-90 transition-colors rounded-lg shadow-sm"
+                >
+                  📚 Info PPDB
+                </a>
+              </div>
             </nav>
           </div>
         </div>
