@@ -30,7 +30,7 @@ export function StrukturOrganisasiCard({ struktur, layout }: StrukturOrganisasiC
   const backgroundPattern = "https://www.ums.ac.id/__image__/uploads/KZ4tligbcEdhZFxCLan8FNQMirVQuIYtCOMHLOqd.svg";
 
   return (
-    <section className="relative lg:h-[700px] h-auto overflow-hidden min-h-[600px] max-h-[750px]" style={{fontFamily: 'Ubuntu, sans-serif'}}>
+    <section className="relative lg:h-[700px] h-auto overflow-hidden min-h-[600px] max-h-[750px] opacity-100 visible" style={{fontFamily: 'Ubuntu, sans-serif'}}>
       <img 
         draggable={false} 
         alt="banner" 

@@ -12,7 +12,6 @@ import { ErrorMessage } from '@/components/ErrorMessage';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { useI18n } from '@/hooks/useI18n';
 import { strukturOrganisasiService, StrukturOrganisasiSettings, StrukturOrganisasiData, StrukturOrganisasiContent } from '@/services/strukturOrganisasiService';
-import { BackendStatus } from '@/components/BackendStatus';
 import { StrukturOrganisasiCard } from '@/components/StrukturOrganisasiCard';
 
 export default function StrukturOrganisasiPage() {
@@ -181,7 +180,6 @@ export default function StrukturOrganisasiPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <BackendStatus isOnline={isBackendOnline} hasData={hasBackendData} />
       <Header />
       
       {/* Main Content */}
@@ -262,211 +260,42 @@ export default function StrukturOrganisasiPage() {
       </main>
 
       {/* Content Section */}
-      <main className="flex-grow container mx-auto px-4 py-8 bg-white" style={{ minHeight: 'auto', display: 'block', visibility: 'visible', opacity: 1, position: 'relative', zIndex: 10 }}>
-        {/* Debug Info - Hapus setelah testing */}
-        <div className="mb-6 p-4 bg-yellow-100 border border-yellow-300 rounded-lg">
-          <h3 className="text-lg font-semibold text-yellow-800 mb-2">🔍 Debug Info</h3>
-          <div className="text-sm text-yellow-700 space-y-1">
-            <p><strong>Content Length:</strong> {content?.length || 0}</p>
-            <p><strong>Struktur Organisasi Length:</strong> {strukturOrganisasi?.length || 0}</p>
-            <p><strong>Has Backend Data:</strong> {hasBackendData ? 'Yes' : 'No'}</p>
-            <p><strong>Backend Online:</strong> {isBackendOnline ? 'Yes' : 'No'}</p>
-            <p><strong>Settings:</strong> {settings ? 'Available' : 'Not Available'}</p>
-          </div>
-        </div>
-
-        {/* Fallback Content - Selalu terlihat tanpa ScrollReveal */}
-        <div className="mb-8 p-6 bg-green-100 border border-green-300 rounded-lg">
-          <h3 className="text-xl font-bold text-green-800 mb-3">📋 Struktur Organisasi - Fallback View</h3>
-          <p className="text-green-700 mb-4">Ini adalah fallback content yang selalu terlihat untuk memastikan data struktur organisasi dapat diakses.</p>
-          
-          {/* Struktur Organisasi Cards - Tanpa ScrollReveal */}
-          {strukturOrganisasi && strukturOrganisasi.length > 0 && (
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-green-800">Daftar Struktur Organisasi:</h4>
-              {strukturOrganisasi.slice(0, 3).map((item: StrukturOrganisasiData, index: number) => (
-                <div key={item.id} className="bg-white p-4 rounded-lg border border-green-200 shadow-sm">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1">
-                      <h5 className="font-semibold text-gray-800">{item.position}</h5>
-                      <p className="text-gray-600">{item.name}</p>
-                      {item.description && (
-                        <p className="text-sm text-gray-500 mt-1">{item.description}</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-              {strukturOrganisasi.length > 3 && (
-                <div className="text-center text-green-600 font-medium">
-                  +{strukturOrganisasi.length - 3} struktur organisasi lainnya...
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Content Sections - Tanpa ScrollReveal */}
-          {content && content.length > 0 && (
-            <div className="mt-6">
-              <h4 className="text-lg font-semibold text-green-800 mb-3">Content Sections:</h4>
-              {content.map((section: StrukturOrganisasiContent, index: number) => (
-                <div key={section.id} className="bg-white p-4 rounded-lg border border-green-200 shadow-sm mb-3">
-                  <h5 className="font-semibold text-gray-800 mb-2">{section.title}</h5>
-                  {section.content && (
-                    <p className="text-gray-600 text-sm mb-2">{section.content}</p>
-                  )}
-                  {section.bidang_structure && (
-                    <div className="text-xs text-gray-500">
-                      <strong>Bidang:</strong> {section.bidang_structure.length} bidang struktur
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <ScrollReveal>
-          {/* Struktur Organisasi Content Sections */}
-          {content && content.length > 0 && (
-            <div className="prose prose-black max-w-none mb-12">
-              {content.map((section: StrukturOrganisasiContent, index: number) => (
-                <div key={section.id} className={`${section.background_color} ${section.border_color} rounded-lg shadow-md p-6 mb-8`}>
-                  <div className="flex items-center justify-center mb-6">
-                    <div className="w-16 h-1 bg-primary rounded-full mr-3"></div>
-                    <h2 className="text-2xl font-semibold text-primary">{section.title}</h2>
-                    <div className="w-16 h-1 bg-primary rounded-full ml-3"></div>
-                  </div>
-                  
-                  {/* Content Description */}
-                  {section.content && (
-                    <div className="mb-6 text-black" dangerouslySetInnerHTML={{ __html: section.content }} />
-                  )}
-                  
-                  {/* Struktur Bidang Kompleks */}
-                  {section.use_list_disc && section.bidang_structure && (
-                    <div>
-                      {/* Debug info - hapus setelah testing */}
-                      <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
-                        <strong>Debug:</strong> Grid Type: "{section.grid_type}" | Display Type: "{section.display_type}" | Bidang Count: {section.bidang_structure.length}
-                      </div>
-                      
-                      <div className={`grid ${section.grid_type} gap-6`}>
-                        {section.bidang_structure.map((bidang, bidangIndex) => (
-                          <div key={bidangIndex} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                            {/* Header Bidang */}
-                            <div className="bg-green-600 text-white px-4 py-3">
-                              <h3 className="font-semibold text-lg">{bidang.bidang_name}</h3>
-                            </div>
-                            
-                            {/* Daftar Anggota */}
-                            <div className="p-4">
-                              {section.display_type === 'list' ? (
-                                // List biasa
-                                <ul className="list-disc list-inside space-y-2">
-                                  {bidang.members.map((member, memberIndex) => (
-                                    <li key={memberIndex} className="text-gray-700">
-                                      {member.name}
-                                      {member.position && (
-                                        <span className="text-gray-500 ml-2">({member.position})</span>
-                                      )}
-                                    </li>
-                                  ))}
-                                </ul>
-                              ) : (
-                                // Bagan/Diagram - mirip dengan IPM
-                                <div className="space-y-2">
-                                  {bidang.members.map((member, memberIndex) => (
-                                    <div key={memberIndex} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
-                                      <div className="flex items-center">
-                                        <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xs font-bold mr-3">
-                                          {memberIndex + 1}
-                                        </span>
-                                        <span className="font-medium text-black">{member.name}</span>
-                                      </div>
-                                      {member.position && (
-                                        <span className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">
-                                          {member.position}
-                                        </span>
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Legacy List Items (untuk backward compatibility) */}
-                  {section.use_list_disc && section.list_items && !section.bidang_structure && (
-                    <div className="space-y-3">
-                      {section.list_items.map((item, idx) => (
-                        <div key={idx} className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
-                          <p className="text-black font-medium">{item.item}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Struktur Organisasi Section (Layout Asli) */}
-          {strukturOrganisasi && strukturOrganisasi.length > 0 && (
-            <div>
-              <h2 className="text-3xl font-bold text-primary mb-8 text-center">Struktur Organisasi</h2>
-              <div className="space-y-8">
-                {strukturOrganisasi.map((item: StrukturOrganisasiData, index: number) => (
+      <main className="flex-grow container mx-auto px-4 py-8 bg-white">
+        {/* Struktur Organisasi Section - Fixed visibility issues */}
+        {strukturOrganisasi && strukturOrganisasi.length > 0 && (
+          <div className="w-full">
+            <h2 className="text-3xl font-bold text-primary mb-8 text-center opacity-100 visible">
+              Struktur Organisasi
+            </h2>
+            <div className="space-y-8 w-full opacity-100 visible">
+              {strukturOrganisasi.map((item: StrukturOrganisasiData, index: number) => (
+                <div key={item.id} className="w-full opacity-100 visible">
                   <StrukturOrganisasiCard 
-                    key={item.id} 
                     struktur={item} 
                     layout={index % 2 === 0 ? 'left' : 'right'}
                   />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Fallback message jika tidak ada data */}
-          {(!strukturOrganisasi || strukturOrganisasi.length === 0) && (!content || content.length === 0) && (
-            <div className="text-center py-12">
-              <div className="max-w-md mx-auto">
-                <div className="bg-gray-100 rounded-full w-24 h-24 mx-auto mb-4 flex items-center justify-center">
-                  <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Belum Ada Data</h3>
-                <p className="text-gray-600">
-                  Data struktur organisasi belum tersedia. Silakan hubungi administrator untuk menambahkan data.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Test Content - Hapus setelah testing */}
-          <div className="mt-8 p-6 bg-blue-100 border border-blue-300 rounded-lg">
-            <h3 className="text-xl font-bold text-blue-800 mb-3">🧪 Test Content</h3>
-            <p className="text-blue-700 mb-4">Ini adalah test content untuk memastikan section ini terlihat.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white p-4 rounded border">
-                <h4 className="font-semibold text-gray-800">Test Card 1</h4>
-                <p className="text-gray-600">Ini adalah test card pertama</p>
-              </div>
-              <div className="bg-white p-4 rounded border">
-                <h4 className="font-semibold text-gray-800">Test Card 2</h4>
-                <p className="text-gray-600">Ini adalah test card kedua</p>
-              </div>
+              ))}
             </div>
           </div>
-        </ScrollReveal>
+        )}
+
+        {/* Fallback message jika tidak ada data */}
+        {(!strukturOrganisasi || strukturOrganisasi.length === 0) && (!content || content.length === 0) && (
+          <div className="text-center py-12">
+            <div className="max-w-md mx-auto">
+              <div className="bg-gray-100 rounded-full w-24 h-24 mx-auto mb-4 flex items-center justify-center">
+                <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Belum Ada Data</h3>
+              <p className="text-gray-600">
+                Data struktur organisasi belum tersedia. Silakan hubungi administrator untuk menambahkan data.
+              </p>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

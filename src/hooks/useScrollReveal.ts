@@ -5,9 +5,15 @@ export const useScrollReveal = (options = {}) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    // Fallback: Make content visible after a short delay if intersection observer fails
+    const fallbackTimer = setTimeout(() => {
+      setIsVisible(true)
+    }, 100)
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          clearTimeout(fallbackTimer)
           setIsVisible(true)
           // Unobserve after animation triggers (optional)
           observer.unobserve(entry.target)
@@ -25,6 +31,7 @@ export const useScrollReveal = (options = {}) => {
     }
 
     return () => {
+      clearTimeout(fallbackTimer)
       if (ref.current) {
         observer.unobserve(ref.current)
       }
