@@ -275,6 +275,60 @@ export default function StrukturOrganisasiPage() {
           </div>
         </div>
 
+        {/* Fallback Content - Selalu terlihat tanpa ScrollReveal */}
+        <div className="mb-8 p-6 bg-green-100 border border-green-300 rounded-lg">
+          <h3 className="text-xl font-bold text-green-800 mb-3">📋 Struktur Organisasi - Fallback View</h3>
+          <p className="text-green-700 mb-4">Ini adalah fallback content yang selalu terlihat untuk memastikan data struktur organisasi dapat diakses.</p>
+          
+          {/* Struktur Organisasi Cards - Tanpa ScrollReveal */}
+          {strukturOrganisasi && strukturOrganisasi.length > 0 && (
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-green-800">Daftar Struktur Organisasi:</h4>
+              {strukturOrganisasi.slice(0, 3).map((item: StrukturOrganisasiData, index: number) => (
+                <div key={item.id} className="bg-white p-4 rounded-lg border border-green-200 shadow-sm">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                      {index + 1}
+                    </div>
+                    <div className="flex-1">
+                      <h5 className="font-semibold text-gray-800">{item.position}</h5>
+                      <p className="text-gray-600">{item.name}</p>
+                      {item.description && (
+                        <p className="text-sm text-gray-500 mt-1">{item.description}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {strukturOrganisasi.length > 3 && (
+                <div className="text-center text-green-600 font-medium">
+                  +{strukturOrganisasi.length - 3} struktur organisasi lainnya...
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Content Sections - Tanpa ScrollReveal */}
+          {content && content.length > 0 && (
+            <div className="mt-6">
+              <h4 className="text-lg font-semibold text-green-800 mb-3">Content Sections:</h4>
+              {content.map((section: StrukturOrganisasiContent, index: number) => (
+                <div key={section.id} className="bg-white p-4 rounded-lg border border-green-200 shadow-sm mb-3">
+                  <h5 className="font-semibold text-gray-800 mb-2">{section.title}</h5>
+                  {section.content && (
+                    <p className="text-gray-600 text-sm mb-2">{section.content}</p>
+                  )}
+                  {section.bidang_structure && (
+                    <div className="text-xs text-gray-500">
+                      <strong>Bidang:</strong> {section.bidang_structure.length} bidang struktur
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <ScrollReveal>
           {/* Struktur Organisasi Content Sections */}
           {content && content.length > 0 && (
