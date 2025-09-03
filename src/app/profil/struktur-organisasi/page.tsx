@@ -262,7 +262,7 @@ export default function StrukturOrganisasiPage() {
       </main>
 
       {/* Content Section */}
-      <main className="flex-grow container mx-auto px-4 py-8 bg-white">
+      <main className="flex-grow container mx-auto px-4 py-8 bg-white" style={{ minHeight: 'auto', display: 'block' }}>
         <ScrollReveal>
           {/* Struktur Organisasi Content Sections */}
           {content && content.length > 0 && (
