@@ -78,7 +78,8 @@ export function Header() {
             { name: 'Struktur Organisasi', href: '/profil/struktur-organisasi' },
             { name: 'IPM', href: '/profil/ipm' },
             { name: 'Ekstrakurikuler', href: '/profil/ekstrakurikuler' },
-            { name: 'Hisbul Wathan', href: '/profil/hisbul-wathan' } // Tambahkan Hisbul Wathan
+            { name: 'Tapak Suci', href: '/profil/tapak-suci' },
+            { name: 'Hizbul Wathan', href: '/profil/hizbul-wathan' }
           ]
         },
         { 
