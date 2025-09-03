@@ -77,7 +77,8 @@ export function Header() {
             { name: 'Visi Misi', href: '/profil/visi-misi' },
             { name: 'Struktur Organisasi', href: '/profil/struktur-organisasi' },
             { name: 'IPM', href: '/profil/ipm' },
-            { name: 'Ekstrakurikuler', href: '/profil/ekstrakurikuler' }
+            { name: 'Ekstrakurikuler', href: '/profil/ekstrakurikuler' },
+            { name: 'Hisbul Wathan', href: '/profil/hisbul-wathan' } // Tambahkan Hisbul Wathan
           ]
         },
         { 
@@ -121,6 +122,15 @@ export function Header() {
           ]
         }
       ]
+
+  // Debug: Log data yang diterima dari API
+  console.log('🔍 Header Data from API:', headerData)
+  console.log('🔍 Menu Items (API vs Fallback):', {
+    hasApiData: !!headerData?.menu,
+    apiMenuLength: headerData?.menu?.length || 0,
+    fallbackMenuLength: menuItems.length,
+    usingFallback: !headerData?.menu || headerData.menu.length === 0
+  })
 
   // Marquee data dari API atau fallback
   const marqueeData = headerData?.marquee && headerData.marquee.length > 0 
@@ -374,8 +384,13 @@ export function Header() {
       {isMenuOpen && (
         <div className="xl:hidden bg-primary border-t border-gray-600">
           <div className="container mx-auto px-4 py-4">
+            {/* Debug Info untuk Mobile */}
+            <div className="mb-4 p-2 bg-yellow-100 border border-yellow-300 rounded text-xs">
+              <strong>🔍 Mobile Menu Debug:</strong> {menuItems.length} menu items loaded
+            </div>
+            
             <nav className="flex flex-col space-y-2">
-              {menuItems.map((item) => (
+              {menuItems.map((item, index) => (
                 <div key={item.name} className="relative">
                   {/* Main Menu Item */}
                   <div 
