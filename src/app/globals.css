@@ -531,7 +531,7 @@ body {
   100% {
     opacity: 1;
     transform: translateY(0);
-    max-height: 300px;
+    max-height: 500px;
   }
 }
 
@@ -539,7 +539,7 @@ body {
   0% {
     opacity: 1;
     transform: translateY(0);
-    max-height: 300px;
+    max-height: 500px;
   }
   100% {
     opacity: 0;
