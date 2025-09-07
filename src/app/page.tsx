@@ -31,6 +31,7 @@ export default function Home() {
   const [whyInitial, setWhyInitial] = useState<any | null>(null)
   const [whyTranslated, setWhyTranslated] = useState<any | null>(null)
   const [heroLoaded, setHeroLoaded] = useState(false)
+  const [showPopup, setShowPopup] = useState(false)
 
   const rotatingWords = [
     (hero?.config_data?.flip_text as string) || t('header.home') + ", Sekolah Surgaku",
@@ -171,6 +172,32 @@ export default function Home() {
       cta: t('common.consult')
     }
   ]
+
+  // Show popup on page load/reload
+  useEffect(() => {
+    // Show popup immediately without delay
+    const timer = setTimeout(() => {
+      setShowPopup(true)
+    }, 50) // Very short delay to ensure DOM is ready
+    
+    return () => clearTimeout(timer)
+  }, [])
+  
+  // Play sound effect separately after popup is shown
+  useEffect(() => {
+    if (showPopup) {
+      // Play sound effect asynchronously without blocking popup display
+      const playAudio = async () => {
+        try {
+          const audio = new Audio('/popupeffect.mp3')
+          await audio.play()
+        } catch (error) {
+          console.log('Audio play failed:', error)
+        }
+      }
+      playAudio()
+    }
+  }, [showPopup])
 
   // Load Home sections from backend (update per section begitu selesai, tanpa menunggu semuanya)
   useEffect(() => {
@@ -381,6 +408,26 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      {/* Welcome Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+          <div className="relative animate-fade-in">
+            <button 
+              onClick={() => setShowPopup(false)}
+              className="absolute top-2 right-2 text-white hover:text-gray-300 text-3xl font-bold z-10 bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center"
+            >
+              ×
+            </button>
+            <img 
+              src="/popupimage.jpg" 
+              alt="Popup Image" 
+              className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg cursor-pointer"
+              onClick={() => setShowPopup(false)}
+            />
+          </div>
+        </div>
+      )}
+      
       <Header />
       
       {/* Hero Section with Video Background - Digital School, Sekolahku Surgaku */}
