@@ -732,6 +732,19 @@ export default function Home() {
         <YouTubeSection />
       </ScrollReveal>
       
+      {/* Background Footer Section */}
+      <ScrollReveal delay={300}>
+        <div 
+          className="w-full h-80 md:h-64 lg:h-[400px] md:h-[600px] xl:h-[1200px] -mt-20 md:-mt-32 xl:-mt-56 -mb-6 bg-no-repeat bg-center bg-cover relative z-20"
+          style={{
+            backgroundImage: 'url(/backgroundatasfooter.png)',
+            backgroundColor: 'transparent'
+          }}
+        >
+        </div>
+      </ScrollReveal>
+
+      
       {/* Import and add Footer component before using it */}
       {/* <Footer /> */}
     </div>

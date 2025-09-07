@@ -9,8 +9,11 @@ import { gsap } from 'gsap'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  
+
   const { t } = useI18n()
   const { headerData, loading: headerLoading } = useHeader()
   const marqueeRef = useRef<HTMLDivElement>(null)
@@ -349,13 +352,101 @@ export function Header() {
                 </a>
               </div>
 
-              {/* Grid/Apps Icon */}
-              <div className="fe-more-item">
+              {/* Grid/Apps Icon with Dropdown */}
+              <div 
+                className="fe-more-item relative"
+                onMouseEnter={() => setIsMoreMenuOpen(true)}
+                onMouseLeave={() => setIsMoreMenuOpen(false)}
+              >
                 <div className="fe-more-item-icon">
-                  <button className="text-white p-1 hover:bg-white hover:bg-opacity-10 rounded transition-colors">
+                  <button 
+                    className="text-white p-1 hover:bg-white hover:bg-opacity-10 rounded transition-colors"
+                    onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
+                  >
                     <GridIcon className="w-4 h-4" />
                   </button>
                 </div>
+                
+
+                
+                {/* Modern Dropdown Menu */}
+                {isMoreMenuOpen && (
+                  <div className="fe-more-item-dropdown absolute top-full right-0 mt-2 bg-white shadow-2xl rounded-xl border border-gray-100 z-50 overflow-hidden backdrop-blur-sm w-80 md:w-80 sm:w-72 xs:w-64 max-w-[90vw]">
+                    {/* Header */}
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3 md:px-6 md:py-4">
+                      <h3 className="text-white font-semibold text-base md:text-lg">Menu Navigasi</h3>
+                      <p className="text-blue-100 text-xs md:text-sm mt-1">Akses cepat ke semua halaman</p>
+                    </div>
+                    
+                    {/* Navigation Menu from Navbar */}
+                    <div className="max-h-80 md:max-h-96 overflow-y-auto">
+                      {menuItems.map((item, index) => (
+                        <div key={item.name} className="border-b border-gray-50 last:border-b-0">
+                          <div className="px-3 py-3 md:px-6 md:py-4 hover:bg-gray-50 transition-colors duration-200">
+                            <a 
+                              href={item.href}
+                              className="flex items-center justify-between group"
+                            >
+                              <div className="flex items-center space-x-2 md:space-x-3">
+                                <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                                  <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    {index === 0 && (
+                                      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                                    )}
+                                    {index === 1 && (
+                                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                                    )}
+                                    {index === 2 && (
+                                      <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" />
+                                    )}
+                                    {index === 3 && (
+                                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    )}
+                                    {index === 4 && (
+                                      <path fillRule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clipRule="evenodd" />
+                                    )}
+                                    {index === 5 && (
+                                      <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                                    )}
+                                    {index >= 6 && (
+                                      <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                                    )}
+                                  </svg>
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <h4 className="font-semibold text-sm md:text-base text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+                                    {item.name}
+                                  </h4>
+                                  {item.dropdown.length > 0 && (
+                                    <p className="text-xs md:text-sm text-gray-500">{item.dropdown.length} sub menu</p>
+                                  )}
+                                </div>
+                              </div>
+                              {item.dropdown.length > 0 && (
+                                <ChevronDownIcon className="w-3 h-3 md:w-4 md:h-4 text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0" />
+                              )}
+                            </a>
+                            
+                            {/* Sub Menu */}
+                            {item.dropdown.length > 0 && (
+                              <div className="mt-2 md:mt-3 ml-6 md:ml-13 space-y-1">
+                                {item.dropdown.map((subItem) => (
+                                  <a
+                                    key={subItem.name}
+                                    href={subItem.href}
+                                    className="block px-2 py-1.5 md:px-3 md:py-2 text-xs md:text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                                  >
+                                    {subItem.name}
+                                  </a>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Mobile Menu Toggle */}

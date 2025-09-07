@@ -80,7 +80,7 @@ const Footer: React.FC<FooterProps> = ({ marginTop = 'mt-0' }) => {
   const lainnyaLinks = footerData?.links?.lainnya || [];
 
   return (
-    <footer className={`bg-gradient-to-br from-blue-900 via-blue-800 to-green-700 text-white rounded-t-3xl ${marginTop} pt-16 relative z-10 overflow-hidden`}>
+    <footer className={`bg-gradient-to-br from-blue-900 via-blue-800 to-green-700 text-white rounded-t-3xl ${marginTop} pt-16 relative z-20 overflow-hidden`}>
       {/* Geometric Decoration */}
       <GeometricDecoration />
       
