@@ -366,7 +366,7 @@ const AlkaproLibrary = () => {
                   Alur <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Pemanfaatan Fasilitas</span>
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  Langkah-langkah mudah untuk memanfaatkan fasilitas perpustakaan Alkapro Library
+                  {data?.additional_services?.description || 'Langkah-langkah mudah untuk memanfaatkan fasilitas perpustakaan Alkapro Library'}
                 </p>
               </div>
               
@@ -413,14 +413,9 @@ const AlkaproLibrary = () => {
                   </div>
                 </div>
                 
-                {/* Steps Grid */}
+                {/* Steps Grid - Now using API data */}
                 <div className="grid gap-6">
-                  {[
-                    { title: '1. Registrasi Anggota', description: 'Daftarkan diri sebagai anggota perpustakaan dengan menunjukkan kartu pelajar dan mengisi formulir keanggotaan', icon: UserCheck, color: 'from-blue-500 to-indigo-600' },
-                    { title: '2. Pencarian Koleksi', description: 'Gunakan sistem katalog digital atau minta bantuan pustakawan untuk mencari buku dan referensi yang dibutuhkan', icon: Search, color: 'from-indigo-500 to-purple-600' },
-                    { title: '3. Peminjaman Buku', description: 'Pinjam buku dengan menunjukkan kartu anggota, maksimal 3 buku untuk jangka waktu 1 minggu', icon: BookOpen, color: 'from-purple-500 to-pink-600' },
-                    { title: '4. Pemanfaatan Fasilitas', description: 'Gunakan area baca, komputer, internet, dan ruang diskusi sesuai dengan tata tertib perpustakaan', icon: Monitor, color: 'from-pink-500 to-red-600' },
-                  ].map((step, i) => {
+                  {(data?.additional_services?.services || additionalServices.slice(0, 4)).map((step, i) => {
                     const bgGrad = [
                       'from-blue-50 to-indigo-50 border-blue-100',
                       'from-indigo-50 to-purple-50 border-indigo-100',
@@ -433,11 +428,33 @@ const AlkaproLibrary = () => {
                       'group-hover:text-purple-600',
                       'group-hover:text-pink-600',
                     ][i % 4]
+                    const colors = [
+                      'from-blue-500 to-indigo-600',
+                      'from-indigo-500 to-purple-600',
+                      'from-purple-500 to-pink-600',
+                      'from-pink-500 to-red-600',
+                    ][i % 4]
+                    
+                    // Map icon names to components
+                    const getIconComponent = (iconName: string) => {
+                      switch (iconName) {
+                        case 'user-check': return UserCheck
+                        case 'search': return Search
+                        case 'book-open': return BookOpen
+                        case 'monitor': return Monitor
+                        case 'users': return Users
+                        case 'file-text': return FileText
+                        default: return BookOpen
+                      }
+                    }
+                    
+                    const IconComponent = getIconComponent(step.icon)
+                    
                     return (
                       <div key={i} className={`group bg-gradient-to-r ${bgGrad} p-6 rounded-2xl border hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer`}>
                         <div className="flex items-start space-x-4">
-                          <div className={`w-12 h-12 bg-gradient-to-r ${step.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                            <step.icon className="w-6 h-6 text-white" />
+                          <div className={`w-12 h-12 bg-gradient-to-r ${colors} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                            <IconComponent className="w-6 h-6 text-white" />
                           </div>
                           <div className="flex-1">
                             <h3 className={`text-xl font-bold text-gray-800 mb-2 transition-colors ${TitleHover}`} style={{ fontFamily: 'Philosopher, serif' }}>{step.title}</h3>
@@ -544,20 +561,22 @@ const AlkaproLibrary = () => {
                 </p>
               </div>
 
-              <div className="relative max-w-4xl mx-auto">
+              <div className="relative max-w-6xl mx-auto">
                 <div className="relative group">
                   {/* Background glow */}
                   <div className="absolute inset-0 bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
                   
-                  {/* Main container */}
-                  <div className="relative ">
+                  {/* Main container - responsive to image size */}
+                  <div className="relative bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-2xl">
                     <div className="relative overflow-hidden rounded-2xl">
                       <Image
                         src={libraryPamphlets[currentPamphletIndex]}
                         alt={`Library Pamphlet ${currentPamphletIndex + 1}`}
-                        width={800}
-                        height={600}
-                        className="w-full h-96 object-cover rounded-2xl transition-all duration-500"
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        className="w-full h-auto rounded-2xl transition-all duration-500"
+                        style={{ width: '100%', height: 'auto' }}
                       />
                       
                       {/* Navigation buttons */}
