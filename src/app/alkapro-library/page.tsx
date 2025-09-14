@@ -104,7 +104,7 @@ const AlkaproLibrary = () => {
   const introDescription = data?.introduction?.description || 'Perpustakaan modern dengan koleksi lengkap dan fasilitas terdepan untuk mendukung kegiatan belajar mengajar dan penelitian siswa SMP Muhammadiyah Al Kautsar PK Kartasura.'
   const introFeaturedImage = data?.introduction?.featured_image || '/perpustakaan-sekolah.webp'
   
-  const featuresTitle = data?.features?.title || 'Fitur Perpustakaan'
+  const featuresTitle = data?.features?.title || 'Koleksi Lengkap & Fasilitas Modern'
   const collectionFeatures = data?.features?.collection_features || [
     'Buku pelajaran kurikulum terbaru',
     'Koleksi buku referensi dan ensiklopedia', 
@@ -118,6 +118,8 @@ const AlkaproLibrary = () => {
     'Sistem katalog digital'
   ]
 
+  // Programs section - conditional rendering
+  const showPrograms = data?.programs !== null
   const programsTitle = data?.programs?.title || 'Program Unggulan Perpustakaan'
   const programsDescription = data?.programs?.description || 'Berbagai program menarik yang tersedia di Alkapro Library untuk mendukung minat baca dan pembelajaran siswa'
   const readingClubTitle = data?.programs?.reading_club?.title || 'Reading Club Alkapro'
@@ -127,6 +129,8 @@ const AlkaproLibrary = () => {
   const digitalLibraryDescription = data?.programs?.digital_library?.description || 'Akses ke koleksi digital yang luas termasuk e-book, jurnal online, dan database akademik untuk mendukung penelitian dan pembelajaran modern siswa.'
   const digitalLibraryImage = data?.programs?.digital_library?.image || '/Programkhusus/html-code-on-computer-monitor-software-web-developer-programming-code-photo.jpg'
 
+  // Additional services - conditional rendering
+  const showAdditionalServices = data?.additional_services !== null
   const additionalServicesTitle = data?.additional_services?.title || 'Layanan Tambahan'
   const additionalServicesDescription = data?.additional_services?.description || 'Layanan khusus yang tersedia untuk mendukung kegiatan akademik dan penelitian siswa'
   const additionalServices = data?.additional_services?.services || [
@@ -136,14 +140,20 @@ const AlkaproLibrary = () => {
     { title: '4. Layanan Fotokopi & Print', description: 'Fasilitas fotokopi dan print untuk kebutuhan akademik siswa dengan harga terjangkau', icon: 'file-text' },
   ]
 
+  // Service hours - conditional rendering
+  const showServiceHours = data?.service_hours !== null
   const serviceHoursTitle = data?.service_hours?.title || 'Jam Layanan Perpustakaan Sekolah'
   const weekdayHours = data?.service_hours?.weekday_hours || '07.30 - 14.30 WIB'
   const weekendHours = data?.service_hours?.weekend_hours || '07.30 - 11.00 WIB'
   const serviceNote = data?.service_hours?.note || 'Perpustakaan tutup pada hari libur nasional dan cuti bersama'
 
+  // Social media - conditional rendering
+  const showSocialMedia = data?.social_media !== null
   const instagramUsername = data?.social_media?.instagram_username || '@alkapro.library'
   const instagramUrl = data?.social_media?.instagram_url || 'https://instagram.com/alkapro.library'
 
+  // CTA section - conditional rendering
+  const showCTA = data?.call_to_action !== null
   const ctaTitle = data?.call_to_action?.title || 'Siap Menjelajahi Dunia Pengetahuan di Alkapro Library?'
   const ctaDescription = data?.call_to_action?.description || 'Bergabunglah dengan ribuan siswa yang telah merasakan manfaat fasilitas perpustakaan modern kami. Temukan koleksi lengkap, fasilitas terdepan, dan suasana belajar yang nyaman.'
   const ctaBackground = data?.call_to_action?.background_image || '/Programkhusus/156354-building-a-custom-wordpress-theme.png'
@@ -451,75 +461,83 @@ const AlkaproLibrary = () => {
               </div>
             </div>
 
-            {/* Library Program Options Section */}
-            <div className="mb-20">
-              <div className="text-center mb-12">
-                <div className="inline-flex items-center bg-gradient-to-r from-purple-100 to-indigo-100 rounded-full px-6 py-2 mb-6">
-                  <Star className="w-5 h-5 mr-2 text-purple-500" />
-                  <span className="text-sm font-semibold text-gray-700">Program Perpustakaan</span>
-                </div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4" style={{ fontFamily: 'Philosopher, serif' }}>
-                  Program <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Unggulan</span> Perpustakaan
-                </h2>
-                <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                  Berbagai program menarik yang tersedia di Alkapro Library untuk mendukung minat baca dan pembelajaran siswa
-                </p>
-              </div>
-              
-              <div className="max-w-6xl mx-auto space-y-16">
-                {/* Reading Club Program */}
-                <div className="grid lg:grid-cols-2 gap-8 items-center">
-                  <div className="space-y-4">
-                    <div className="inline-flex items-center bg-gradient-to-r from-blue-100 to-cyan-100 rounded-full px-4 py-2">
-                      <BookOpen className="w-5 h-5 mr-2 text-blue-600" />
-                      <span className="text-sm font-semibold text-blue-700">Program Literasi</span>
-                    </div>
-                    <h3 className="text-2xl md:text-3xl font-bold text-gray-800" style={{ fontFamily: 'Philosopher, serif' }}>Reading Club Alkapro</h3>
-                    <p className="text-lg text-gray-600 leading-relaxed">Program klub membaca yang mengajak siswa untuk aktif membaca buku, berdiskusi, dan berbagi pengalaman literasi dalam suasana yang menyenangkan dan edukatif.</p>
+            {/* Library Program Options Section - Conditional */}
+            {(showPrograms || !data) && (
+              <div className="mb-20">
+                <div className="text-center mb-12">
+                  <div className="inline-flex items-center bg-gradient-to-r from-purple-100 to-indigo-100 rounded-full px-6 py-2 mb-6">
+                    <Star className="w-5 h-5 mr-2 text-purple-500" />
+                    <span className="text-sm font-semibold text-gray-700">Program Perpustakaan</span>
                   </div>
-                  <div>
-                    <div className="relative group">
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-2xl transform rotate-2 group-hover:rotate-0 transition-transform duration-300 opacity-20"></div>
-                      <div className="relative bg-white p-3 rounded-2xl shadow-xl">
-                        <Image
-                          src="/perpustakaan-sekolah.webp"
-                          alt="Reading Club"
-                          width={400}
-                          height={300}
-                          className="w-full h-64 object-cover rounded-xl"
-                        />
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4" style={{ fontFamily: 'Philosopher, serif' }}>
+                    {programsTitle.split(' ').map((word, index) => 
+                      index === 1 ? (
+                        <span key={index} className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">{word}</span>
+                      ) : (
+                        <span key={index}>{word} </span>
+                      )
+                    )}
+                  </h2>
+                  <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                    {programsDescription}
+                  </p>
+                </div>
+                
+                <div className="max-w-6xl mx-auto space-y-16">
+                  {/* Reading Club Program */}
+                  <div className="grid lg:grid-cols-2 gap-8 items-center">
+                    <div className="space-y-4">
+                      <div className="inline-flex items-center bg-gradient-to-r from-blue-100 to-cyan-100 rounded-full px-4 py-2">
+                        <BookOpen className="w-5 h-5 mr-2 text-blue-600" />
+                        <span className="text-sm font-semibold text-blue-700">Program Literasi</span>
+                      </div>
+                      <h3 className="text-2xl md:text-3xl font-bold text-gray-800" style={{ fontFamily: 'Philosopher, serif' }}>{readingClubTitle}</h3>
+                      <p className="text-lg text-gray-600 leading-relaxed">{readingClubDescription}</p>
+                    </div>
+                    <div>
+                      <div className="relative group">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-2xl transform rotate-2 group-hover:rotate-0 transition-transform duration-300 opacity-20"></div>
+                        <div className="relative bg-white p-3 rounded-2xl shadow-xl">
+                          <Image
+                            src={readingClubImage}
+                            alt="Reading Club"
+                            width={400}
+                            height={300}
+                            className="w-full h-64 object-cover rounded-xl"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Digital Library Program */}
-                <div className="grid lg:grid-cols-2 gap-8 items-center">
-                  <div className="order-2 lg:order-1">
-                    <div className="relative group">
-                      <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-500 rounded-2xl transform -rotate-2 group-hover:rotate-0 transition-transform duration-300 opacity-20"></div>
-                      <div className="relative bg-white p-3 rounded-2xl shadow-xl">
-                        <Image
-                          src="/Programkhusus/html-code-on-computer-monitor-software-web-developer-programming-code-photo.jpg"
-                          alt="Digital Library"
-                          width={400}
-                          height={300}
-                          className="w-full h-64 object-cover rounded-xl"
-                        />
+                  {/* Digital Library Program */}
+                  <div className="grid lg:grid-cols-2 gap-8 items-center">
+                    <div className="order-2 lg:order-1">
+                      <div className="relative group">
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-500 rounded-2xl transform -rotate-2 group-hover:rotate-0 transition-transform duration-300 opacity-20"></div>
+                        <div className="relative bg-white p-3 rounded-2xl shadow-xl">
+                          <Image
+                            src={digitalLibraryImage}
+                            alt="Digital Library"
+                            width={400}
+                            height={300}
+                            className="w-full h-64 object-cover rounded-xl"
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="space-y-4 order-1 lg:order-2">
-                    <div className="inline-flex items-center bg-gradient-to-r from-purple-100 to-pink-100 rounded-full px-4 py-2">
-                      <Monitor className="w-5 h-5 mr-2 text-purple-600" />
-                      <span className="text-sm font-semibold text-purple-700">Teknologi Digital</span>
+                    <div className="space-y-4 order-1 lg:order-2">
+                      <div className="inline-flex items-center bg-gradient-to-r from-purple-100 to-pink-100 rounded-full px-4 py-2">
+                        <Monitor className="w-5 h-5 mr-2 text-purple-600" />
+                        <span className="text-sm font-semibold text-purple-700">Teknologi Digital</span>
+                      </div>
+                      <h3 className="text-2xl md:text-3xl font-bold text-gray-800" style={{ fontFamily: 'Philosopher, serif' }}>{digitalLibraryTitle}</h3>
+                      <p className="text-lg text-gray-600 leading-relaxed">{digitalLibraryDescription}</p>
                     </div>
-                    <h3 className="text-2xl md:text-3xl font-bold text-gray-800" style={{ fontFamily: 'Philosopher, serif' }}>Perpustakaan Digital</h3>
-                    <p className="text-lg text-gray-600 leading-relaxed">Akses ke koleksi digital yang luas termasuk e-book, jurnal online, dan database akademik untuk mendukung penelitian dan pembelajaran modern siswa.</p>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Library Pamphlet Section */}
             <div className="mb-20">
@@ -586,159 +604,183 @@ const AlkaproLibrary = () => {
               </div>
             </div>
 
-            {/* Additional Library Services Section */}
-            <div className="mb-20">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4" style={{ fontFamily: 'Philosopher, serif' }}>
-                  Layanan <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">Tambahan</span>
-                </h2>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  Layanan khusus yang tersedia untuk mendukung kegiatan akademik dan penelitian siswa
-                </p>
-              </div>
-              
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
-                {/* Steps Grid - Left Side */}
-                <div className="grid gap-6">
-                  {[
-                    { title: '1. Layanan Referensi', description: 'Bantuan pustakawan dalam mencari informasi dan referensi untuk tugas dan penelitian siswa', icon: Search, color: 'from-orange-500 to-red-600' },
-                    { title: '2. Pelatihan Literasi Digital', description: 'Workshop dan pelatihan penggunaan database digital, e-journal, dan sumber informasi online', icon: Monitor, color: 'from-red-500 to-pink-600' },
-                    { title: '3. Ruang Belajar Kelompok', description: 'Fasilitas ruang diskusi untuk kegiatan belajar kelompok dan presentasi siswa', icon: Users, color: 'from-pink-500 to-purple-600' },
-                    { title: '4. Layanan Fotokopi & Print', description: 'Fasilitas fotokopi dan print untuk kebutuhan akademik siswa dengan harga terjangkau', icon: FileText, color: 'from-purple-500 to-indigo-600' },
-                  ].map((service, i) => {
-                    const bgGrad = [
-                      'from-orange-50 to-red-50 border-orange-100',
-                      'from-red-50 to-pink-50 border-red-100',
-                      'from-pink-50 to-purple-50 border-pink-100',
-                      'from-purple-50 to-indigo-50 border-purple-100',
-                    ][i % 4]
-                    const TitleHover = [
-                      'group-hover:text-orange-600',
-                      'group-hover:text-red-600',
-                      'group-hover:text-pink-600',
-                      'group-hover:text-purple-600',
-                    ][i % 4]
-                    return (
-                      <div key={i} className={`group bg-gradient-to-r ${bgGrad} p-6 rounded-2xl border hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer`}>
-                        <div className="flex items-start space-x-4">
-                          <div className={`w-12 h-12 bg-gradient-to-r ${service.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                            <service.icon className="w-6 h-6 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className={`text-xl font-bold text-gray-800 mb-2 transition-colors ${TitleHover}`} style={{ fontFamily: 'Philosopher, serif' }}>{service.title}</h3>
-                            <p className="text-gray-600 leading-relaxed">{service.description}</p>
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
+            {/* Additional Library Services Section - Conditional */}
+            {(showAdditionalServices || !data) && (
+              <div className="mb-20">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4" style={{ fontFamily: 'Philosopher, serif' }}>
+                    {additionalServicesTitle.split(' ').map((word, index) => 
+                      index === 1 ? (
+                        <span key={index} className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">{word}</span>
+                      ) : (
+                        <span key={index}>{word} </span>
+                      )
+                    )}
+                  </h2>
+                  <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                    {additionalServicesDescription}
+                  </p>
                 </div>
                 
-                {/* Image Section - Right Side */}
-                <div className="relative">
-                  <div className="relative group">
-                    {/* Background glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 rounded-3xl blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
-                    
-                    {/* 3D card container */}
-                    <div className="relative bg-white/90 backdrop-blur-sm p-4 rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
-                      <div className="relative overflow-hidden rounded-2xl">
-                        <Image
-                          src="/perpustakaan-sekolah.webp"
-                          alt="Layanan Tambahan Perpustakaan"
-                          width={400}
-                          height={600}
-                          className="w-full h-[600px] object-cover rounded-2xl transform group-hover:scale-110 transition-transform duration-700"
-                        />
-                        
-                        {/* Modern overlay gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-orange-600/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="absolute bottom-6 left-6 right-6">
-                            <div className="bg-white/20 backdrop-blur-md rounded-xl p-4 border border-white/30">
-                              <div className="flex items-center space-x-3">
-                                <div className="w-3 h-3 bg-orange-400 rounded-full animate-pulse"></div>
-                                <span className="text-sm font-medium text-white">Layanan Lengkap & Berkualitas</span>
-                              </div>
+                <div className="grid lg:grid-cols-2 gap-12 items-center">
+                  {/* Steps Grid - Left Side */}
+                  <div className="grid gap-6">
+                    {additionalServices.map((service, i) => {
+                      const bgGrad = [
+                        'from-orange-50 to-red-50 border-orange-100',
+                        'from-red-50 to-pink-50 border-red-100',
+                        'from-pink-50 to-purple-50 border-pink-100',
+                        'from-purple-50 to-indigo-50 border-purple-100',
+                      ][i % 4]
+                      const TitleHover = [
+                        'group-hover:text-orange-600',
+                        'group-hover:text-red-600',
+                        'group-hover:text-pink-600',
+                        'group-hover:text-purple-600',
+                      ][i % 4]
+                      const colors = [
+                        'from-orange-500 to-red-600',
+                        'from-red-500 to-pink-600',
+                        'from-pink-500 to-purple-600',
+                        'from-purple-500 to-indigo-600',
+                      ][i % 4]
+                      const IconComponent = service.icon === 'search' ? Search : 
+                                          service.icon === 'monitor' ? Monitor :
+                                          service.icon === 'users' ? Users : FileText
+                      return (
+                        <div key={i} className={`group bg-gradient-to-r ${bgGrad} p-6 rounded-2xl border hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer`}>
+                          <div className="flex items-start space-x-4">
+                            <div className={`w-12 h-12 bg-gradient-to-r ${colors} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                              <IconComponent className="w-6 h-6 text-white" />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className={`text-xl font-bold text-gray-800 mb-2 transition-colors ${TitleHover}`} style={{ fontFamily: 'Philosopher, serif' }}>{service.title}</h3>
+                              <p className="text-gray-600 leading-relaxed">{service.description}</p>
                             </div>
                           </div>
                         </div>
-                        
-                        {/* Floating badge */}
-                        <div className="absolute -top-3 -right-3 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg transform rotate-12 group-hover:rotate-0 transition-transform duration-500">
-                          LAYANAN
+                      )
+                    })}
+                  </div>
+                  
+                  {/* Image Section - Right Side */}
+                  <div className="relative">
+                    <div className="relative group">
+                      {/* Background glow effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 rounded-3xl blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+                      
+                      {/* 3D card container */}
+                      <div className="relative bg-white/90 backdrop-blur-sm p-4 rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
+                        <div className="relative overflow-hidden rounded-2xl">
+                          <Image
+                            src="/perpustakaan-sekolah.webp"
+                            alt="Layanan Tambahan Perpustakaan"
+                            width={400}
+                            height={600}
+                            className="w-full h-[600px] object-cover rounded-2xl transform group-hover:scale-110 transition-transform duration-700"
+                          />
+                          
+                          {/* Modern overlay gradient */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-orange-600/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div className="absolute bottom-6 left-6 right-6">
+                              <div className="bg-white/20 backdrop-blur-md rounded-xl p-4 border border-white/30">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-3 h-3 bg-orange-400 rounded-full animate-pulse"></div>
+                                  <span className="text-sm font-medium text-white">Layanan Lengkap & Berkualitas</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Floating badge */}
+                          <div className="absolute -top-3 -right-3 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg transform rotate-12 group-hover:rotate-0 transition-transform duration-500">
+                            LAYANAN
+                          </div>
                         </div>
                       </div>
+                      
+                      {/* Decorative elements */}
+                      <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl opacity-60 blur-xl"></div>
+                      <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full opacity-60 blur-xl"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Call to Action Section - Conditional */}
+            {(showCTA || !data) && (
+              <div className="relative mb-20">
+                <div className="absolute inset-0 rounded-3xl transform rotate-1">
+                  <Image
+                    src={ctaBackground}
+                    alt="Background"
+                    fill
+                    className="object-cover rounded-3xl"
+                  />
+                  <div className="absolute inset-0 bg-black/40 rounded-3xl"></div>
+                </div>
+                <div className="relative bg-transparent rounded-3xl p-8 md:p-12 text-white text-center">
+                  <div className="max-w-4xl mx-auto">
+                    <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-6 py-2 mb-6">
+                      <BookOpen className="w-5 h-5 mr-2" />
+                      <span className="text-sm font-medium">Kunjungi Sekarang</span>
                     </div>
                     
-                    {/* Decorative elements */}
-                    <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl opacity-60 blur-xl"></div>
-                    <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full opacity-60 blur-xl"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Call to Action Section */}
-            <div className="relative mb-20">
-              <div className="absolute inset-0 rounded-3xl transform rotate-1">
-                <Image
-                  src="/Programkhusus/156354-building-a-custom-wordpress-theme.png"
-                  alt="Background"
-                  fill
-                  className="object-cover rounded-3xl"
-                />
-                <div className="absolute inset-0 bg-black/40 rounded-3xl"></div>
-              </div>
-              <div className="relative bg-transparent rounded-3xl p-8 md:p-12 text-white text-center">
-                <div className="max-w-4xl mx-auto">
-                  <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-6 py-2 mb-6">
-                    <BookOpen className="w-5 h-5 mr-2" />
-                    <span className="text-sm font-medium">Kunjungi Sekarang</span>
-                  </div>
-                  
-                  <h2 className="text-3xl md:text-4xl font-bold mb-6 leading-tight" style={{ fontFamily: 'Philosopher, serif', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
-                    Siap Menjelajahi Dunia <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Pengetahuan di Alkapro Library</span>?
-                  </h2>
-                  
-                  <p className="text-xl text-blue-100 mb-8 leading-relaxed max-w-3xl mx-auto" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-                    Bergabunglah dengan ribuan siswa yang telah merasakan manfaat fasilitas perpustakaan modern kami. Temukan koleksi lengkap, fasilitas terdepan, dan suasana belajar yang nyaman.
-                  </p>
-                  
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link 
-                      href="/profil"
-                      className="group bg-white text-blue-600 hover:bg-blue-50 font-semibold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                    >
-                      <span className="flex items-center justify-center">
-                        Tentang Sekolah
-                        <BookOpen className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform" />
-                      </span>
-                    </Link>
-                    <Link 
-                      href="/fasilitas"
-                      className="group border-2 border-white text-white hover:bg-white hover:text-blue-600 font-semibold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105"
-                    >
-                      <span className="flex items-center justify-center">
-                        Lihat Fasilitas Lain
-                        <Star className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform" />
-                      </span>
-                    </Link>
-                  </div>
-                  
-                  {/* Contact Info */}
-                  <div className="mt-8 pt-8 border-t border-white/20">
-                    <p className="text-blue-100 text-sm" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-                      Kunjungi perpustakaan kami dan rasakan pengalaman belajar yang berbeda
+                    <h2 className="text-3xl md:text-4xl font-bold mb-6 leading-tight" style={{ fontFamily: 'Philosopher, serif', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+                      {ctaTitle.includes('Alkapro Library') ? (
+                        <>
+                          {ctaTitle.split('Alkapro Library')[0]}
+                          <br />
+                          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                            Alkapro Library
+                          </span>
+                          {ctaTitle.split('Alkapro Library')[1]}
+                        </>
+                      ) : (
+                        ctaTitle
+                      )}
+                    </h2>
+                    
+                    <p className="text-xl text-blue-100 mb-8 leading-relaxed max-w-3xl mx-auto" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
+                      {ctaDescription}
                     </p>
+                    
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <Link 
+                        href={ctaPrimaryUrl}
+                        className="group bg-white text-blue-600 hover:bg-blue-50 font-semibold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                      >
+                        <span className="flex items-center justify-center">
+                          {ctaPrimaryText}
+                          <BookOpen className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform" />
+                        </span>
+                      </Link>
+                      <Link 
+                        href={ctaSecondaryUrl}
+                        className="group border-2 border-white text-white hover:bg-white hover:text-blue-600 font-semibold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105"
+                      >
+                        <span className="flex items-center justify-center">
+                          {ctaSecondaryText}
+                          <Star className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform" />
+                        </span>
+                      </Link>
+                    </div>
+                    
+                    {/* Contact Info */}
+                    <div className="mt-8 pt-8 border-t border-white/20">
+                      <p className="text-blue-100 text-sm" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
+                        Kunjungi perpustakaan kami dan rasakan pengalaman belajar yang berbeda
+                      </p>
+                    </div>
                   </div>
+                  
+                  {/* Floating Elements */}
+                  <div className="absolute top-8 left-8 w-16 h-16 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+                  <div className="absolute bottom-8 right-8 w-20 h-20 bg-blue-300/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
                 </div>
-                
-                {/* Floating Elements */}
-                <div className="absolute top-8 left-8 w-16 h-16 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-                <div className="absolute bottom-8 right-8 w-20 h-20 bg-blue-300/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
               </div>
-            </div>
+            )}
             
             {/* Library Gallery Section */}
             <div className="mb-20">
