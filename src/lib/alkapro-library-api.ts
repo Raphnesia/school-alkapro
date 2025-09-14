@@ -97,7 +97,7 @@ class AlkaproLibraryAPI {
   private baseURL: string
 
   constructor() {
-    this.baseURL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.raphnesia.my.id/api'
+    this.baseURL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.raphnesia.my.id/api/v1'
   }
 
   private buildImageUrl(path?: string, fallback?: string): string {
@@ -111,7 +111,7 @@ class AlkaproLibraryAPI {
 
   async getComplete(): Promise<AlkaproLibraryData | null> {
     try {
-      const response = await fetch(`${this.baseURL}/v1/alkapro-library/complete`, {
+      const response = await fetch(`${this.baseURL}/alkapro-library/complete`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ class AlkaproLibraryAPI {
 
   async getSettings(): Promise<any> {
     try {
-      const response = await fetch(`${this.baseURL}/v1/alkapro-library/settings`)
+      const response = await fetch(`${this.baseURL}/alkapro-library/settings`)
       const result = await response.json()
       return result.success ? result.data : null
     } catch (error) {
@@ -181,7 +181,7 @@ class AlkaproLibraryAPI {
 
   async getGallery(): Promise<any> {
     try {
-      const response = await fetch(`${this.baseURL}/v1/alkapro-library/gallery`)
+      const response = await fetch(`${this.baseURL}/alkapro-library/gallery`)
       const result = await response.json()
       if (result.success && result.data?.images) {
         result.data.images = result.data.images.map((img: string) => this.buildImageUrl(img))
@@ -195,7 +195,7 @@ class AlkaproLibraryAPI {
 
   async getPamphlets(): Promise<any> {
     try {
-      const response = await fetch(`${this.baseURL}/v1/alkapro-library/pamphlets`)
+      const response = await fetch(`${this.baseURL}/alkapro-library/pamphlets`)
       const result = await response.json()
       if (result.success && result.data?.images) {
         result.data.images = result.data.images.map((img: string) => this.buildImageUrl(img))

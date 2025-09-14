@@ -104,18 +104,14 @@ const AlkaproLibrary = () => {
   const introDescription = data?.introduction?.description || 'Perpustakaan modern dengan koleksi lengkap dan fasilitas terdepan untuk mendukung kegiatan belajar mengajar dan penelitian siswa SMP Muhammadiyah Al Kautsar PK Kartasura.'
   const introFeaturedImage = data?.introduction?.featured_image || '/perpustakaan-sekolah.webp'
   
-  const featuresTitle = data?.features?.title || 'Koleksi Lengkap & Fasilitas Modern'
+  const featuresTitle = data?.features?.title || 'Visi dan Misi Alkapro Library'
   const collectionFeatures = data?.features?.collection_features || [
-    'Buku pelajaran kurikulum terbaru',
-    'Koleksi buku referensi dan ensiklopedia', 
-    'Majalah dan jurnal ilmiah',
-    'E-book dan sumber digital'
+    'Menjadi Pusat Layanan Sumber Pembelajaran berbasis Teknologi Informasi yang menyenangkan dan bermanfaat guna mendukung SMP Muhammadiyah Al Kautsar PK menjadi Sekolah Islami yang berprestasi, modern dan berkemajuan'
   ]
   const facilityFeatures = data?.features?.facility_features || [
-    'Area baca yang nyaman dan tenang',
-    'Komputer dan akses internet gratis',
-    'Ruang diskusi kelompok',
-    'Sistem katalog digital'
+    'Menumbuhkan, Menanamkan serta membina minat baca siswa SMP Muhammadiyah Al Kausar PK',
+    'Memperluas pengetahuan dengan menyediakan berbagai macam sumber informasi berupa, bahan pustaka dan multimedia',
+    'Memberikan layanan prima dengan menggunakan teknologi informasi.'
   ]
 
   // Programs section - conditional rendering
@@ -252,13 +248,21 @@ const AlkaproLibrary = () => {
             <div className="text-center mb-16">
               <div className="inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full px-6 py-2 mb-6">
                 <BookOpen className="w-5 h-5 mr-2 text-blue-500" />
-                <span className="text-sm font-semibold text-gray-700">Perpustakaan Sekolah</span>
+                <span className="text-sm font-semibold text-gray-700">{introBadge}</span>
               </div>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight" style={{ fontFamily: 'Philosopher, serif' }}>
-                Selamat Datang di <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Alkapro Library</span>
+                {introTitle.includes('Alkapro Library') ? (
+                  <>
+                    {introTitle.split('Alkapro Library')[0]}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Alkapro Library</span>
+                    {introTitle.split('Alkapro Library')[1]}
+                  </>
+                ) : (
+                  introTitle
+                )}
               </h2>
               <p className="text-xl text-gray-600 leading-relaxed max-w-4xl mx-auto">
-                Perpustakaan modern dengan koleksi lengkap dan fasilitas terdepan untuk mendukung kegiatan belajar mengajar dan penelitian siswa SMP Muhammadiyah Al Kautsar PK Kartasura.
+                {introDescription}
               </p>
             </div>
 
@@ -274,7 +278,7 @@ const AlkaproLibrary = () => {
                   <div className="relative overflow-hidden rounded-2xl">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-purple-500/20"></div>
                     <Image
-                      src="/perpustakaan-sekolah.webp"
+                      src={introFeaturedImage}
                       alt="Alkapro Library Interior"
                       width={800}
                       height={500}
@@ -309,32 +313,28 @@ const AlkaproLibrary = () => {
             </div>
             
             {/* Key Points - Library Features */}
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4" style={{ fontFamily: 'Philosopher, serif' }}>
+                {featuresTitle}
+              </h2>
+            </div>
+            
             <div className="grid md:grid-cols-2 gap-8 mb-16">
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 p-8 rounded-2xl hover:shadow-lg transition-all duration-300 group">
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
-                    <BookOpen className="w-6 h-6 text-white" />
+                    <Target className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800" style={{ fontFamily: 'Philosopher, serif' }}>Koleksi Lengkap</h3>
+                  <h3 className="text-xl font-bold text-gray-800" style={{ fontFamily: 'Philosopher, serif' }}>Visi</h3>
                 </div>
                 <div className="text-gray-700 leading-relaxed">
-                  <ul className="space-y-2">
-                    <li className="flex items-start">
-                      <CheckCircle className="w-4 h-4 text-blue-500 mr-2 mt-1 flex-shrink-0" />
-                      <span>Buku pelajaran kurikulum terbaru</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckCircle className="w-4 h-4 text-blue-500 mr-2 mt-1 flex-shrink-0" />
-                      <span>Koleksi buku referensi dan ensiklopedia</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckCircle className="w-4 h-4 text-blue-500 mr-2 mt-1 flex-shrink-0" />
-                      <span>Majalah dan jurnal ilmiah</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckCircle className="w-4 h-4 text-blue-500 mr-2 mt-1 flex-shrink-0" />
-                      <span>E-book dan sumber digital</span>
-                    </li>
+                  <ul className="space-y-3">
+                    {collectionFeatures.map((feature, index) => (
+                      <li key={index} className="flex items-start">
+                        <CheckCircle className="w-4 h-4 text-blue-500 mr-2 mt-1 flex-shrink-0" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -342,28 +342,18 @@ const AlkaproLibrary = () => {
               <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100 p-8 rounded-2xl hover:shadow-lg transition-all duration-300 group">
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
-                    <Monitor className="w-6 h-6 text-white" />
+                    <Heart className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800" style={{ fontFamily: 'Philosopher, serif' }}>Fasilitas Modern</h3>
+                  <h3 className="text-xl font-bold text-gray-800" style={{ fontFamily: 'Philosopher, serif' }}>Misi</h3>
                 </div>
                 <div className="text-gray-700 leading-relaxed">
-                  <ul className="space-y-2">
-                    <li className="flex items-start">
-                      <CheckCircle className="w-4 h-4 text-purple-500 mr-2 mt-1 flex-shrink-0" />
-                      <span>Area baca yang nyaman dan tenang</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckCircle className="w-4 h-4 text-purple-500 mr-2 mt-1 flex-shrink-0" />
-                      <span>Komputer dan akses internet gratis</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckCircle className="w-4 h-4 text-purple-500 mr-2 mt-1 flex-shrink-0" />
-                      <span>Ruang diskusi kelompok</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckCircle className="w-4 h-4 text-purple-500 mr-2 mt-1 flex-shrink-0" />
-                      <span>Sistem katalog digital</span>
-                    </li>
+                  <ul className="space-y-3">
+                    {facilityFeatures.map((feature, index) => (
+                      <li key={index} className="flex items-start">
+                        <CheckCircle className="w-4 h-4 text-purple-500 mr-2 mt-1 flex-shrink-0" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
