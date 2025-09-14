@@ -700,7 +700,63 @@ body {
   overflow: visible;
 }
 
-.mobile-dropdown-content {
+/* Mobile dropdown responsive positioning - Always centered */
+@media (max-width: 1280px) {
+  .mobile-dropdown-enter {
+    box-sizing: border-box !important;
+  }
+}
+
+/* Extra small screens (phones in portrait) */
+@media (max-width: 480px) {
+  .mobile-dropdown-enter {
+    font-size: 14px !important;
+  }
+  
+  .mobile-dropdown-enter .mobile-dropdown-item {
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .mobile-dropdown-enter {
+  }
+  
+  .mobile-dropdown-enter .mobile-dropdown-item {
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* Ensure mobile menu container is properly sized */
+@media (max-width: 1279px) {
+  .xl\:hidden {
+    overflow-x: hidden !important;
+  }
+  
+  /* Mobile menu container */
+  .xl\:hidden .container {
+    padding-left: 25px !important;
+    padding-right: 16px !important;
+    max-width: 100% !important;
+  }
+  
+  /* Prevent horizontal scroll on mobile dropdown */
+  .mobile-dropdown-enter {
+    overflow-x: hidden !important;
+    word-wrap: break-word !important;
+  }
+  
+  .mobile-dropdown-enter .mobile-dropdown-item {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+}
+ 
+ .mobile-dropdown-content {
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
@@ -748,6 +804,45 @@ body {
 /* Mobile dropdown visibility fix */
 .mobile-dropdown-visible {
   display: block !important;
+}
+
+/* Touch optimization for mobile devices */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Enhanced mobile dropdown container */
+.mobile-dropdown-enter {
+  animation: mobileSlideDown 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  transform-origin: top;
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+  overflow: visible;
+}
+
+/* Ensure dropdown is always clickable on mobile */
+@media (max-width: 1279px) {
+  .mobile-dropdown-enter {
+    pointer-events: auto;
+    touch-action: auto;
+  }
+  
+  .mobile-dropdown-item {
+    pointer-events: auto;
+    touch-action: manipulation;
+    min-height: 44px; /* iOS recommended touch target size */
+    display: flex;
+    align-items: center;
+  }
+}
   visibility: visible !important;
   opacity: 1 !important;
   position: relative !important;
@@ -906,5 +1001,6 @@ body {
          t r a n s f o r m :   r o t a t e ( 1 8 0 d e g ) ; 
      } 
  } 
-  
+ 
+ 
  

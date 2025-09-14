@@ -476,20 +476,31 @@ export function Header() {
       {isMenuOpen && (
         <div className="xl:hidden bg-primary border-t border-gray-600">
           <div className="container mx-auto px-4 py-4">
+
             
             <nav className="flex flex-col space-y-2">
               {menuItems.map((item, index) => (
                 <div key={`${item.name}-${index}`} className="relative">
                   {/* Main Menu Item */}
                   <div 
-                    className="text-white hover:text-gray-200 font-semibold text-base py-3 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors flex items-center justify-between cursor-pointer border border-transparent hover:border-white/20"
-                    onClick={() => {
+                    className="text-white hover:text-gray-200 font-semibold text-base py-3 px-4 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors flex items-center justify-between cursor-pointer border border-transparent hover:border-white/20 touch-manipulation"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       if (item.dropdown && item.dropdown.length > 0) {
-                        setActiveDropdown(activeDropdown === item.name ? null : item.name);
+                        const newActiveDropdown = activeDropdown === item.name ? null : item.name;
+                        setActiveDropdown(newActiveDropdown);
                       } else {
                         window.location.href = item.href;
                         setIsMenuOpen(false);
                       }
+                    }}
+                    onTouchStart={(e) => {
+                      // Ensure touch events work properly on mobile
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                    }}
+                    onTouchEnd={(e) => {
+                      e.currentTarget.style.backgroundColor = '';
                     }}
                   >
                     <span className="flex items-center gap-3">
@@ -545,7 +556,7 @@ export function Header() {
                   
                   {/* Mobile Dropdown - Enhanced */}
                   {item.dropdown && item.dropdown.length > 0 && activeDropdown === item.name && (
-                    <div className="bg-white rounded-lg mt-2 ml-4 shadow-lg border border-gray-200 overflow-hidden mobile-dropdown-enter">
+                    <div className="bg-white rounded-lg mt-2 shadow-lg border border-gray-200 overflow-hidden mobile-dropdown-enter" style={{position: 'absolute', left: '16px', right: '16px', width: 'auto', maxWidth: '400px', margin: '0 auto', zIndex: 1000}}>
                       {/* Dropdown Header */}
                       <div className="bg-gradient-to-r from-primary to-blue-600 text-white px-4 py-2 text-sm font-semibold">
                         {item.name} ({item.dropdown.length} items)
