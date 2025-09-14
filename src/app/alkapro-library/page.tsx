@@ -167,8 +167,8 @@ const AlkaproLibrary = () => {
         <div className="relative w-full md:h-screen h-64">
           {/* Desktop Image */}
           <Image 
-            src="/perpustakaan-sekolah.webp"
-            alt="Alkapro Library"
+            src={data?.basic_info?.banner_desktop || "/perpustakaan-sekolah.webp"}
+            alt={data?.basic_info?.title || "Alkapro Library"}
             fill
             className="object-cover hidden md:block"
             priority
@@ -178,8 +178,8 @@ const AlkaproLibrary = () => {
           {/* Mobile Image */}
           <div className="relative w-full h-full md:hidden">
             <Image 
-              src="/perpustakaan-sekolah.webp"
-              alt="Alkapro Library"
+              src={data?.basic_info?.banner_mobile || "/perpustakaan-sekolah.webp"}
+              alt={data?.basic_info?.title || "Alkapro Library"}
               fill
               className="object-cover"
               priority
@@ -663,7 +663,7 @@ const AlkaproLibrary = () => {
                       <div className="relative bg-white/90 backdrop-blur-sm p-4 rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
                         <div className="relative overflow-hidden rounded-2xl">
                           <Image
-                            src="/perpustakaan-sekolah.webp"
+                            src={data?.programs?.reading_club?.image || "/perpustakaan-sekolah.webp"}
                             alt="Layanan Tambahan Perpustakaan"
                             width={400}
                             height={600}
