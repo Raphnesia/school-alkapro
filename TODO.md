@@ -1,128 +1,38 @@
-# Mobile Navbar Fix - Profile Menu Items
+# Alkapro Library Facilities Flow Update
 
-## Issue
-Mobile navbar tidak menampilkan semua item menu profil seperti di desktop. Item yang hilang:
-- Ekstrakurikuler
-- Tapak Suci  
-- Hizbul Wathan
+## Task: Update Library Facilities Flow Section to use API data
 
-## Plan
-- [x] Analyze current Header component structure
-- [x] Identify mobile menu rendering logic
-- [x] Fix mobile dropdown display logic
-- [x] Enhance mobile menu styling
-- [x] Add better debugging for mobile menu
-- [x] Test mobile menu functionality
-- [x] Verify all profile items are visible
+### Progress Tracker:
 
-## Files Edited
-- [x] src/components/Header.tsx - Enhanced mobile menu with better debugging and icons
-- [x] src/app/globals.css - Added enhanced mobile dropdown styling and animations
+- [x] **Step 1**: Update TypeScript Interface in `src/lib/alkapro-library-api.ts`
+  - [x] Add `facilities_flow` interface definition
+  - [x] Add `FacilitiesFlowStep` interface
+  - [x] Update main `AlkaproLibraryData` interface
 
-## Changes Made
-1. **Enhanced Mobile Menu Debug Info**: Added detailed debugging information showing menu items and dropdown counts
-2. **Improved Mobile Dropdown Logic**: Fixed dropdown rendering with proper null checks and enhanced styling
-3. **Dynamic Icons**: Added specific icons for each menu type (Home, Profile, Facilities, etc.)
-4. **Enhanced Dropdown Items**: Added specific icons for each profile submenu item (Pimpinan, Guru, Ekstrakurikuler, etc.)
-5. **Better Animations**: Improved CSS animations for mobile dropdown with staggered item animations
-6. **Dropdown Header**: Added header showing menu name and item count
-7. **External Link Indicators**: Added visual indicators for external links
-8. **Improved Styling**: Enhanced mobile dropdown with better spacing, colors, and hover effects
+- [x] **Step 2**: Update Page Component in `src/app/alkapro-library/page.tsx`
+  - [x] Import new icon components (UserPlus, MapPin, ShieldCheck, Key)
+  - [x] Update Library Facilities Flow Section to use `data?.facilities_flow`
+  - [x] Update icon mapping for new step icons
+  - [x] Update fallback data structure
+  - [x] Update title and description to use API data
 
-## Key Fixes
-- Fixed dropdown item rendering to ensure all 9 profile items are shown
-- Added proper null checks for dropdown arrays
-- Enhanced debugging to show exactly which items are being rendered
-- Improved mobile dropdown visibility and styling
-- Added proper target attributes for external vs internal links
+- [ ] **Step 3**: Testing and Verification
+  - [ ] Test the changes work correctly
+  - [ ] Verify icon mapping displays properly
+  - [ ] Confirm API data is being used
 
-## Testing Results ✅
-🎉 **SUCCESS! All tests passed:**
-- ✅ Mobile menu opens correctly
-- ✅ Debug info shows 8 total menu items with API data
-- ✅ Profile dropdown displays ALL 9 items:
-  1. ✅ Pimpinan SMP
-  2. ✅ Guru & Tendik  
-  3. ✅ Sejarah Singkat
-  4. ✅ Visi Misi
-  5. ✅ Struktur Organisasi
-  6. ✅ IPM
-  7. ✅ **Ekstrakurikuler** (Previously missing - NOW FIXED!)
-  8. ✅ **Tapak Suci** (Previously missing - NOW FIXED!)
-  9. ✅ **Hizbul Wathan** (Previously missing - NOW FIXED!)
-- ✅ Smooth animations and transitions working
-- ✅ Icons and styling displaying correctly
-
-## Progress
-- ✅ Mobile navbar fixes implemented
-- ✅ Testing completed successfully
-- ✅ **MOBILE NAVBAR TASK COMPLETED! 🎉**
-
----
-
-# Struktur Organisasi Page Fix ✅ COMPLETED
-
-## Issue ✅ RESOLVED
-Struktur organisasi content dan struktur organisasi card tidak muncul dan harus dipancing dengan resize browser 2-3x baru muncul padahal aslinya harusnya udah muncul.
-
-## Root Cause Found
-- ScrollReveal animation menyebabkan content tersembunyi (opacity: 0) pada initial load
-- Intersection Observer tidak trigger dengan benar pada beberapa kasus
-- Content hanya muncul setelah browser resize karena re-trigger intersection observer
-
-## Fixes Applied ✅
-1. **Fixed Page Structure**: Removed problematic inline styles and ensured proper visibility
-2. **Enhanced StrukturOrganisasiCard**: Added `opacity-100 visible` classes to ensure immediate visibility
-3. **Improved useScrollReveal Hook**: Added fallback timer (100ms) to make content visible if intersection observer fails
-4. **Content Wrapper Fix**: Added explicit visibility classes to prevent hidden content
-
-## Files Fixed ✅
-- ✅ `src/app/profil/struktur-organisasi/page.tsx` - Fixed content section visibility
-- ✅ `src/components/StrukturOrganisasiCard.tsx` - Added explicit visibility classes
-- ✅ `src/hooks/useScrollReveal.ts` - Added fallback mechanism for failed intersection observer
-
-## Testing Results ✅
-🎉 **SUCCESS! All tests passed:**
-- ✅ Page loads immediately without loading spinner issues
-- ✅ Content appears instantly without browser resize needed
-- ✅ All struktur organisasi cards display correctly:
-  1. ✅ Drs. Mahmud Hasni, M.Pd. (Kepala Sekolah)
-  2. ✅ Annisa Mayasari, S.Pd. (Wakil Kepala Sekolah Bidang Kurikulum)
-  3. ✅ Additional cards loading properly
-- ✅ Layout alternating (left/right) working correctly
-- ✅ Images loading properly
-- ✅ Text content fully visible and readable
-- ✅ Fallback data working when backend offline
-- ✅ ScrollReveal animations still working but with fallback
-
-## **BOTH TASKS COMPLETED SUCCESSFULLY! 🎉🎉**
-
-### Summary of All Fixes:
-1. ✅ **Mobile Navbar**: All 9 profile dropdown items now visible (including previously missing Ekstrakurikuler, Tapak Suci, Hizbul Wathan)
-2. ✅ **Struktur Organisasi Page**: Content now appears immediately without needing browser resize
-
----
-
-## **GIT COMMIT & PUSH COMPLETED! 🚀**
-
-### Commit Details:
-- **Commit Hash**: `25e5b20`
-- **Branch**: `main`
-- **Files Changed**: 8 files
-- **Insertions**: +904 lines
-- **Deletions**: -294 lines
-- **Status**: ✅ Successfully pushed to GitHub repository
-
-### Commit Message:
-```
-fix: Mobile navbar dropdown & struktur organisasi page visibility
-
-- Mobile navbar: Fixed profile dropdown to show all 9 items including Ekstrakurikuler, Tapak Suci, Hizbul Wathan
-- Enhanced mobile menu with better debugging, icons, and animations
-- Struktur organisasi: Fixed content visibility issue that required browser resize
-- Added fallback mechanism to useScrollReveal hook for immediate content display
-- Removed debug BackendStatus component from struktur organisasi page
-- Improved mobile dropdown styling and user experience
-```
-
-## **FINAL STATUS: ALL TASKS COMPLETED & COMMITTED! ✅🎉**
+### API Data Structure Reference:
+```json
+"facilities_flow": {
+  "title": "Alur Peminjaman Buku",
+  "description": "Langkah-langkah mudah untuk peminjaman buku di perpustakaan Alkapro Library",
+  "steps": [
+    {
+      "step_number": "01",
+      "title": "Siswa atau peminjam datang langsung ke perpustakaan...",
+      "description": "...",
+      "icon": "user-plus"
+    },
+    // ... more steps
+  ]
+}

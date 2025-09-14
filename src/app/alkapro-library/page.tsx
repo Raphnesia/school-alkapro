@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Header } from '@/components/Header'
-import { BookOpen, Users, Target, Award, Star, CheckCircle, Heart, Brain, Monitor, Code, UsersRound, Lightbulb, FileText, UserCheck, Calendar, CreditCard, GraduationCap, Building, Clock, Instagram, Camera, FileImage, Book, Search, Wifi, Coffee, ChevronLeft, ChevronRight } from 'lucide-react'
+import { BookOpen, Users, Target, Award, Star, CheckCircle, Heart, Brain, Monitor, Code, UsersRound, Lightbulb, FileText, UserCheck, Calendar, CreditCard, GraduationCap, Building, Clock, Instagram, Camera, FileImage, Book, Search, Wifi, Coffee, ChevronLeft, ChevronRight, UserPlus, MapPin, ShieldCheck, Key } from 'lucide-react'
 import { useAlkaproLibrary } from '@/hooks/useAlkaproLibrary'
 import { AlkaproLibraryLoading } from '@/components/AlkaproLibraryLoading'
 import { AlkaproLibraryError } from '@/components/AlkaproLibraryError'
@@ -363,10 +363,24 @@ const AlkaproLibrary = () => {
             <div className="mb-20">
               <div className="text-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4" style={{ fontFamily: 'Philosopher, serif' }}>
-                  Alur <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Pemanfaatan Fasilitas</span>
+                  {data?.facilities_flow?.title ? (
+                    <>
+                      {data.facilities_flow.title.split(' ').map((word, index) => 
+                        index === 1 ? (
+                          <span key={index} className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{word} </span>
+                        ) : (
+                          <span key={index}>{word} </span>
+                        )
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      Alur <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Peminjaman Buku</span>
+                    </>
+                  )}
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  {data?.additional_services?.description || 'Langkah-langkah mudah untuk memanfaatkan fasilitas perpustakaan Alkapro Library'}
+                  {data?.facilities_flow?.description || 'Langkah-langkah mudah untuk peminjaman buku di perpustakaan Alkapro Library'}
                 </p>
               </div>
               
@@ -394,7 +408,7 @@ const AlkaproLibrary = () => {
                             <div className="bg-white/20 backdrop-blur-md rounded-xl p-4 border border-white/30">
                               <div className="flex items-center space-x-3">
                                 <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
-                                <span className="text-sm font-medium text-white">Fasilitas Lengkap & Modern</span>
+                                <span className="text-sm font-medium text-white">Proses Peminjaman Mudah</span>
                               </div>
                             </div>
                           </div>
@@ -402,7 +416,7 @@ const AlkaproLibrary = () => {
                         
                         {/* Floating badge */}
                         <div className="absolute -top-3 -right-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg transform rotate-12 group-hover:rotate-0 transition-transform duration-500">
-                          MODERN
+                          MUDAH
                         </div>
                       </div>
                     </div>
@@ -413,34 +427,47 @@ const AlkaproLibrary = () => {
                   </div>
                 </div>
                 
-                {/* Steps Grid - Now using API data */}
+                {/* Steps Grid - Now using facilities_flow API data */}
                 <div className="grid gap-6">
-                  {(data?.additional_services?.services || additionalServices.slice(0, 4)).map((step, i) => {
+                  {(data?.facilities_flow?.steps || [
+                    { step_number: '01', title: 'Siswa atau peminjam datang langsung ke perpustakaan', description: 'Siswa atau peminjam datang langsung ke perpustakaan dan mencari buku yang ingin dipinjam langsung ke rak buku atau dengan menggunakan OPAC', icon: 'user-plus' },
+                    { step_number: '02', title: 'Menyerahkan buku dan KTA Perpus kepada pustakawan', description: 'Siswa atau peminjam menyerahkan buku yang ingin dipinjam beserta KTA Perpus kepada pustakawan di bagian sirkulasi', icon: 'map-pin' },
+                    { step_number: '03', title: 'Pustakawan memproses peminjaman melalui SLiMS', description: 'Pustakawan memproses peminjaman buku yang ingin dipinjam siswa melalui aplikasi automasi SLiMS', icon: 'shield-check' },
+                    { step_number: '04', title: 'Pustakawan menyerahkan buku kepada siswa', description: 'Pustakawan menyerahkan buku yang ingin dipinjam siswa dan telah diproses serta KTA kepada siswa atau peminjam', icon: 'key' },
+                    { step_number: '05', title: 'Proses Peminjaman Selesai', description: 'Proses Peminjaman Selesai, Siswa dapat membaca buku dengan nyaman dan aman', icon: 'book-open' }
+                  ]).map((step, i) => {
                     const bgGrad = [
                       'from-blue-50 to-indigo-50 border-blue-100',
                       'from-indigo-50 to-purple-50 border-indigo-100',
                       'from-purple-50 to-pink-50 border-purple-100',
                       'from-pink-50 to-red-50 border-pink-100',
-                    ][i % 4]
+                      'from-red-50 to-orange-50 border-red-100',
+                    ][i % 5]
                     const TitleHover = [
                       'group-hover:text-blue-600',
                       'group-hover:text-indigo-600',
                       'group-hover:text-purple-600',
                       'group-hover:text-pink-600',
-                    ][i % 4]
+                      'group-hover:text-red-600',
+                    ][i % 5]
                     const colors = [
                       'from-blue-500 to-indigo-600',
                       'from-indigo-500 to-purple-600',
                       'from-purple-500 to-pink-600',
                       'from-pink-500 to-red-600',
-                    ][i % 4]
+                      'from-red-500 to-orange-600',
+                    ][i % 5]
                     
-                    // Map icon names to components
+                    // Map icon names to components for facilities flow
                     const getIconComponent = (iconName: string) => {
                       switch (iconName) {
+                        case 'user-plus': return UserPlus
+                        case 'map-pin': return MapPin
+                        case 'shield-check': return ShieldCheck
+                        case 'key': return Key
+                        case 'book-open': return BookOpen
                         case 'user-check': return UserCheck
                         case 'search': return Search
-                        case 'book-open': return BookOpen
                         case 'monitor': return Monitor
                         case 'users': return Users
                         case 'file-text': return FileText
@@ -453,8 +480,11 @@ const AlkaproLibrary = () => {
                     return (
                       <div key={i} className={`group bg-gradient-to-r ${bgGrad} p-6 rounded-2xl border hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer`}>
                         <div className="flex items-start space-x-4">
-                          <div className={`w-12 h-12 bg-gradient-to-r ${colors} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                          <div className={`w-12 h-12 bg-gradient-to-r ${colors} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform relative`}>
                             <IconComponent className="w-6 h-6 text-white" />
+                            <div className="absolute -top-2 -right-2 bg-white text-gray-800 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg">
+                              {step.step_number}
+                            </div>
                           </div>
                           <div className="flex-1">
                             <h3 className={`text-xl font-bold text-gray-800 mb-2 transition-colors ${TitleHover}`} style={{ fontFamily: 'Philosopher, serif' }}>{step.title}</h3>

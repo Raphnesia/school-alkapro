@@ -23,6 +23,7 @@ export interface AlkaproLibraryData {
     collection_features: string[]
     facility_features: string[]
   }
+  facilities_flow?: FacilitiesFlow | null
   gallery?: {
     images: string[]
     auto_slide: boolean
@@ -91,6 +92,19 @@ export interface AdditionalService {
   title: string
   description: string
   icon: string // 'search' | 'monitor' | 'users' | 'file-text'
+}
+
+export interface FacilitiesFlowStep {
+  step_number: string
+  title: string
+  description: string
+  icon: string // 'user-plus' | 'map-pin' | 'shield-check' | 'key' | 'book-open'
+}
+
+export interface FacilitiesFlow {
+  title: string
+  description: string
+  steps: FacilitiesFlowStep[]
 }
 
 class AlkaproLibraryAPI {
